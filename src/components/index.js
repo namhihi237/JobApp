@@ -1,5 +1,5 @@
 import {Login} from './login';
-import {RegisterIter} from './register';
+import {RegisterIter, RegisterCompany} from './register';
 import {Landing} from './loading';
 
-export {Landing, Login, RegisterIter};
+export {Landing, Login, RegisterIter, RegisterCompany};

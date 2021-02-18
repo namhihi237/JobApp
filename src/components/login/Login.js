@@ -21,11 +21,17 @@ class Login extends Component {
       password: '',
     };
   }
+
   showToast = (msg) => {
     ToastAndroid.show(`${msg}`, ToastAndroid.SHORT);
   };
-  moveToRegister = () => {
-    this.props.navigation.navigate('Register');
+
+  moveToRegisterIter = () => {
+    this.props.navigation.navigate('RegisterIter');
+  };
+
+  moveToRegisterCompany = () => {
+    this.props.navigation.navigate('RegisterCompany');
   };
 
   moveToMain = async () => {
@@ -86,8 +92,11 @@ class Login extends Component {
             <Text style={styles.loginText}>LOGIN</Text>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity onPress={this.moveToRegister}>
-          <Text style={styles.loginText}>Signup</Text>
+        <TouchableOpacity onPress={this.moveToRegisterIter}>
+          <Text style={styles.loginText}>Signup for Iter</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={this.moveToRegisterCompany}>
+          <Text style={styles.loginText}>Signup for Company</Text>
         </TouchableOpacity>
       </View>
     );

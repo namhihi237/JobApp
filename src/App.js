@@ -4,7 +4,7 @@ import 'react-native-gesture-handler';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {Landing, Login, RegisterIter} from './components';
+import {Landing, Login, RegisterIter, RegisterCompany} from './components';
 import {store} from './redux/store';
 import {Provider} from 'react-redux';
 import {storeData, getData} from './utils';
@@ -79,7 +79,8 @@ export class App extends Component {
             }}>
             <Stack.Screen name="Loading" component={Landing} />
             <Stack.Screen name="Login" component={Login} />
-            <Stack.Screen name="Register" component={RegisterIter} />
+            <Stack.Screen name="RegisterIter" component={RegisterIter} />
+            <Stack.Screen name="RegisterCompany" component={RegisterCompany} />
             <Stack.Screen name="MainStudent" component={tabBarForStudent} />
             <Stack.Screen name="MainCompany" component={tabBarForCompany} />
           </Stack.Navigator>

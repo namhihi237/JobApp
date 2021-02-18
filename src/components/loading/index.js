@@ -1,2 +1,4 @@
 import {Landing} from './Landing';
-export {Landing};
+import {Login} from '../login';
+import {RegisterIter} from '../register';
+export {Landing, Login, RegisterIter};

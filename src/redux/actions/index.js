@@ -1,4 +1,4 @@
 import {login} from './login';
 import {registerIter} from './registerIter';
-
-export {login, registerIter};
+import {registerCompany} from './registerCompany';
+export {login, registerIter, registerCompany};

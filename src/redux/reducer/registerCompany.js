@@ -1,17 +1,21 @@
 import {actionType} from '../acitonType';
-const {REGISTER_ITER, REGISTER_ITER_FAIL, REGISTER_ITER_SUCCESS} = actionType;
+const {
+  REGISTER_COMPANY,
+  REGISTER_COMPANY_SUCCESS,
+  REGISTER_COMPANY_FAIL,
+} = actionType;
 const initialState = {
   msg: '',
   loading: false,
   success: false,
 };
-export const registerIter = (state = initialState, actions) => {
+export const registerCompany = (state = initialState, actions) => {
   switch (actions.type) {
-    case REGISTER_ITER:
+    case REGISTER_COMPANY:
       return {...state, loading: true};
-    case REGISTER_ITER_SUCCESS:
+    case REGISTER_COMPANY_SUCCESS:
       return {...state, ...actions.payload, loading: false, success: true};
-    case REGISTER_ITER_FAIL:
+    case REGISTER_COMPANY_FAIL:
       return {...state, ...actions.payload, loading: false};
     default:
       return state;

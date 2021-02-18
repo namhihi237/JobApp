@@ -1,2 +1,3 @@
 import RegisterIter from './registerIter';
-export {RegisterIter};
+import RegisterCompany from './registerCompany';
+export {RegisterIter, RegisterCompany};
