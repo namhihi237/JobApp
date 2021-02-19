@@ -9,7 +9,7 @@ import {
 import {TextInput} from 'react-native-gesture-handler';
 import {registerCompany} from '../../redux/actions';
 import {connect} from 'react-redux';
-import {showLoading} from '../../common';
+import {Loader} from '../../common';
 
 class Register extends Component {
   constructor(props) {
@@ -18,7 +18,8 @@ class Register extends Component {
       email: '',
       password: '',
       confirmPassword: '',
-      fullName: '',
+      companyName: '',
+      address: '',
     };
   }
   showToast = (msg) => {
@@ -36,19 +37,32 @@ class Register extends Component {
   changeTextConfirmPass = (text) => {
     this.setState({confirmPassword: text});
   };
-  changeTextFullName = (text) => {
-    this.setState({fullName: text});
+
+  changeTextCompanyName = (text) => {
+    this.setState({companyName: text});
+  };
+
+  changeTextAddress = (text) => {
+    this.setState({address: text});
   };
 
   moveToLogin = () => {
     this.props.navigation.navigate('Login');
   };
 
+  validateData = () => {
+    let {email, password, companyName, address} = this.state;
+    if (!email || !password || !companyName || !address) return false;
+    return true;
+  };
+
   registerAcc = async () => {
+    const {email, password, companyName, address} = this.state;
     const data = {
-      email: this.state.email,
-      password: this.state.password,
-      fullName: this.state.fullName,
+      email,
+      password,
+      companyName,
+      address,
       role: 'company',
     };
     if (!this.validateData()) {
@@ -65,7 +79,7 @@ class Register extends Component {
   render() {
     return (
       <View style={styles.container}>
-        {showLoading(this.props.loading)}
+        <Loader status={this.props.loading}></Loader>
         <View style={styles.inputView}>
           <TextInput
             style={styles.inputText}
@@ -95,15 +109,22 @@ class Register extends Component {
         <View style={styles.inputView}>
           <TextInput
             style={styles.inputText}
-            placeholder="Full Name..."
+            placeholder="Name..."
             placeholderTextColor="#003f5c"
-            onChangeText={this.changeTextFullName}
+            onChangeText={this.changeTextCompanyName}
           />
         </View>
-
+        <View style={styles.inputView}>
+          <TextInput
+            style={styles.inputText}
+            placeholder="Address..."
+            placeholderTextColor="#003f5c"
+            onChangeText={this.changeTextAddress}
+          />
+        </View>
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.loginBtn} onPress={this.registerAcc}>
-            <Text style={styles.loginText}>SIGNUP</Text>
+            <Text style={styles.loginText}>SIGNUP ACCOUNT COMPANY</Text>
           </TouchableOpacity>
         </View>
         <TouchableOpacity onPress={this.moveToLogin}>

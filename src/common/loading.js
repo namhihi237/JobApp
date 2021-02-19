@@ -4,29 +4,46 @@ import {
   StyleSheet,
   View,
   Dimensions,
+  Modal,
 } from 'react-native';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-export const showLoading = (condition) => {
-  if (condition) {
+
+export class Loader extends Component {
+  constructor(props) {
+    super(props);
+  }
+  render() {
     return (
-      <View style={styles.container}>
-        <ActivityIndicator size="large" color="#00ff00" />
-      </View>
+      <Modal
+        visible={this.props.status}
+        transparent={true}
+        animationType={'none'}>
+        <View style={styles.modalBackground}>
+          <View style={styles.activityIndicatorWrapper}>
+            <ActivityIndicator size="large" color="#00ff00" />
+          </View>
+        </View>
+      </Modal>
     );
   }
-  return null;
-};
+}
 
 const styles = StyleSheet.create({
-  container: {
-    height: windowHeight,
-    width: windowWidth,
-    position: 'absolute',
-    top: 0,
-    left: 0,
+  modalBackground: {
     flex: 1,
-    justifyContent: 'center',
-    alignContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'column',
+    justifyContent: 'space-around',
+    backgroundColor: '#00000040',
+  },
+  activityIndicatorWrapper: {
+    backgroundColor: '#FFFFFF',
+    height: 100,
+    width: 100,
+    borderRadius: 10,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-around',
   },
 });

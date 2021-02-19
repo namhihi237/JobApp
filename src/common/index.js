@@ -1,2 +1,2 @@
-import {showLoading} from './loading';
-export {showLoading};
+import {Loader} from './loading';
+export {Loader};

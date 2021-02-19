@@ -10,7 +10,7 @@ import {
 import {TextInput} from 'react-native-gesture-handler';
 import {registerIter} from '../../redux/actions';
 import {connect} from 'react-redux';
-import {showLoading} from '../../common';
+import {Loader} from '../../common';
 import RadioForm from 'react-native-simple-radio-button';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
@@ -80,13 +80,14 @@ class Register extends Component {
     this.props.navigation.navigate('Login');
   };
   registerAcc = async () => {
+    const {email, password, gender, fullName, birthday} = this.state;
     const data = {
-      email: this.state.email,
-      password: this.state.password,
-      gender: this.state.gender,
-      fullName: this.state.fullName,
+      email,
+      password,
+      gender,
+      fullName,
+      birthday,
       role: 'iter',
-      birthday: this.state.birthday,
     };
     if (!this.validateData()) {
       this.showToast('Data is empty');
@@ -102,7 +103,7 @@ class Register extends Component {
   render() {
     return (
       <View style={styles.container}>
-        {showLoading(this.props.loading)}
+        <Loader status={this.props.loading}></Loader>
         <View style={styles.inputView}>
           <TextInput
             style={styles.inputText}
@@ -157,7 +158,7 @@ class Register extends Component {
         />
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.loginBtn} onPress={this.registerAcc}>
-            <Text style={styles.loginText}>SIGNUP</Text>
+            <Text style={styles.loginText}>SIGNUP ACCOUT ITER</Text>
           </TouchableOpacity>
         </View>
         <TouchableOpacity onPress={this.moveToLogin}>

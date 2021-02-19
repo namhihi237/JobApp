@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {View, Text} from 'react-native';
 import 'react-native-gesture-handler';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -32,7 +33,7 @@ class C3 extends Component {
   }
 }
 
-class tabBarForStudent extends Component {
+class tabBarForIter extends Component {
   render() {
     return (
       <Tab.Navigator>
@@ -46,9 +47,20 @@ class tabBarForStudent extends Component {
 class tabBarForCompany extends Component {
   render() {
     return (
-      <Tab.Navigator>
-        <Tab.Screen name="Todos" component={C2} />
-        <Tab.Screen name="Settings" component={C3} />
+      <Tab.Navigator
+        screenOptions={({route}) => ({
+          tabBarIcon: ({color, size}) => {
+            if (route.name === 'Job') {
+              return <Icon name="home" size={15}></Icon>;
+            } else if (route.name === 'My Job') {
+              return <Icon name="home" size={15}></Icon>;
+            }
+          },
+        })}>
+        <Tab.Screen name="Job" component={C2} />
+        <Tab.Screen name="My Job" component={C3} />
+        <Tab.Screen name="Profile" component={C3} />
+        <Tab.Screen name="Setting" component={C3} />
       </Tab.Navigator>
     );
   }
@@ -81,7 +93,7 @@ export class App extends Component {
             <Stack.Screen name="Login" component={Login} />
             <Stack.Screen name="RegisterIter" component={RegisterIter} />
             <Stack.Screen name="RegisterCompany" component={RegisterCompany} />
-            <Stack.Screen name="MainStudent" component={tabBarForStudent} />
+            <Stack.Screen name="MainIter" component={tabBarForIter} />
             <Stack.Screen name="MainCompany" component={tabBarForCompany} />
           </Stack.Navigator>
         </NavigationContainer>

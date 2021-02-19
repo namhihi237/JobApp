@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {showLoading} from '../../common';
+import {Loader} from '../../common';
 import {
   StyleSheet,
   View,
@@ -37,17 +37,15 @@ class Login extends Component {
   moveToMain = async () => {
     const data = {email: this.state.email, password: this.state.password};
     await this.props.login(data);
-    console.log('ok');
     this.showToast(this.props.msg);
     const token = await getData('token');
     const role = await getData('role');
-    console.log(token, role);
     if (token === null || token === undefined || token === '') {
       this.props.navigation.navigate('Login');
       return;
     }
-    if (role == 0) {
-      this.props.navigation.navigate('MainStudent');
+    if (role == 'iter') {
+      this.props.navigation.navigate('MainIter');
     } else {
       this.props.navigation.navigate('MainCompany');
     }
@@ -64,7 +62,7 @@ class Login extends Component {
   render() {
     return (
       <View style={styles.container}>
-        {showLoading(this.props.loading)}
+        <Loader status={this.props.loading}></Loader>
         <View style={styles.inputView}>
           <TextInput
             onChangeText={this.changeTextEmail}
@@ -92,7 +90,9 @@ class Login extends Component {
             <Text style={styles.loginText}>LOGIN</Text>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity onPress={this.moveToRegisterIter}>
+        <TouchableOpacity
+          onPress={this.moveToRegisterIter}
+          style={{marginBottom: 10}}>
           <Text style={styles.loginText}>Signup for Iter</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={this.moveToRegisterCompany}>
