@@ -9,6 +9,7 @@ import {
   FlatList,
   Dimensions,
   SafeAreaView,
+  TouchableOpacity,
 } from 'react-native';
 
 import {connect} from 'react-redux';
@@ -35,7 +36,16 @@ class Job extends Component {
 
   renderItem = ({item}) => (
     <View style={styles.item}>
-      <Text style={styles.text}>{item.companyName}</Text>
+      <Text style={styles.text}>Company Name: {item.companyName}</Text>
+      <Text style={styles.text}>Address: {item.address}</Text>
+      <Text style={styles.text}>Description: {item.description}</Text>
+      <Text style={styles.text}>Salary: {item.salary}</Text>
+      <Text style={styles.text}>Skill: {item.skill.join(', ')}</Text>
+      <Text style={styles.text}>Position: {item.position.join(', ')}</Text>
+      <Text style={styles.text}>End time: {item.endTime}</Text>
+      <TouchableOpacity>
+        <Text style={{color: 'green'}}>Detail</Text>
+      </TouchableOpacity>
     </View>
   );
 
@@ -43,8 +53,11 @@ class Job extends Component {
     return item._id;
   };
 
+  showDetail = () => {};
+
   async componentDidMount() {
     await this.props.getJob();
+    console.log(this.props.posts);
   }
   render() {
     const {search} = this.state;
@@ -94,28 +107,25 @@ const mapStateToProps = (state) => {
 export default connect(mapStateToProps, mapDispatchToProps)(Job);
 
 const styles = StyleSheet.create({
-  container: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#003f5c',
-    flex: 1,
+  flatlist: {
+    // backgroundColor: '#003f5c',
+    marginTop: 1,
   },
   item: {
-    height: (windowHeight - 10) / 8,
+    height: (windowHeight - 10) / 4,
     marginBottom: 10,
     marginLeft: 5,
     marginRight: 5,
     backgroundColor: '#DF2455',
     shadowOpacity: 0.6,
-    justifyContent: 'center',
-    alignItems: 'center',
     flex: 1,
     display: 'flex',
-    justifyContent: 'space-around',
-    flexDirection: 'row',
+    flexDirection: 'column',
+    paddingLeft: 10,
+    paddingTop: 5,
   },
   text: {
-    fontSize: 20,
-    fontWeight: 'bold',
+    fontSize: 15,
+    // fontWeight: 'bold',
   },
 });
