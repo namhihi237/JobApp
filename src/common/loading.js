@@ -3,16 +3,16 @@ import {
   ActivityIndicator,
   StyleSheet,
   View,
-  Dimensions,
   Modal,
+  Text,
+  TouchableOpacity,
 } from 'react-native';
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
 
 export class Loader extends Component {
   constructor(props) {
     super(props);
   }
+
   render() {
     return (
       <Modal
@@ -22,6 +22,7 @@ export class Loader extends Component {
         <View style={styles.modalBackground}>
           <View style={styles.activityIndicatorWrapper}>
             <ActivityIndicator size="large" color="#00ff00" />
+            <Text>{this.props.msg}</Text>
           </View>
         </View>
       </Modal>

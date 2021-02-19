@@ -103,7 +103,7 @@ class Register extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Loader status={this.props.loading}></Loader>
+        <Loader status={this.props.loading} msg={'Registering'}></Loader>
         <View style={styles.inputView}>
           <TextInput
             style={styles.inputText}

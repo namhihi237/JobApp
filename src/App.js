@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {Landing, Login, RegisterIter, RegisterCompany} from './components';
+import {Landing, Login, RegisterIter, RegisterCompany, Job} from './components';
 import {store} from './redux/store';
 import {Provider} from 'react-redux';
 import {storeData, getData} from './utils';
@@ -36,9 +36,26 @@ class C3 extends Component {
 class tabBarForIter extends Component {
   render() {
     return (
-      <Tab.Navigator>
-        <Tab.Screen name="Todos" component={C3} />
-        <Tab.Screen name="Settings" component={C2} />
+      <Tab.Navigator
+        screenOptions={({route}) => ({
+          tabBarIcon: ({color, size}) => {
+            if (route.name === 'Home') {
+              return <Icon name="home" size={28}></Icon>;
+            } else if (route.name === 'My CV') {
+              return <Icon name="contact-page" size={28}></Icon>;
+            } else if (route.name === 'Setting') {
+              return <Icon name="settings" size={28}></Icon>;
+            }
+          },
+        })}
+        tabBarOptions={{
+          activeTintColor: 'tomato',
+          inactiveTintColor: 'gray',
+        }}>
+        <Tab.Screen name="Home" component={Job} />
+        <Tab.Screen name="My CV" component={C2} />
+        <Tab.Screen name="Profile" component={C2} />
+        <Tab.Screen name="Setting" component={C2} />
       </Tab.Navigator>
     );
   }
@@ -50,14 +67,20 @@ class tabBarForCompany extends Component {
       <Tab.Navigator
         screenOptions={({route}) => ({
           tabBarIcon: ({color, size}) => {
-            if (route.name === 'Job') {
-              return <Icon name="home" size={15}></Icon>;
+            if (route.name === 'Home') {
+              return <Icon name="home" size={28}></Icon>;
             } else if (route.name === 'My Job') {
-              return <Icon name="home" size={15}></Icon>;
+              return <Icon name="work" size={28}></Icon>;
+            } else if (route.name === 'Setting') {
+              return <Icon name="settings" size={28}></Icon>;
             }
           },
-        })}>
-        <Tab.Screen name="Job" component={C2} />
+        })}
+        tabBarOptions={{
+          activeTintColor: 'tomato',
+          inactiveTintColor: 'gray',
+        }}>
+        <Tab.Screen name="Home" component={Job} />
         <Tab.Screen name="My Job" component={C3} />
         <Tab.Screen name="Profile" component={C3} />
         <Tab.Screen name="Setting" component={C3} />
@@ -78,6 +101,7 @@ export class App extends Component {
 
   clear = async () => {
     await storeData('token', '');
+    await storeData('role', '');
   };
 
   render() {

@@ -34,7 +34,17 @@ class Login extends Component {
     this.props.navigation.navigate('RegisterCompany');
   };
 
+  validateData = () => {
+    const {email, password} = this.state;
+    if (!email || !password) return false;
+    return true;
+  };
+
   moveToMain = async () => {
+    if (!this.validateData()) {
+      this.showToast('Email or password is empty!');
+      return;
+    }
     const data = {email: this.state.email, password: this.state.password};
     await this.props.login(data);
     this.showToast(this.props.msg);
@@ -62,7 +72,7 @@ class Login extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Loader status={this.props.loading}></Loader>
+        <Loader status={this.props.loading} msg={'Signing in '}></Loader>
         <View style={styles.inputView}>
           <TextInput
             onChangeText={this.changeTextEmail}
