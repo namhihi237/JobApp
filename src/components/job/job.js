@@ -10,6 +10,9 @@ import {
   Dimensions,
   SafeAreaView,
   TouchableOpacity,
+  Modal,
+  TextInput,
+  TouchableHighlight,
 } from 'react-native';
 
 import {connect} from 'react-redux';
@@ -18,11 +21,33 @@ import {getJob} from '../../redux/actions';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
+class JobDetail extends Component {
+  constructor(props) {
+    super(props);
+  }
+  render() {
+    const {item} = this.props;
+    return (
+      <View style={styles.itemDetail}>
+        <Text style={styles.text}>Company Name: {item.companyName}</Text>
+        <Text style={styles.text}>Address: {item.address}</Text>
+        <Text style={styles.text}>Description: {item.description}</Text>
+        <Text style={styles.text}>Salary: {item.salary}</Text>
+        <Text style={styles.text}>Skill: {item.skill.join(', ')}</Text>
+        <Text style={styles.text}>Position: {item.position.join(', ')}</Text>
+        <Text style={styles.text}>End time: {item.endTime}</Text>
+      </View>
+    );
+  }
+}
+
 class Job extends Component {
   constructor(props) {
     super(props);
     this.state = {
       search: '',
+      modalVisible: false,
+      item: null,
     };
   }
 
@@ -37,13 +62,10 @@ class Job extends Component {
   renderItem = ({item}) => (
     <View style={styles.item}>
       <Text style={styles.text}>Company Name: {item.companyName}</Text>
-      <Text style={styles.text}>Address: {item.address}</Text>
-      <Text style={styles.text}>Description: {item.description}</Text>
       <Text style={styles.text}>Salary: {item.salary}</Text>
       <Text style={styles.text}>Skill: {item.skill.join(', ')}</Text>
       <Text style={styles.text}>Position: {item.position.join(', ')}</Text>
-      <Text style={styles.text}>End time: {item.endTime}</Text>
-      <TouchableOpacity>
+      <TouchableOpacity onPress={() => this.showDetail(item)}>
         <Text style={{color: 'green'}}>Detail</Text>
       </TouchableOpacity>
     </View>
@@ -53,19 +75,27 @@ class Job extends Component {
     return item._id;
   };
 
-  showDetail = () => {};
-
   async componentDidMount() {
     await this.props.getJob();
-    console.log(this.props.posts);
   }
+
+  setModalVisible = (visible) => {
+    this.setState({modalVisible: visible});
+  };
+
+  showDetail = (item) => {
+    this.setModalVisible(true);
+    this.setState({item});
+  };
+
   render() {
-    const {search} = this.state;
+    const {search, modalVisible, item} = this.state;
 
     if (this.props.status != 200 && this.props.status != 304) {
       this.showToast(this.props.msg);
       return (
         <View>
+          <Loader status={this.props.loading}></Loader>
           <Text>No data</Text>
         </View>
       );
@@ -87,6 +117,36 @@ class Job extends Component {
             keyExtractor={this.keyExtractor}
             renderItem={this.renderItem}></FlatList>
         </SafeAreaView>
+        <View style={styles.centeredView}>
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={() => {
+              // Alert.alert('Modal has been closed.');
+            }}>
+            <View style={styles.centeredView}>
+              <View style={styles.modalView}>
+                <Text style={styles.modalText}>Job Detail</Text>
+                <JobDetail item={item}></JobDetail>
+                <View style={styles.containerButton}>
+                  <TouchableHighlight
+                    style={styles.openButton}
+                    onPress={() => {
+                      this.setModalVisible(!modalVisible);
+                    }}>
+                    <Text style={styles.textStyle}>Cancel</Text>
+                  </TouchableHighlight>
+                  <TouchableHighlight
+                    style={styles.openButton}
+                    onPress={this.addItem}>
+                    <Text style={styles.textStyle}>Appy</Text>
+                  </TouchableHighlight>
+                </View>
+              </View>
+            </View>
+          </Modal>
+        </View>
       </View>
     );
   }
@@ -112,7 +172,7 @@ const styles = StyleSheet.create({
     marginTop: 1,
   },
   item: {
-    height: (windowHeight - 10) / 4,
+    height: (windowHeight - 10) / 6,
     marginBottom: 10,
     marginLeft: 5,
     marginRight: 5,
@@ -124,8 +184,59 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     paddingTop: 5,
   },
+  itemDetail: {
+    height: (windowHeight - 10) / 4,
+    marginBottom: 10,
+    marginLeft: 5,
+    marginRight: 5,
+    backgroundColor: '#6ca2c1',
+    shadowOpacity: 0.6,
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    paddingLeft: 10,
+    paddingTop: 5,
+    borderRadius: 10,
+  },
   text: {
     fontSize: 15,
     // fontWeight: 'bold',
+  },
+  // modal
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    height: 300,
+    width: 300,
+    padding: 20,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+  },
+  openButton: {
+    backgroundColor: '#2196F3',
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+    marginLeft: 10,
+    marginRight: 10,
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  containerButton: {
+    flexDirection: 'row',
   },
 });

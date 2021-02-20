@@ -12,7 +12,6 @@ export const login = (data) => async (dispatch) => {
   let result;
   try {
     result = await axios.post(LOGIN_URL, data);
-
     let token = result.data.token;
     // storeData('userId', result.data.user._id);
     storeData('token', token);
