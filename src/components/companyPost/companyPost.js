@@ -8,15 +8,10 @@ import {
   FlatList,
   Dimensions,
   TouchableOpacity,
-  Modal,
-  TextInput,
   Alert,
-  KeyboardAvoidingView,
 } from 'react-native';
 import {connect} from 'react-redux';
 import {getCompanyPost} from '../../redux/actions';
-
-import {FormInfo} from './FormInfo';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -27,7 +22,6 @@ class CompanyPost extends Component {
     this.state = {
       dataAccept: [],
       dataWait: [],
-      modalVisible: false,
     };
   }
 
@@ -70,10 +64,6 @@ class CompanyPost extends Component {
     return item._id;
   };
 
-  showModalAdd = () => {
-    this.setModalVisible(true);
-  };
-
   async componentDidMount() {
     // const unsubscribe = this.props.navigation.addListener('focus', async () => {
     //   await this.props.getCompanyPost();
@@ -86,8 +76,12 @@ class CompanyPost extends Component {
     });
   }
 
+  moveToCreatePost = () => {
+    this.props.navigation.navigate('CreatePost');
+  };
+
   render() {
-    const {dataAccept, dataWait, modalVisible} = this.state;
+    const {dataAccept, dataWait} = this.state;
     if (this.props.status != 200 && this.props.status != 304) {
       return (
         <View>
@@ -117,39 +111,11 @@ class CompanyPost extends Component {
             keyExtractor={this.keyExtractor}
           />
         </View>
-        <TouchableOpacity style={styles.buttonAdd} onPress={this.showModalAdd}>
+        <TouchableOpacity
+          style={styles.buttonAdd}
+          onPress={this.moveToCreatePost}>
           <Text style={styles.textAdd}>+</Text>
         </TouchableOpacity>
-        <View style={styles.centeredView}>
-          <Modal
-            animationType="slide"
-            transparent={true}
-            visible={modalVisible}
-            onRequestClose={() => {
-              // Alert.alert('Modal has been closed.');
-            }}>
-            <View style={styles.centeredView}>
-              <View style={styles.modalView}>
-                <Text style={styles.modalText}>Create New Job</Text>
-                <FormInfo></FormInfo>
-                <View style={styles.containerButton}>
-                  <TouchableOpacity
-                    style={styles.openButton}
-                    onPress={() => {
-                      this.setModalVisible(!modalVisible);
-                    }}>
-                    <Text style={styles.textStyle}>Cancel</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={styles.openButton}
-                    onPress={this.addItem}>
-                    <Text style={styles.textStyle}>Create</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </View>
-          </Modal>
-        </View>
       </View>
     );
   }
@@ -216,45 +182,5 @@ const styles = StyleSheet.create({
   textAdd: {
     fontSize: 30,
     fontWeight: '900',
-  },
-  //modal
-  centeredView: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 22,
-  },
-  modalView: {
-    margin: 20,
-    backgroundColor: 'white',
-    borderRadius: 20,
-    height: 400,
-    width: 300,
-    padding: 20,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-  },
-  openButton: {
-    backgroundColor: '#2196F3',
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
-    marginLeft: 10,
-    marginRight: 10,
-  },
-  textStyle: {
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  containerButton: {
-    flexDirection: 'row',
-  },
-  modalText: {
-    fontSize: 20,
   },
 });

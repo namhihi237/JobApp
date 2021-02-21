@@ -6,4 +6,5 @@ export const apiUrl = {
   REGISTER_COMPANY_URL: `${baseUrl}/api/v1/auth/register-company`,
   GET_JOBS_URL: `${baseUrl}/api/v1/posts/accept`,
   GET_COMPANY_POST: `${baseUrl}/api/v1/posts/company`,
+  CREATE_POST: `${baseUrl}/api/v1/posts`,
 };

@@ -7,6 +7,7 @@ import {
   registerCompany,
   getJob,
   getCompanyPost,
+  createPost,
 } from '../reducer/';
 
 const AppReduces = combineReducers({
@@ -15,6 +16,7 @@ const AppReduces = combineReducers({
   registerCompany,
   getJob,
   getCompanyPost,
+  createPost,
 });
 
 const rootReducer = (state, action) => {

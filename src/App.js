@@ -12,6 +12,7 @@ import {
   RegisterCompany,
   Job,
   CompanyPost,
+  CreatePost,
 } from './components';
 import {store} from './redux/store';
 import {Provider} from 'react-redux';
@@ -20,6 +21,7 @@ import {storeData, getData} from './utils';
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
+const CompanyPostStack = createStackNavigator();
 class C2 extends Component {
   render() {
     return (
@@ -34,7 +36,7 @@ class C3 extends Component {
   render() {
     return (
       <View>
-        <Text>COmpany</Text>
+        <Text>Cmpany</Text>
       </View>
     );
   }
@@ -68,6 +70,22 @@ class tabBarForIter extends Component {
   }
 }
 
+class CompanyPostnav extends Component {
+  render() {
+    return (
+      <CompanyPostStack.Navigator initialRouteName="Loading">
+        <Stack.Screen
+          name="MyPost"
+          component={CompanyPost}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen name="CreatePost" component={CreatePost} />
+      </CompanyPostStack.Navigator>
+    );
+  }
+}
 class tabBarForCompany extends Component {
   render() {
     return (
@@ -88,7 +106,7 @@ class tabBarForCompany extends Component {
           inactiveTintColor: 'gray',
         }}>
         <Tab.Screen name="Home" component={Job} />
-        <Tab.Screen name="My Post" component={CompanyPost} />
+        <Tab.Screen name="My Post" component={CompanyPostnav} />
         <Tab.Screen name="Profile" component={C3} />
         <Tab.Screen name="Setting" component={C3} />
       </Tab.Navigator>
