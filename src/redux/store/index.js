@@ -1,13 +1,20 @@
 import thunkMiddleware from 'redux-thunk';
 import {createStore, combineReducers, applyMiddleware} from 'redux';
 
-import {login, registerIter, registerCompany, getJob} from '../reducer/';
+import {
+  login,
+  registerIter,
+  registerCompany,
+  getJob,
+  getCompanyPost,
+} from '../reducer/';
 
 const AppReduces = combineReducers({
   login,
   registerIter,
   registerCompany,
   getJob,
+  getCompanyPost,
 });
 
 const rootReducer = (state, action) => {

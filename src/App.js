@@ -5,7 +5,14 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {Landing, Login, RegisterIter, RegisterCompany, Job} from './components';
+import {
+  Landing,
+  Login,
+  RegisterIter,
+  RegisterCompany,
+  Job,
+  CompanyPost,
+} from './components';
 import {store} from './redux/store';
 import {Provider} from 'react-redux';
 import {storeData, getData} from './utils';
@@ -69,7 +76,7 @@ class tabBarForCompany extends Component {
           tabBarIcon: ({color, size}) => {
             if (route.name === 'Home') {
               return <Icon name="home" size={28}></Icon>;
-            } else if (route.name === 'My Job') {
+            } else if (route.name === 'My Post') {
               return <Icon name="work" size={28}></Icon>;
             } else if (route.name === 'Setting') {
               return <Icon name="settings" size={28}></Icon>;
@@ -81,7 +88,7 @@ class tabBarForCompany extends Component {
           inactiveTintColor: 'gray',
         }}>
         <Tab.Screen name="Home" component={Job} />
-        <Tab.Screen name="My Job" component={C3} />
+        <Tab.Screen name="My Post" component={CompanyPost} />
         <Tab.Screen name="Profile" component={C3} />
         <Tab.Screen name="Setting" component={C3} />
       </Tab.Navigator>

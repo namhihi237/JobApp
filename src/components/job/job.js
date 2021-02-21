@@ -75,8 +75,12 @@ class Job extends Component {
     return item._id;
   };
 
-  async componentDidMount() {
-    await this.props.getJob();
+  componentDidMount() {
+    const unsubscribe = this.props.navigation.addListener('focus', async () => {
+      await this.props.getJob();
+    });
+
+    return unsubscribe;
   }
 
   setModalVisible = (visible) => {
@@ -92,7 +96,6 @@ class Job extends Component {
     const {search, modalVisible, item} = this.state;
 
     if (this.props.status != 200 && this.props.status != 304) {
-      this.showToast(this.props.msg);
       return (
         <View>
           <Loader status={this.props.loading}></Loader>
