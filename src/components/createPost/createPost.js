@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import CheckboxList from 'rn-checkbox-list';
+import SelectMultiple from 'react-native-select-multiple';
 import {Loader} from '../../common';
 import {
   StyleSheet,
@@ -19,31 +19,30 @@ import {connect} from 'react-redux';
 import {createPost} from '../../redux/actions';
 
 const dataSkill = [
-  {id: 1, name: 'C'},
-  {id: 2, name: 'C++'},
-  {id: 3, name: 'C#'},
-  {id: 4, name: 'Java'},
-  {id: 5, name: 'Javascript'},
-  {id: 6, name: 'PHP'},
-  {id: 7, name: 'Python'},
-  {id: 8, name: 'Nodejs'},
-  {id: 9, name: 'Spring'},
-  {id: 10, name: 'Flask'},
-  {id: 11, name: 'Vuejs'},
-  {id: 12, name: 'ReactJs'},
-  {id: 13, name: 'DotNet'},
+  'C',
+  'C++',
+  'C#',
+  'Java',
+  'Javascript',
+  'PHP',
+  'Python',
+  'Nodejs',
+  'Spring',
+  'Flask',
+  'Vuejs',
+  'ReactJs',
+  'DotNet',
 ];
-
 const dataPosition = [
-  {id: 1, name: 'Inter'},
-  {id: 2, name: 'Fresher'},
-  {id: 3, name: 'Junio'},
-  {id: 4, name: 'Senio'},
-  {id: 5, name: 'Project Manager'},
-  {id: 6, name: 'Team Leader'},
-  {id: 7, name: 'Tester'},
-  {id: 8, name: 'Developer'},
-  {id: 9, name: 'Software Engineer'},
+  'Inter',
+  'Fresher',
+  'Junio',
+  'Senio',
+  'Project Manager',
+  'Team Leader',
+  'Tester',
+  'Developer',
+  'Software Engineer',
 ];
 class CreatePost extends Component {
   constructor(props) {
@@ -51,12 +50,14 @@ class CreatePost extends Component {
     this.state = {
       modalVisible: false,
       skill: false,
-      positionId: [],
-      skillId: [],
+      selectedSkill: [],
+      selectedPos: [],
       salary: '',
       address: '',
       endTime: '',
       description: '',
+      textSkill: '',
+      textPos: '',
     };
   }
 
@@ -78,13 +79,20 @@ class CreatePost extends Component {
     this.setState({modalVisible: true, skill: false});
   };
 
-  setSkills = (ids) => {
-    console.log(ids);
-    // this.setState({skillId: ids});
+  onChangeSalary = (salary) => {
+    this.setState({salary});
   };
 
-  setPos = (ids) => {
-    this.setState({positionId: ids});
+  onChangeAddress = (address) => {
+    this.setState({address});
+  };
+
+  onChangeEndTime = (endTime) => {
+    this.setState({endTime});
+  };
+
+  onChangeDesciption = (description) => {
+    this.setState({description});
   };
 
   validateData = () => {
@@ -93,16 +101,16 @@ class CreatePost extends Component {
       description,
       address,
       endTime,
-      skillId,
-      positionId,
+      selectedSkill,
+      selectedPos,
     } = this.state;
     if (!salary || !description || !address || !endTime) return false;
-    if (skillId.length == 0 || positionId.length == 0) return false;
+    if (selectedSkill.length == 0 || selectedPos.length == 0) return false;
     return true;
   };
 
-  createPost = () => {
-    if (this.validateData()) {
+  createCompanyPost = async () => {
+    if (!this.validateData()) {
       this.showToast('Data is empty!');
       return;
     }
@@ -111,62 +119,68 @@ class CreatePost extends Component {
       description,
       address,
       endTime,
-      skillId,
-      positionId,
+      selectedSkill,
+      selectedPos,
     } = this.state;
 
-    const skill = dataSkill
-      .filter((e) => skillId.includes(e.id))
-      .map((e) => e.name);
-
-    const position = dataPosition
-      .filter((e) => positionId.includes(e.id))
-
-      .map((e) => e.name);
-    console.log(skill);
-    const data = {};
     try {
-    } catch (error) {}
+      const skill = selectedSkill.map((e) => e.value);
+      const position = selectedPos.map((e) => e.value);
+      const data = {skill, position, salary, address, endTime, description};
+      console.log(data);
+      await this.props.createPost(data);
+      this.showToast(this.props.msg);
+      if (this.props.status != 200) {
+        return;
+      }
+      this.props.navigation.goBack();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  onSelectionsChangesKill = (selectedSkill) => {
+    const skills = selectedSkill.map((e) => e.value).join(', ');
+    this.setState({selectedSkill, textSkill: skills});
+  };
+
+  onSelectionsChangePos = (selectedPos) => {
+    const pos = selectedPos.map((e) => e.value).join(' ,');
+    this.setState({selectedPos, textPos: pos});
   };
 
   showSkill = () => {
     if (!this.state.skill)
       return (
         <View style={{height: 300, width: 200}}>
-          <CheckboxList
-            theme="red"
-            listItems={dataPosition}
-            onChange={({ids, items}) => this.setPos(ids)}
-            listItemStyle={{borderBottomColor: '#eee', borderBottomWidth: 1}}
-            checkboxProp={{boxType: 'square'}}
-            selectedListItems={this.state.positions}
-            // onLoading={() => <LoaderComponent />}
+          <SelectMultiple
+            items={dataPosition}
+            selectedItems={this.state.selectedPos}
+            onSelectionsChange={this.onSelectionsChangePos}
           />
         </View>
       );
     return (
       <View style={{height: 300, width: 200}}>
-        <CheckboxList
-          theme="red"
-          listItems={dataSkill}
-          onChange={({ids, items}) => this.setSkills(ids)}
-          listItemStyle={{borderBottomColor: '#eee', borderBottomWidth: 1}}
-          checkboxProp={{boxType: 'square'}}
-          selectedListItems={this.state.skills}
-          // onLoading={() => <LoaderComponent />}
+        <SelectMultiple
+          items={dataSkill}
+          selectedItems={this.state.selectedSkill}
+          onSelectionsChange={this.onSelectionsChangesKill}
         />
       </View>
     );
   };
 
   render() {
-    const {modalVisible} = this.state;
+    const {modalVisible, textSkill, textPos} = this.state;
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <KeyboardAvoidingView style={{flex: 1}}>
+          <Loader status={this.props.loading} msg={'Creating '}></Loader>
           <View style={styles.container}>
             <View style={{flexDirection: 'row'}}>
               <TextInput
+                value={textSkill}
                 style={styles.textInput}
                 editable={false}
                 selectTextOnFocus={false}
@@ -179,6 +193,7 @@ class CreatePost extends Component {
             </View>
             <View style={{flexDirection: 'row'}}>
               <TextInput
+                value={textPos}
                 style={styles.textInput}
                 editable={false}
                 selectTextOnFocus={false}
@@ -191,14 +206,18 @@ class CreatePost extends Component {
             </View>
             <TextInput
               style={styles.textInput}
+              onChangeText={this.onChangeSalary}
               placeholder="Salary..."></TextInput>
             <TextInput
               style={styles.textInput}
+              onChangeText={this.onChangeAddress}
               placeholder="Address..."></TextInput>
             <TextInput
               style={styles.textInput}
+              onChangeText={this.onChangeEndTime}
               placeholder="End Time..."></TextInput>
             <TextInput
+              onChangeText={this.onChangeDesciption}
               multiline={true}
               numberOfLines={4}
               style={styles.desInput}
@@ -207,7 +226,7 @@ class CreatePost extends Component {
             />
             <TouchableOpacity
               style={styles.openButton}
-              onPress={this.createPost}>
+              onPress={this.createCompanyPost}>
               <Text style={styles.textStyle}>Create</Text>
             </TouchableOpacity>
           </View>
@@ -247,7 +266,7 @@ const mapDispatchToProps = {
 };
 
 const mapStateToProps = (state) => {
-  const {loading, posts, status, msg} = state.createPost;
+  const {loading, status, msg} = state.createPost;
   return {
     loading,
     status,
@@ -267,6 +286,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     paddingLeft: 6,
     marginLeft: 100,
+    color: 'black',
   },
   desInput: {
     borderColor: 'black',

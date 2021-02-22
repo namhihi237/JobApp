@@ -64,16 +64,16 @@ class CompanyPost extends Component {
     return item._id;
   };
 
-  async componentDidMount() {
-    // const unsubscribe = this.props.navigation.addListener('focus', async () => {
-    //   await this.props.getCompanyPost();
-    // });
-    // return unsubscribe;
-    await this.props.getCompanyPost();
-    this.setState({
-      dataWait: this.props.posts.filter((e) => e.accept == false),
-      dataAccept: this.props.posts.filter((e) => e.accept == true),
+  componentDidMount() {
+    const unsubscribe = this.props.navigation.addListener('focus', async () => {
+      await this.props.getCompanyPost();
+      this.setState({
+        dataWait: this.props.posts.filter((e) => e.accept == false),
+        dataAccept: this.props.posts.filter((e) => e.accept == true),
+      });
     });
+
+    return unsubscribe;
   }
 
   moveToCreatePost = () => {
