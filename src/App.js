@@ -6,6 +6,12 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {
+  createDrawerNavigator,
+  DrawerContentScrollView,
+  DrawerItemList,
+  DrawerItem,
+} from '@react-navigation/drawer';
+import {
   Landing,
   Login,
   RegisterIter,
@@ -42,6 +48,34 @@ class C3 extends Component {
   }
 }
 
+// custome draw tab setting
+const Drawer = createDrawerNavigator();
+class SettingDrawer extends Component {
+  render() {
+    return (
+      <Drawer.Navigator
+        initialRouteName="C2"
+        drawerContent={(props) => {
+          return (
+            <DrawerContentScrollView {...props}>
+              <DrawerItemList {...props} />
+              <DrawerItem
+                label="Logout"
+                onPress={async () => {
+                  await storeData('token', '');
+                  await storeData('role', '');
+                  props.navigation.navigate('Loading');
+                }}
+              />
+            </DrawerContentScrollView>
+          );
+        }}>
+        <Drawer.Screen name="C2" component={C2} />
+        <Drawer.Screen name="C3" component={C3} />
+      </Drawer.Navigator>
+    );
+  }
+}
 class tabBarForIter extends Component {
   render() {
     return (
@@ -64,7 +98,7 @@ class tabBarForIter extends Component {
         <Tab.Screen name="Home" component={Job} />
         <Tab.Screen name="My CV" component={C2} />
         <Tab.Screen name="Profile" component={C2} />
-        <Tab.Screen name="Setting" component={C2} />
+        <Tab.Screen name="Setting" component={SettingDrawer} />
       </Tab.Navigator>
     );
   }
@@ -108,7 +142,19 @@ class tabBarForCompany extends Component {
         <Tab.Screen name="Home" component={Job} />
         <Tab.Screen name="My Post" component={CompanyPostnav} />
         <Tab.Screen name="Profile" component={C3} />
-        <Tab.Screen name="Setting" component={C3} />
+        <Tab.Screen
+          name="Setting"
+          component={SettingDrawer}
+          options={{
+            headerRight: () => (
+              <Button
+                onPress={() => alert('This is a button!')}
+                title="Info"
+                color="#00cc00"
+              />
+            ),
+          }}
+        />
       </Tab.Navigator>
     );
   }
@@ -117,8 +163,7 @@ class tabBarForCompany extends Component {
 export class App extends Component {
   checkLogin = async () => {
     const token = await getData('token');
-
-    if (token === '' || token === null || token === undefined) {
+    if (!token) {
       return false;
     }
     return true;
@@ -129,6 +174,14 @@ export class App extends Component {
     await storeData('role', '');
   };
 
+  initScreen = (async () => {
+    const check = await this.checkLogin();
+    if (check) {
+      const role = await getData('role');
+      return role == 'iter' ? 'MainIter' : 'MainCompany';
+    }
+    return 'Loading';
+  })();
   render() {
     return (
       <Provider store={store}>

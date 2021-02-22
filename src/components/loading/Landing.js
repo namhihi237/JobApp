@@ -20,8 +20,8 @@ export class Landing extends Component {
       this.props.navigation.navigate('Login');
     } else {
       const role = await getData('role');
-      if (role == 0) {
-        this.props.navigation.navigate('MainStudent');
+      if (role == 'iter') {
+        this.props.navigation.navigate('MainIter');
       } else {
         this.props.navigation.navigate('MainCompany');
       }

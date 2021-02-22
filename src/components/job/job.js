@@ -17,7 +17,7 @@ import {
 
 import {connect} from 'react-redux';
 import {getJob} from '../../redux/actions';
-
+import {getData} from '../../utils';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
@@ -48,6 +48,7 @@ class Job extends Component {
       search: '',
       modalVisible: false,
       item: null,
+      role: '',
     };
   }
 
@@ -78,6 +79,8 @@ class Job extends Component {
   componentDidMount() {
     const unsubscribe = this.props.navigation.addListener('focus', async () => {
       await this.props.getJob();
+      const role = await getData('role');
+      this.setState({role});
     });
 
     return unsubscribe;
@@ -90,6 +93,17 @@ class Job extends Component {
   showDetail = (item) => {
     this.setModalVisible(true);
     this.setState({item});
+  };
+
+  renderButtonApply = () => {
+    if (this.state.role == 'iter') {
+      return (
+        <TouchableHighlight style={styles.openButton} onPress={this.addItem}>
+          <Text style={styles.textStyle}>Appy</Text>
+        </TouchableHighlight>
+      );
+    }
+    return null;
   };
 
   render() {
@@ -140,11 +154,7 @@ class Job extends Component {
                     }}>
                     <Text style={styles.textStyle}>Cancel</Text>
                   </TouchableHighlight>
-                  <TouchableHighlight
-                    style={styles.openButton}
-                    onPress={this.addItem}>
-                    <Text style={styles.textStyle}>Appy</Text>
-                  </TouchableHighlight>
+                  {this.renderButtonApply()}
                 </View>
               </View>
             </View>
