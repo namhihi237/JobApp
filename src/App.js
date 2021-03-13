@@ -19,6 +19,8 @@ import {
   Job,
   CompanyPost,
   CreatePost,
+  Forgot,
+  Confirm,
 } from './components';
 import {store} from './redux/store';
 import {Provider} from 'react-redux';
@@ -42,13 +44,12 @@ class C3 extends Component {
   render() {
     return (
       <View>
-        <Text>Cmpany</Text>
+        <Text>Company</Text>
       </View>
     );
   }
 }
 
-// custome draw tab setting
 const Drawer = createDrawerNavigator();
 class SettingDrawer extends Component {
   render() {
@@ -193,6 +194,8 @@ export class App extends Component {
             }}>
             <Stack.Screen name="Loading" component={Landing} />
             <Stack.Screen name="Login" component={Login} />
+            <Stack.Screen name="ForgotPassword" component={Forgot} />
+            <Stack.Screen name="ConfirmCode" component={Confirm} />
             <Stack.Screen name="RegisterIter" component={RegisterIter} />
             <Stack.Screen name="RegisterCompany" component={RegisterCompany} />
             <Stack.Screen name="MainIter" component={tabBarForIter} />

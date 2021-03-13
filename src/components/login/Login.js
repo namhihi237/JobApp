@@ -68,7 +68,9 @@ class Login extends Component {
   changeTextPass = (text) => {
     this.setState({password: text});
   };
-
+  moveToForgotPassword = () => {
+    this.props.navigation.navigate('ForgotPassword');
+  };
   render() {
     return (
       <View style={styles.container}>
@@ -91,7 +93,7 @@ class Login extends Component {
           />
         </View>
 
-        <TouchableOpacity>
+        <TouchableOpacity onPress={this.moveToForgotPassword}>
           <Text style={styles.forgot}>Forgot Password?</Text>
         </TouchableOpacity>
 
@@ -169,5 +171,4 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
   },
-  loginText: {},
 });

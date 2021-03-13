@@ -11,13 +11,6 @@ import {TextInput} from 'react-native-gesture-handler';
 import {registerIter} from '../../redux/actions';
 import {connect} from 'react-redux';
 import {Loader} from '../../common';
-import RadioForm from 'react-native-simple-radio-button';
-import DateTimePickerModal from 'react-native-modal-datetime-picker';
-
-var radio_props = [
-  {label: 'Male', value: 'Male'},
-  {label: 'Female', value: 'Female'},
-];
 
 class Register extends Component {
   constructor(props) {
@@ -27,9 +20,6 @@ class Register extends Component {
       password: '',
       confirmPassword: '',
       fullName: '',
-      gender: 'Male',
-      birthday: 'YYYY/MM/DD',
-      isDatePickerVisible: false,
     };
   }
   showToast = (msg) => {
@@ -51,28 +41,13 @@ class Register extends Component {
     this.setState({fullName: text});
   };
 
-  setGender = (value) => {
-    this.setState({gender: value});
-  };
-
-  // birthday
-  showDatePicker = () => {
-    this.setState({isDatePickerVisible: true});
-  };
-
-  handleConfirm = (value) => {
-    let birthday = `${value.getFullYear()}/${value.getMonth()}/${value.getDate()}`;
-    this.setState({birthday});
-  };
-
   hideDatePicker = () => {
     this.setState({isDatePickerVisible: false});
   };
 
   validateData = () => {
-    let {email, password, fullName, gender, birthday} = this.state;
-    if (!email || !password || !fullName || !gender || !birthday) return false;
-    if (birthday == 'YYYY/MM/DD') return false;
+    let {email, password, fullName} = this.state;
+    if (!email || !password || !fullName) return false;
     return true;
   };
 
@@ -80,14 +55,11 @@ class Register extends Component {
     this.props.navigation.navigate('Login');
   };
   registerAcc = async () => {
-    const {email, password, gender, fullName, birthday} = this.state;
+    const {email, password, fullName} = this.state;
     const data = {
       email,
       password,
-      gender,
       fullName,
-      birthday,
-      role: 'iter',
     };
     if (!this.validateData()) {
       this.showToast('Data is empty');
@@ -138,27 +110,10 @@ class Register extends Component {
             onChangeText={this.changeTextFullName}
           />
         </View>
-        <RadioForm
-          radio_props={radio_props}
-          formHorizontal={true}
-          buttonColor={'#2196f3'}
-          animation={true}
-          onPress={this.setGender}
-        />
 
-        <View style={styles.birthday}>
-          <Button title="Birthday" onPress={this.showDatePicker} />
-          <Text style={styles.birthday_text}>{this.state.birthday}</Text>
-        </View>
-        <DateTimePickerModal
-          isVisible={this.state.isDatePickerVisible}
-          mode="date"
-          onConfirm={this.handleConfirm}
-          onCancel={this.hideDatePicker}
-        />
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.loginBtn} onPress={this.registerAcc}>
-            <Text style={styles.loginText}>SIGNUP ACCOUT ITER</Text>
+            <Text style={styles.loginText}>SIGNUP ACCOUNT ITER</Text>
           </TouchableOpacity>
         </View>
         <TouchableOpacity onPress={this.moveToLogin}>
@@ -228,12 +183,4 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   type: {height: 40, width: 200},
-  birthday: {
-    flexDirection: 'row',
-  },
-  birthday_text: {
-    fontSize: 20,
-    marginTop: 5,
-    marginLeft: 10,
-  },
 });

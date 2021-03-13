@@ -67,6 +67,8 @@ class CompanyPost extends Component {
   componentDidMount() {
     const unsubscribe = this.props.navigation.addListener('focus', async () => {
       await this.props.getCompanyPost();
+      this.showToast(this.props.msg);
+      console.log(this.props.status);
       this.setState({
         dataWait: this.props.posts.filter((e) => e.accept == false),
         dataAccept: this.props.posts.filter((e) => e.accept == true),

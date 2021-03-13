@@ -29,15 +29,15 @@ const dataSkill = [
   'Nodejs',
   'Spring',
   'Flask',
-  'Vuejs',
+  'VueJs',
   'ReactJs',
   'DotNet',
 ];
 const dataPosition = [
   'Inter',
   'Fresher',
-  'Junio',
-  'Senio',
+  'Junior',
+  'Senior',
   'Project Manager',
   'Team Leader',
   'Tester',
@@ -91,7 +91,7 @@ class CreatePost extends Component {
     this.setState({endTime});
   };
 
-  onChangeDesciption = (description) => {
+  onChangeDescription = (description) => {
     this.setState({description});
   };
 
@@ -217,7 +217,7 @@ class CreatePost extends Component {
               onChangeText={this.onChangeEndTime}
               placeholder="End Time..."></TextInput>
             <TextInput
-              onChangeText={this.onChangeDesciption}
+              onChangeText={this.onChangeDescription}
               multiline={true}
               numberOfLines={4}
               style={styles.desInput}

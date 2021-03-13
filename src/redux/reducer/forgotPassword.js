@@ -1,16 +1,17 @@
 import {actionType} from '../acitonType';
-const {APPLY_JOB, APPLY_JOB_FAIL, APPLY_JOB_SUCCESS} = actionType;
+const {FORGOT_PASS, FORGOT_PASS_SUCCESS, FORGOT_PASS_FAIL} = actionType;
 const initialState = {
   msg: '',
   loading: false,
+  status: '',
 };
-export const applyJob = (state = initialState, actions) => {
+export const forgotPassword = (state = initialState, actions) => {
   switch (actions.type) {
-    case APPLY_JOB:
+    case FORGOT_PASS:
       return {...state, loading: true};
-    case APPLY_JOB_SUCCESS:
+    case FORGOT_PASS_SUCCESS:
       return {...state, ...actions.payload, loading: false};
-    case APPLY_JOB_FAIL:
+    case FORGOT_PASS_FAIL:
       return {...state, ...actions.payload, loading: false};
     default:
       return state;

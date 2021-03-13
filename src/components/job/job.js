@@ -16,7 +16,7 @@ import {
 } from 'react-native';
 
 import {connect} from 'react-redux';
-import {getJob} from '../../redux/actions';
+import {getJob, applyJob} from '../../redux/actions';
 import {getData} from '../../utils';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -95,11 +95,18 @@ class Job extends Component {
     this.setState({item});
   };
 
+  iterApplyJob = async (id) => {
+    await this.props.applyJob(id);
+    this.showToast(this.props.msgApply);
+  };
+
   renderButtonApply = () => {
     if (this.state.role == 'iter') {
       return (
-        <TouchableHighlight style={styles.openButton} onPress={this.addItem}>
-          <Text style={styles.textStyle}>Appy</Text>
+        <TouchableHighlight
+          style={styles.openButton}
+          onPress={this.iterApplyJob}>
+          <Text style={styles.textStyle}>Apply</Text>
         </TouchableHighlight>
       );
     }
@@ -166,15 +173,19 @@ class Job extends Component {
 }
 const mapDispatchToProps = {
   getJob,
+  applyJob,
 };
 
 const mapStateToProps = (state) => {
   const {loading, posts, status, msg} = state.getJob;
+
   return {
     loading,
     posts,
     status,
     msg,
+    statusApply: state.applyJob.status,
+    msgApply: state.applyJob.msg,
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Job);

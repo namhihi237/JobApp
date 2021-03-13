@@ -19,7 +19,6 @@ class Register extends Component {
       password: '',
       confirmPassword: '',
       companyName: '',
-      address: '',
     };
   }
   showToast = (msg) => {
@@ -42,28 +41,22 @@ class Register extends Component {
     this.setState({companyName: text});
   };
 
-  changeTextAddress = (text) => {
-    this.setState({address: text});
-  };
-
   moveToLogin = () => {
     this.props.navigation.navigate('Login');
   };
 
   validateData = () => {
-    let {email, password, companyName, address} = this.state;
-    if (!email || !password || !companyName || !address) return false;
+    let {email, password, companyName} = this.state;
+    if (!email || !password || !companyName) return false;
     return true;
   };
 
   registerAcc = async () => {
-    const {email, password, companyName, address} = this.state;
+    const {email, password, companyName} = this.state;
     const data = {
       email,
       password,
       companyName,
-      address,
-      role: 'company',
     };
     if (!this.validateData()) {
       this.showToast('Data is empty');
@@ -79,7 +72,7 @@ class Register extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Loader status={this.props.loading} msg={'Registing'}></Loader>
+        <Loader status={this.props.loading} msg={'Register'}></Loader>
         <View style={styles.inputView}>
           <TextInput
             style={styles.inputText}
@@ -112,14 +105,6 @@ class Register extends Component {
             placeholder="Name..."
             placeholderTextColor="#003f5c"
             onChangeText={this.changeTextCompanyName}
-          />
-        </View>
-        <View style={styles.inputView}>
-          <TextInput
-            style={styles.inputText}
-            placeholder="Address..."
-            placeholderTextColor="#003f5c"
-            onChangeText={this.changeTextAddress}
           />
         </View>
         <View style={styles.buttonContainer}>

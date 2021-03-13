@@ -4,6 +4,8 @@ import {Landing} from './loading';
 import {Job} from './job';
 import {CompanyPost} from './companyPost';
 import {CreatePost} from './createPost';
+import {Forgot} from './forgotPassword';
+import {Confirm} from './confirmCode';
 
 export {
   Landing,
@@ -13,4 +15,6 @@ export {
   Job,
   CompanyPost,
   CreatePost,
+  Forgot,
+  Confirm,
 };
