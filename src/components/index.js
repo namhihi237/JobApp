@@ -6,7 +6,8 @@ import {CompanyPost} from './companyPost';
 import {CreatePost} from './createPost';
 import {Forgot} from './forgotPassword';
 import {Confirm} from './confirmCode';
-
+import {UpdatePassword} from './updatePassword';
+import {Cv} from './Cv';
 export {
   Landing,
   Login,
@@ -17,4 +18,6 @@ export {
   CreatePost,
   Forgot,
   Confirm,
+  UpdatePassword,
+  Cv,
 };

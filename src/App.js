@@ -21,6 +21,8 @@ import {
   CreatePost,
   Forgot,
   Confirm,
+  UpdatePassword,
+  Cv,
 } from './components';
 import {store} from './redux/store';
 import {Provider} from 'react-redux';
@@ -97,7 +99,7 @@ class tabBarForIter extends Component {
           inactiveTintColor: 'gray',
         }}>
         <Tab.Screen name="Home" component={Job} />
-        <Tab.Screen name="My CV" component={C2} />
+        <Tab.Screen name="My CV" component={Cv} />
         <Tab.Screen name="Profile" component={C2} />
         <Tab.Screen name="Setting" component={SettingDrawer} />
       </Tab.Navigator>
@@ -142,7 +144,7 @@ class tabBarForCompany extends Component {
         }}>
         <Tab.Screen name="Home" component={Job} />
         <Tab.Screen name="My Post" component={CompanyPostnav} />
-        <Tab.Screen name="Profile" component={C3} />
+        <Tab.Screen name="Profile" component={C2} />
         <Tab.Screen
           name="Setting"
           component={SettingDrawer}
@@ -196,6 +198,7 @@ export class App extends Component {
             <Stack.Screen name="Login" component={Login} />
             <Stack.Screen name="ForgotPassword" component={Forgot} />
             <Stack.Screen name="ConfirmCode" component={Confirm} />
+            <Stack.Screen name="UpdatePassword" component={UpdatePassword} />
             <Stack.Screen name="RegisterIter" component={RegisterIter} />
             <Stack.Screen name="RegisterCompany" component={RegisterCompany} />
             <Stack.Screen name="MainIter" component={tabBarForIter} />

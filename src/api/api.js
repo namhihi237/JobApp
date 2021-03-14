@@ -10,4 +10,5 @@ export const apiUrl = {
   APPLY_JOB_URL: `${baseUrl}/api/v1/posts`,
   FORGOT_PASS_URL: `${baseUrl}/api/v1/auth/reset-password`,
   CONFIRM_CODE_URL: `${baseUrl}/api/v1/auth/confirm-code`,
+  UPDATE_PASS_URL: `${baseUrl}/api/v1/auth/change-password`,
 };

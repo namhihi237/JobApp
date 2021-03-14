@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Loader} from '../../common';
 import {connect} from 'react-redux';
-import {confirmCode} from '../../redux/actions';
+import {updatePass} from '../../redux/actions';
 
 import {
   StyleSheet,
@@ -11,12 +11,13 @@ import {
   TextInput,
   ToastAndroid,
 } from 'react-native';
-import {TabRouter} from '@react-navigation/routers';
-class ConfirmCode extends Component {
+class UpdatePassword extends Component {
   constructor(props) {
     super(props);
     this.state = {
       code: '',
+      password: '',
+      confirmPassword: '',
     };
   }
 
@@ -28,21 +29,30 @@ class ConfirmCode extends Component {
     this.setState({code: text});
   };
 
-  confirmCode = async () => {
-    if (!this.state.code) {
-      this.showToast('code is empty!');
+  changeTextPass = (text) => {
+    this.setState({password: text});
+  };
+
+  changeTextPassConfirm = (text) => {
+    this.setState({confirmPassword: text});
+  };
+
+  updatePassword = async () => {
+    if (!this.state.password || !this.state.confirmPassword) {
+      this.showToast('data is empty!');
       return;
     }
-    const data = {code: this.state.code, email: this.props.route.params.email};
-    await this.props.confirmCode(data);
+    const data = {
+      code: this.props.route.params.code,
+      email: this.props.route.params.email,
+      password: this.state.password,
+    };
+    await this.props.updatePass(data);
     this.showToast(this.props.msg);
     if (this.props.status != 200 && this.props.status != 304) {
       return;
     } else {
-      this.props.navigation.navigate('UpdatePassword', {
-        email: this.props.route.params.email,
-        code: this.state.code,
-      });
+      this.props.navigation.navigate('Login');
     }
   };
 
@@ -52,15 +62,27 @@ class ConfirmCode extends Component {
         <Loader status={this.props.loading} msg={''}></Loader>
         <View style={styles.inputView}>
           <TextInput
+            onChangeText={this.changeTextPass}
             style={styles.inputText}
-            placeholder="Code..."
+            placeholder="Password..."
             placeholderTextColor="#003f5c"
-            onChangeText={this.changeTextCode}
+            secureTextEntry={true}
+          />
+        </View>
+        <View style={styles.inputView}>
+          <TextInput
+            onChangeText={this.changeTextPassConfirm}
+            style={styles.inputText}
+            placeholder="Confirm Password..."
+            placeholderTextColor="#003f5c"
+            secureTextEntry={true}
           />
         </View>
         <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.loginBtn} onPress={this.confirmCode}>
-            <Text style={styles.loginText}>CONFIRM</Text>
+          <TouchableOpacity
+            style={styles.loginBtn}
+            onPress={this.updatePassword}>
+            <Text style={styles.loginText}>UPDATE</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -69,18 +91,18 @@ class ConfirmCode extends Component {
 }
 
 const mapDispatchToProps = {
-  confirmCode,
+  updatePass,
 };
 
 const mapStateToProps = (state) => {
-  const {loading, status, msg} = state.confirmCode;
+  const {loading, status, msg} = state.updatePass;
   return {
     loading,
     status,
     msg,
   };
 };
-export default connect(mapStateToProps, mapDispatchToProps)(ConfirmCode);
+export default connect(mapStateToProps, mapDispatchToProps)(UpdatePassword);
 
 const styles = StyleSheet.create({
   container: {
