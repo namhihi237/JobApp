@@ -9,6 +9,7 @@ import {forgotPassword} from './forgotPassword';
 import {confirmCode} from './confirmCode';
 import {updatePass} from './updatePass';
 import {createIterCv  } from "./createIterCv";
+import {getCv} from './getCv'
 export {
   login,
   registerIter,
@@ -20,5 +21,6 @@ export {
   forgotPassword,
   confirmCode,
   updatePass,
-  createIterCv
+  createIterCv,
+  getCv
 };

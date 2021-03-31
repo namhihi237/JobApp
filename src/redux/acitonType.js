@@ -43,4 +43,8 @@ export const actionType = {
   CREATE_CV : 'CREATE_CV',
   CREATE_CV_SUCCESS : 'CREATE_CV_SUCCESS',
   CREATE_CV_FAIL : 'CREATE_CV_FAIL',
+  /* GET CV */
+  GET_CV : 'GET_CV',
+  GET_CV_SUCCESS : 'GET_CV_SUCCESS',
+  GET_CV_FAIL : 'GET_CV_FAIL',
 };

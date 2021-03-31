@@ -94,9 +94,8 @@ class Job extends Component {
     this.setModalVisible(true);
     this.setState({item});
   };
-
-  iterApplyJob = async (id) => {
-    await this.props.applyJob(id);
+  iterApplyJob = async () => { 
+    await this.props.applyJob(this.state.item._id);
     this.showToast(this.props.msgApply);
   };
 

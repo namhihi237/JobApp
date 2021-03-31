@@ -12,7 +12,8 @@ import {
   forgotPassword,
   confirmCode,
   updatePass,
-  createIterCv
+  createIterCv,
+  getCv
 } from '../reducer/';
 
 const AppReduces = combineReducers({
@@ -26,7 +27,8 @@ const AppReduces = combineReducers({
   forgotPassword,
   confirmCode,
   updatePass,
-  createIterCv
+  createIterCv,
+  getCv
 });
 
 const rootReducer = (state, action) => {
