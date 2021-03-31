@@ -119,7 +119,6 @@ class tabBarForIter extends Component {
         }}>
         <Tab.Screen name="Home" component={Job} />
         <Tab.Screen name="My CV" component={IterNav} />
-        <Tab.Screen name="Profile" component={C2} />
         <Tab.Screen name="Setting" component={SettingDrawer} />
       </Tab.Navigator>
     );
@@ -163,7 +162,6 @@ class tabBarForCompany extends Component {
         }}>
         <Tab.Screen name="Home" component={Job} />
         <Tab.Screen name="My Post" component={CompanyPostnav} />
-        <Tab.Screen name="Profile" component={C2} />
         <Tab.Screen
           name="Setting"
           component={SettingDrawer}
@@ -222,7 +220,6 @@ export class App extends Component {
             <Stack.Screen name="RegisterCompany" component={RegisterCompany} />
             <Stack.Screen name="MainIter" component={tabBarForIter} />
             <Stack.Screen name="MainCompany" component={tabBarForCompany} />
-            
           </Stack.Navigator>
         </NavigationContainer>
       </Provider>

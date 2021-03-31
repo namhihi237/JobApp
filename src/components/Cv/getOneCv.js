@@ -5,14 +5,12 @@ import {
   View,
   Text,
   ToastAndroid,
-  FlatList,
   Dimensions,
   TouchableOpacity,
-  Alert,
 } from 'react-native';
 import {connect} from 'react-redux';
 import {getCv} from '../../redux/actions/getCv';
-import {getData} from '../../utils'
+import {getData} from '../../utils';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -21,7 +19,7 @@ class getOneCv extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      dataCv : []
+      dataCv: [],
     };
   }
 
@@ -33,19 +31,13 @@ class getOneCv extends Component {
     this.setState({modalVisible: visible});
   };
 
-       
-
-  keyExtractor = (item) => {
-    return item._id;
-  };
-
   componentDidMount() {
     const unsubscribe = this.props.navigation.addListener('focus', async () => {
       await this.props.getCv();
       this.showToast(this.props.msg);
       //console.log(this.props)
       this.setState({
-        dataCv: this.props.cv
+        dataCv: this.props.cv,
       });
       //console.log(this.state);
     });
@@ -72,15 +64,17 @@ class getOneCv extends Component {
         <Loader status={this.props.loading}></Loader>
         <View>
           <Text style={styles.titleList}>{dataCv.iterName}</Text>
-          <View style = {styles.cv}>
-            <Text style={styles.text}>Personal Skill: {dataCv.personalSkill}</Text>
+          <View style={styles.cv}>
+            <Text style={styles.text}>
+              Personal Skill: {dataCv.personalSkill}
+            </Text>
             <Text style={styles.text}>Skill: {dataCv.skill}</Text>
             <Text style={styles.text}>Experience: {dataCv.experience}</Text>
             <Text style={styles.text}>Description: {dataCv.description}</Text>
           </View>
         </View>
         <View style={styles.line} />
-       
+
         <TouchableOpacity
           style={styles.buttonAdd}
           onPress={this.moveToCreateCv}>
@@ -154,14 +148,11 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: '900',
   },
-  text : {
+  text: {
     fontSize: 20,
-    
   },
   cv: {
-    marginTop : 20,
-    marginLeft: 20
-
-  }
-
+    marginTop: 20,
+    marginLeft: 20,
+  },
 });

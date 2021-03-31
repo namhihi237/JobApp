@@ -6,6 +6,7 @@ import {
   View,
   Text,
   Dimensions,
+  ScrollView,
   TouchableOpacity,
   TextInput,
   KeyboardAvoidingView,
@@ -17,33 +18,10 @@ import {
 
 import {connect} from 'react-redux';
 import {createPost} from '../../redux/actions';
+import {dataPosition, dataSkill} from '../../constant';
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
-const dataSkill = [
-  'C',
-  'C++',
-  'C#',
-  'Java',
-  'Javascript',
-  'PHP',
-  'Python',
-  'Nodejs',
-  'Spring',
-  'Flask',
-  'VueJs',
-  'ReactJs',
-  'DotNet',
-];
-const dataPosition = [
-  'Inter',
-  'Fresher',
-  'Junior',
-  'Senior',
-  'Project Manager',
-  'Team Leader',
-  'Tester',
-  'Developer',
-  'Software Engineer',
-];
 class CreatePost extends Component {
   constructor(props) {
     super(props);
@@ -174,89 +152,91 @@ class CreatePost extends Component {
   render() {
     const {modalVisible, textSkill, textPos} = this.state;
     return (
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-        <KeyboardAvoidingView style={{flex: 1}}>
-          <Loader status={this.props.loading} msg={'Creating '}></Loader>
-          <View style={styles.container}>
-            <View style={{flexDirection: 'row'}}>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+          <KeyboardAvoidingView style={{flex: 1}}>
+            <Loader status={this.props.loading} msg={'Creating '}></Loader>
+            <View style={styles.container}>
+              <View style={{flexDirection: 'row'}}>
+                <TextInput
+                  value={textSkill}
+                  style={styles.textInput}
+                  editable={false}
+                  selectTextOnFocus={false}
+                  placeholder="Skill..."></TextInput>
+                <TouchableOpacity
+                  style={styles.buttonChoice}
+                  onPress={this.showModalSkill}>
+                  <Text>choice</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={{flexDirection: 'row'}}>
+                <TextInput
+                  value={textPos}
+                  style={styles.textInput}
+                  editable={false}
+                  selectTextOnFocus={false}
+                  placeholder="Position..."></TextInput>
+                <TouchableOpacity
+                  style={styles.buttonChoice}
+                  onPress={this.showModalPosition}>
+                  <Text>choice</Text>
+                </TouchableOpacity>
+              </View>
               <TextInput
-                value={textSkill}
                 style={styles.textInput}
-                editable={false}
-                selectTextOnFocus={false}
-                placeholder="Skill..."></TextInput>
+                onChangeText={this.onChangeSalary}
+                placeholder="Salary..."></TextInput>
+              <TextInput
+                style={styles.textInput}
+                onChangeText={this.onChangeAddress}
+                placeholder="Address..."></TextInput>
+              <TextInput
+                style={styles.textInput}
+                onChangeText={this.onChangeEndTime}
+                placeholder="End Time..."></TextInput>
+              <TextInput
+                onChangeText={this.onChangeDescription}
+                multiline={true}
+                numberOfLines={4}
+                style={styles.desInput}
+                placeholder="Description"
+                autoCorrect={false}
+              />
               <TouchableOpacity
-                style={styles.buttonChoice}
-                onPress={this.showModalSkill}>
-                <Text>choice</Text>
+                style={styles.openButton}
+                onPress={this.createCompanyPost}>
+                <Text style={styles.textStyle}>Create</Text>
               </TouchableOpacity>
             </View>
-            <View style={{flexDirection: 'row'}}>
-              <TextInput
-                value={textPos}
-                style={styles.textInput}
-                editable={false}
-                selectTextOnFocus={false}
-                placeholder="Position..."></TextInput>
-              <TouchableOpacity
-                style={styles.buttonChoice}
-                onPress={this.showModalPosition}>
-                <Text>choice</Text>
-              </TouchableOpacity>
-            </View>
-            <TextInput
-              style={styles.textInput}
-              onChangeText={this.onChangeSalary}
-              placeholder="Salary..."></TextInput>
-            <TextInput
-              style={styles.textInput}
-              onChangeText={this.onChangeAddress}
-              placeholder="Address..."></TextInput>
-            <TextInput
-              style={styles.textInput}
-              onChangeText={this.onChangeEndTime}
-              placeholder="End Time..."></TextInput>
-            <TextInput
-              onChangeText={this.onChangeDescription}
-              multiline={true}
-              numberOfLines={4}
-              style={styles.desInput}
-              placeholder="Description"
-              autoCorrect={false}
-            />
-            <TouchableOpacity
-              style={styles.openButton}
-              onPress={this.createCompanyPost}>
-              <Text style={styles.textStyle}>Create</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.centeredView}>
-            <Modal
-              animationType="slide"
-              transparent={true}
-              visible={modalVisible}
-              onRequestClose={() => {
-                // Alert.alert('Modal has been closed.');
-              }}>
-              <View style={styles.centeredView}>
-                <View style={styles.modalView}>
-                  <Text style={styles.modalText}>Choice Skill</Text>
-                  {this.showSkill()}
-                  <View style={styles.containerButton}>
-                    <TouchableOpacity
-                      style={styles.openButton}
-                      onPress={() => {
-                        this.setModalVisible(!modalVisible);
-                      }}>
-                      <Text style={styles.textStyle}>OK</Text>
-                    </TouchableOpacity>
+            <View style={styles.centeredView}>
+              <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                  // Alert.alert('Modal has been closed.');
+                }}>
+                <View style={styles.centeredView}>
+                  <View style={styles.modalView}>
+                    <Text style={styles.modalText}>Choice Skill</Text>
+                    {this.showSkill()}
+                    <View style={styles.containerButton}>
+                      <TouchableOpacity
+                        style={styles.openButton}
+                        onPress={() => {
+                          this.setModalVisible(!modalVisible);
+                        }}>
+                        <Text style={styles.textStyle}>OK</Text>
+                      </TouchableOpacity>
+                    </View>
                   </View>
                 </View>
-              </View>
-            </Modal>
-          </View>
-        </KeyboardAvoidingView>
-      </TouchableWithoutFeedback>
+              </Modal>
+            </View>
+          </KeyboardAvoidingView>
+        </TouchableWithoutFeedback>
+      </ScrollView>
     );
   }
 }
@@ -276,27 +256,32 @@ const mapStateToProps = (state) => {
 export default connect(mapStateToProps, mapDispatchToProps)(CreatePost);
 const styles = StyleSheet.create({
   container: {
+    justifyContent: 'center',
     flex: 1,
+    display: 'flex',
+    height: (windowHeight * 7) / 10,
   },
   textInput: {
     borderColor: 'black',
     borderWidth: 1,
     height: 40,
-    width: 200,
-    marginBottom: 5,
+    width: 260,
+    marginBottom: 15,
     paddingLeft: 6,
-    marginLeft: 100,
+    marginLeft: 50,
     color: 'black',
+    borderRadius: 5,
   },
   desInput: {
     borderColor: 'black',
     borderWidth: 1,
     height: 100,
-    width: 200,
-    marginBottom: 5,
+    width: 260,
+    marginBottom: 15,
     paddingLeft: 6,
     textAlignVertical: 'top',
-    marginLeft: 100,
+    marginLeft: 50,
+    borderRadius: 5,
   },
   buttonChoice: {
     height: 30,
@@ -333,8 +318,9 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 10,
     elevation: 2,
-    marginLeft: 10,
-    marginRight: 10,
+    marginLeft: 35,
+    marginRight: 35,
+    marginTop: 15,
   },
   textStyle: {
     color: 'white',
