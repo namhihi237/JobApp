@@ -7,6 +7,8 @@ import {
   ToastAndroid,
   Dimensions,
   TouchableOpacity,
+  Image,
+  ScrollView,
 } from 'react-native';
 import {connect} from 'react-redux';
 import {getCv} from '../../redux/actions/getCv';
@@ -61,20 +63,55 @@ class getOneCv extends Component {
     }
     return (
       <View style={styles.container}>
-        <Loader status={this.props.loading}></Loader>
-        <View>
-          <Text style={styles.titleList}>{dataCv.iterName}</Text>
-          <View style={styles.cv}>
-            <Text style={styles.text}>
-              Personal Skill: {dataCv.personalSkill}
-            </Text>
-            <Text style={styles.text}>Skill: {dataCv.skill}</Text>
-            <Text style={styles.text}>Experience: {dataCv.experience}</Text>
-            <Text style={styles.text}>Description: {dataCv.description}</Text>
-          </View>
-        </View>
-        <View style={styles.line} />
+        <ScrollView style={styles.scroll}>
+          <Loader status={this.props.loading}></Loader>
+          <View>
+            <Text style={styles.titleList}>My CV</Text>
+            <View style={styles.cv}>
+              <View style={styles.imgContainer}>
+                <Image
+                  style={styles.tinyLogo}
+                  source={require('../../assets/image/person.png')}
+                />
 
+                <View>
+                  <Text style={styles.textName}>
+                    {dataCv.iterName || `Le Trung Nam`}
+                  </Text>
+                  <Text style={styles.textemail}>
+                    Email: {dataCv.email || `Trungnam23799@gmail.com`}
+                  </Text>
+                  <Text style={styles.textemail}>
+                    Brithday: {dataCv.birthday || `23/07/1999`}
+                  </Text>
+                </View>
+              </View>
+              <View style={styles.content}>
+                <Text style={styles.textLabel}>
+                  Personal Skill: {dataCv.personalSkill || 'Toeic 900+'}
+                </Text>
+                <Text style={styles.textLabel}>
+                  Skill:{' '}
+                  {dataCv.skill ||
+                    `
+                  - C++, Java
+                  - Git, GitHub
+                  `}
+                </Text>
+                <Text style={styles.textLabel}>
+                  Experience:{' '}
+                  {dataCv.experience ||
+                    `
+                  - 2020 - 2021 : Madison
+                  - 2021 -2022 : FPT`}
+                </Text>
+                <Text style={styles.textLabel}>
+                  Description: {dataCv.description}
+                </Text>
+              </View>
+            </View>
+          </View>
+        </ScrollView>
         <TouchableOpacity
           style={styles.buttonAdd}
           onPress={this.moveToCreateCv}>
@@ -102,8 +139,21 @@ const mapStateToProps = (state) => {
 export default connect(mapStateToProps, mapDispatchToProps)(getOneCv);
 
 const styles = StyleSheet.create({
+  scroll: {
+    minHeight: windowHeight,
+  },
+
   container: {
     flex: 1,
+    backgroundColor: '#45fad3',
+    margin: 5,
+    borderRadius: 10,
+    padding: 10,
+  },
+  tinyLogo: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
   },
   item: {
     padding: 20,
@@ -148,11 +198,44 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: '900',
   },
-  text: {
+  textLabel: {
     fontSize: 20,
+    marginBottom: 10,
+    color: 'red',
+  },
+  textContent: {
+    fontSize: 30,
+    color: 'green',
+  },
+  textName: {
+    fontSize: 30,
+    color: 'green',
+    marginLeft: 20,
+    marginTop: 15,
   },
   cv: {
+    display: 'flex',
     marginTop: 20,
-    marginLeft: 20,
+    // marginLeft: 20,
+    flexDirection: 'column',
+  },
+  imgContainer: {
+    backgroundColor: '#8bdb85',
+    display: 'flex',
+    flexDirection: 'row',
+    borderBottomRightRadius: 80,
+    borderTopLeftRadius: 10,
+    borderBottomLeftRadius: 10,
+    padding: 5,
+  },
+  content: {
+    // backgroundColor: 'blue',
+    marginTop: 5,
+    padding: 5,
+  },
+  textemail: {
+    fontSize: 15,
+    marginLeft: 9,
+    marginTop: 5,
   },
 });
