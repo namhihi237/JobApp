@@ -8,6 +8,7 @@ import {applyJob} from './applyJob';
 import {forgotPassword} from './forgotPassword';
 import {confirmCode} from './confirmCode';
 import {updatePass} from './updatePass';
+
 export {
   login,
   registerIter,
@@ -19,4 +20,6 @@ export {
   forgotPassword,
   confirmCode,
   updatePass,
+  createIterCv,
+  getCv,
 };

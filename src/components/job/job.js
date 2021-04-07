@@ -95,8 +95,8 @@ class Job extends Component {
     this.setState({item});
   };
 
-  iterApplyJob = async (id) => {
-    await this.props.applyJob(id);
+  iterApplyJob = async () => {
+    await this.props.applyJob(this.state.item._id);
     this.showToast(this.props.msgApply);
   };
 
@@ -143,12 +143,10 @@ class Job extends Component {
         </SafeAreaView>
         <View style={styles.centeredView}>
           <Modal
+            style={styles.search}
             animationType="slide"
             transparent={true}
-            visible={modalVisible}
-            onRequestClose={() => {
-              // Alert.alert('Modal has been closed.');
-            }}>
+            visible={modalVisible}>
             <View style={styles.centeredView}>
               <View style={styles.modalView}>
                 <Text style={styles.modalText}>Job Detail</Text>
@@ -191,6 +189,10 @@ const mapStateToProps = (state) => {
 export default connect(mapStateToProps, mapDispatchToProps)(Job);
 
 const styles = StyleSheet.create({
+  search: {
+    borderBottomRightRadius: 10,
+    height: 50,
+  },
   flatlist: {
     // backgroundColor: '#003f5c',
     marginTop: 1,
@@ -200,13 +202,26 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     marginLeft: 5,
     marginRight: 5,
-    backgroundColor: '#DF2455',
+
+    backgroundColor: '#aecce2',
     shadowOpacity: 0.6,
     flex: 1,
     display: 'flex',
     flexDirection: 'column',
     paddingLeft: 10,
     paddingTop: 5,
+
+    borderRadius: 7,
+    // shawdow
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 5,
+    },
+    shadowOpacity: 0.34,
+    shadowRadius: 6.27,
+
+    elevation: 10,
   },
   itemDetail: {
     height: (windowHeight - 10) / 4,

@@ -79,6 +79,7 @@ class SettingDrawer extends Component {
     );
   }
 }
+
 class tabBarForIter extends Component {
   render() {
     return (
@@ -99,8 +100,7 @@ class tabBarForIter extends Component {
           inactiveTintColor: 'gray',
         }}>
         <Tab.Screen name="Home" component={Job} />
-        <Tab.Screen name="My CV" component={Cv} />
-        <Tab.Screen name="Profile" component={C2} />
+
         <Tab.Screen name="Setting" component={SettingDrawer} />
       </Tab.Navigator>
     );
@@ -144,7 +144,6 @@ class tabBarForCompany extends Component {
         }}>
         <Tab.Screen name="Home" component={Job} />
         <Tab.Screen name="My Post" component={CompanyPostnav} />
-        <Tab.Screen name="Profile" component={C2} />
         <Tab.Screen
           name="Setting"
           component={SettingDrawer}
