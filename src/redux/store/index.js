@@ -13,7 +13,8 @@ import {
   confirmCode,
   updatePass,
   createIterCv,
-  getCv
+  getCv,
+  searchJob,
 } from '../reducer/';
 
 const AppReduces = combineReducers({
@@ -28,7 +29,8 @@ const AppReduces = combineReducers({
   confirmCode,
   updatePass,
   createIterCv,
-  getCv
+  getCv,
+  searchJob,
 });
 
 const rootReducer = (state, action) => {

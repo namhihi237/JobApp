@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {SearchBar} from 'react-native-elements';
 import {Loader} from '../../common';
+import _ from 'lodash';
 import {
   StyleSheet,
   View,
@@ -16,12 +17,13 @@ import {
 } from 'react-native';
 
 import {connect} from 'react-redux';
-import {getJob, applyJob} from '../../redux/actions';
+import {getJob, applyJob, searchJob} from '../../redux/actions';
 import {getData} from '../../utils';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 class JobDetail extends Component {
+  _isMounted = false;
   constructor(props) {
     super(props);
   }
@@ -49,6 +51,7 @@ class Job extends Component {
       modalVisible: false,
       item: null,
       role: '',
+      posts: [],
     };
   }
 
@@ -58,6 +61,11 @@ class Job extends Component {
 
   updateSearch = (search) => {
     this.setState({search});
+  };
+
+  searchItem = async () => {
+    await this.props.searchJob(this.state.search);
+    this.setState({posts: this.props.postsSearch});
   };
 
   renderItem = ({item}) => (
@@ -77,10 +85,12 @@ class Job extends Component {
   };
 
   componentDidMount() {
+    this._isMounted = true;
     const unsubscribe = this.props.navigation.addListener('focus', async () => {
       await this.props.getJob();
       const role = await getData('role');
-      this.setState({role});
+
+      this.setState({role, posts: this.props.posts});
     });
 
     return unsubscribe;
@@ -127,16 +137,23 @@ class Job extends Component {
       <View>
         <Loader status={this.props.loading}></Loader>
         <SafeAreaView>
-          <SearchBar
-            placeholder="Type Here..."
-            onChangeText={this.updateSearch}
-            value={search}
-            placeholderTextColor="#aa5f5f"
-            showLoading={true}
-          />
+          <View style={styles.searchContaier}>
+            <SearchBar
+              placeholder="Type Here..."
+              onChangeText={this.updateSearch}
+              value={search}
+              placeholderTextColor="#aa5f5f"
+              showLoading={true}
+            />
+            <TouchableOpacity
+              style={styles.searchButton}
+              onPress={this.searchItem}>
+              <Text>Search</Text>
+            </TouchableOpacity>
+          </View>
           <FlatList
             style={styles.flatlist}
-            data={this.props.posts}
+            data={this.state.posts}
             keyExtractor={this.keyExtractor}
             renderItem={this.renderItem}></FlatList>
         </SafeAreaView>
@@ -171,16 +188,21 @@ class Job extends Component {
 const mapDispatchToProps = {
   getJob,
   applyJob,
+  searchJob,
 };
 
 const mapStateToProps = (state) => {
-  const {loading, posts, status, msg} = state.getJob;
+  const {loading, status, msg} = state.getJob;
 
+  let postsSearch = _.get(state.searchJob, 'data.posts') || [];
   return {
     loading,
-    posts,
+    posts: _.get(state.getJob, 'data.posts') || [],
     status,
     msg,
+    currentPage: _.get(state.getJob, 'data.scurrentPage') || null,
+    numPages: _.get(state.getJob, 'data.numPages') || null,
+    postsSearch,
     statusApply: state.applyJob.status,
     msgApply: state.applyJob.msg,
   };
@@ -195,6 +217,11 @@ const styles = StyleSheet.create({
   flatlist: {
     // backgroundColor: '#003f5c',
     marginTop: 1,
+  },
+  searchButton: {
+    height: 30,
+    width: 50,
+    backgroundColor: '#afaa',
   },
   item: {
     height: (windowHeight - 10) / 6,

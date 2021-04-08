@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#003f5c',
+    backgroundColor: '#a5e8a4',
     flex: 1,
   },
   forgot: {
