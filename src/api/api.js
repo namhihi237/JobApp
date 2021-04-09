@@ -11,4 +11,6 @@ export const apiUrl = {
   FORGOT_PASS_URL: `${baseUrl}/api/v1/auth/reset-password`,
   CONFIRM_CODE_URL: `${baseUrl}/api/v1/auth/confirm-code`,
   UPDATE_PASS_URL: `${baseUrl}/api/v1/auth/change-password`,
+  CREATE_CV_URL: `${baseUrl}/api/v1/cv`,
+  GET_A_CV: `${baseUrl}/api/v1/cv/user`,
 };

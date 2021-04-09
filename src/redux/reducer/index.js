@@ -11,6 +11,9 @@ import {updatePass} from './updatePass';
 
 import {createIterCv} from './createIterCv';
 import {getCv} from './getCv';
+import {createIterCv} from './createIterCv';
+import {getCv} from './getCv';
+import {searchJob} from './searchJob';
 export {
   login,
   registerIter,
@@ -24,4 +27,5 @@ export {
   updatePass,
   createIterCv,
   getCv,
+  searchJob,
 };
