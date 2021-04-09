@@ -1,6 +1,10 @@
 import React, {Component} from 'react';
 import {SearchBar} from 'react-native-elements';
 import {Loader} from '../../common';
+import axios from 'axios';
+import {apiUrl} from '../../api/api';
+const {GET_JOBS_URL} = apiUrl;
+
 import _ from 'lodash';
 import {
   StyleSheet,
@@ -14,6 +18,7 @@ import {
   Modal,
   TextInput,
   TouchableHighlight,
+  ActivityIndicator,
 } from 'react-native';
 
 import {connect} from 'react-redux';
@@ -52,7 +57,12 @@ class Job extends Component {
       item: null,
       role: '',
       posts: [],
+      loadingmore: false,
+      refreshing: false,
+      page: 1,
+      isLoading: false,
     };
+    this.handleLoadMore = this.handleLoadMore.bind(this);
   }
 
   showToast = (msg) => {
@@ -90,11 +100,42 @@ class Job extends Component {
       await this.props.getJob();
       const role = await getData('role');
 
-      this.setState({role, posts: this.props.posts});
+      this.setState({role, posts: this.props.posts, page: 1});
     });
 
     return unsubscribe;
   }
+
+  async handleLoadMore() {
+    try {
+      await this.setState({page: this.state.page + 1, isLoading: true});
+
+      if (this.state.page > this.props.numPages) {
+        return;
+      }
+      const result = await axios.get(
+        `${GET_JOBS_URL}?page=${this.state.page}&take=${10}`,
+      );
+      const addPost = result.data.data.posts;
+      const currentPage = result.data.data.currentPage;
+      let newPost = [...this.state.posts, ...addPost];
+      this.setState({
+        posts: newPost,
+        isLoading: false,
+        page: currentPage + 1,
+      });
+    } catch (error) {
+      return;
+    }
+  }
+
+  footerList = () => {
+    <View>
+      <ActivityIndicator
+        loading={this.state.isLoading}
+        size={'large'}></ActivityIndicator>
+    </View>;
+  };
 
   setModalVisible = (visible) => {
     this.setState({modalVisible: visible});
@@ -104,6 +145,7 @@ class Job extends Component {
     this.setModalVisible(true);
     this.setState({item});
   };
+
   iterApplyJob = async () => {
     await this.props.applyJob(this.state.item._id);
     this.showToast(this.props.msgApply);
@@ -121,7 +163,9 @@ class Job extends Component {
     }
     return null;
   };
-
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
   render() {
     const {search, modalVisible, item} = this.state;
 
@@ -139,6 +183,8 @@ class Job extends Component {
         <SafeAreaView>
           <View style={styles.searchContaier}>
             <SearchBar
+              searchIcon={true}
+              cancelIcon={true}
               placeholder="Type Here..."
               onChangeText={this.updateSearch}
               value={search}
@@ -155,7 +201,10 @@ class Job extends Component {
             style={styles.flatlist}
             data={this.state.posts}
             keyExtractor={this.keyExtractor}
-            renderItem={this.renderItem}></FlatList>
+            renderItem={this.renderItem}
+            onEndReached={this.handleLoadMore}
+            // ListFooterComponent={this.footerList}
+          ></FlatList>
         </SafeAreaView>
         <View style={styles.centeredView}>
           <Modal
@@ -217,6 +266,12 @@ const styles = StyleSheet.create({
   flatlist: {
     // backgroundColor: '#003f5c',
     marginTop: 1,
+  },
+  searchContaier: {
+    display: 'flex',
+    // flexDirection: 'row',
+    // justifyContent: 'space-between',
+    width: windowWidth,
   },
   searchButton: {
     height: 30,
