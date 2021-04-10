@@ -12,7 +12,6 @@ import {
 } from 'react-native';
 import {connect} from 'react-redux';
 import {getCv} from '../../redux/actions/getCv';
-import {getData} from '../../utils';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -20,9 +19,7 @@ const windowHeight = Dimensions.get('window').height;
 class getOneCv extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      dataCv: [],
-    };
+    this.state = {};
   }
 
   showToast = (msg) => {
@@ -37,11 +34,6 @@ class getOneCv extends Component {
     const unsubscribe = this.props.navigation.addListener('focus', async () => {
       await this.props.getCv();
       this.showToast(this.props.msg);
-      //console.log(this.props)
-      this.setState({
-        dataCv: this.props.cv,
-      });
-      //console.log(this.state);
     });
 
     return unsubscribe;
@@ -52,8 +44,7 @@ class getOneCv extends Component {
   };
 
   render() {
-    const {dataCv} = this.state;
-    //console.log(dataCv)
+    console.log(this.props.cv);
     if (this.props.status != 200 && this.props.status != 304) {
       return (
         <View>
@@ -71,28 +62,28 @@ class getOneCv extends Component {
               <View style={styles.imgContainer}>
                 <Image
                   style={styles.tinyLogo}
-                  source={require('../../assets/image/person.png')}
+                  source={{uri: this.props.cv.image}}
                 />
 
                 <View>
                   <Text style={styles.textName}>
-                    {dataCv.iterName || `Le Trung Nam`}
+                    {this.props.cv.iterName || `Le Trung Nam`}
                   </Text>
                   <Text style={styles.textemail}>
-                    Email: {dataCv.email || `Trungnam23799@gmail.com`}
+                    Email: {this.props.cv.email || `Trungnam23799@gmail.com`}
                   </Text>
                   <Text style={styles.textemail}>
-                    Brithday: {dataCv.birthday || `23/07/1999`}
+                    Brithday: {this.props.cv.birthday || `23/07/1999`}
                   </Text>
                 </View>
               </View>
               <View style={styles.content}>
                 <Text style={styles.textLabel}>
-                  Personal Skill: {dataCv.personalSkill || 'Toeic 900+'}
+                  Personal Skill: {this.props.cv.personalSkill || 'Toeic 900+'}
                 </Text>
                 <Text style={styles.textLabel}>
                   Skill:{' '}
-                  {dataCv.skill ||
+                  {this.props.cv.skill.join(' ,') ||
                     `
                   - C++, Java
                   - Git, GitHub
@@ -100,13 +91,13 @@ class getOneCv extends Component {
                 </Text>
                 <Text style={styles.textLabel}>
                   Experience:{' '}
-                  {dataCv.experience ||
+                  {this.props.cv.experience ||
                     `
                   - 2020 - 2021 : Madison
                   - 2021 -2022 : FPT`}
                 </Text>
                 <Text style={styles.textLabel}>
-                  Description: {dataCv.description}
+                  Description: {this.props.cv.description}
                 </Text>
               </View>
             </View>
@@ -126,9 +117,7 @@ const mapDispatchToProps = {
 };
 
 const mapStateToProps = (state) => {
-  //console.log(state.getCv)
   const {loading, cv, status, msg} = state.getCv;
-
   return {
     loading,
     cv,
@@ -216,7 +205,6 @@ const styles = StyleSheet.create({
   cv: {
     display: 'flex',
     marginTop: 20,
-    // marginLeft: 20,
     flexDirection: 'column',
   },
   imgContainer: {
@@ -229,7 +217,6 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   content: {
-    // backgroundColor: 'blue',
     marginTop: 5,
     padding: 5,
   },
