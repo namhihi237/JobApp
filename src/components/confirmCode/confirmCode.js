@@ -9,9 +9,8 @@ import {
   Text,
   TouchableOpacity,
   TextInput,
-  ToastAndroid,
 } from 'react-native';
-import {TabRouter} from '@react-navigation/routers';
+import {Toast} from 'native-base';
 class ConfirmCode extends Component {
   constructor(props) {
     super(props);
@@ -21,7 +20,11 @@ class ConfirmCode extends Component {
   }
 
   showToast = (msg) => {
-    ToastAndroid.show(`${msg}`, ToastAndroid.LONG);
+    Toast.show({
+      text: `${msg}`,
+      buttonText: 'Okey',
+      duration: 3000,
+    });
   };
 
   changeTextCode = (text) => {

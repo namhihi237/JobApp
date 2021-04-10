@@ -1,12 +1,7 @@
 import React, {Component} from 'react';
+import {Toast} from 'native-base';
 import {Loader} from '../../common';
-import {
-  StyleSheet,
-  View,
-  Text,
-  TouchableOpacity,
-  ToastAndroid,
-} from 'react-native';
+import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
 
 import {TextInput} from 'react-native-gesture-handler';
 import {connect} from 'react-redux';
@@ -23,7 +18,11 @@ class Login extends Component {
   }
 
   showToast = (msg) => {
-    ToastAndroid.show(`${msg}`, ToastAndroid.SHORT);
+    Toast.show({
+      text: `${msg}`,
+      buttonText: 'Okey',
+      duration: 3000,
+    });
   };
 
   moveToRegisterIter = () => {

@@ -13,9 +13,8 @@ import {
   Modal,
   TouchableWithoutFeedback,
   Keyboard,
-  ToastAndroid,
 } from 'react-native';
-
+import {Toast} from 'native-base';
 import {connect} from 'react-redux';
 import {createPost} from '../../redux/actions';
 import {dataPosition, dataSkill} from '../../constant';
@@ -40,7 +39,11 @@ class CreatePost extends Component {
   }
 
   showToast = (msg) => {
-    ToastAndroid.show(`${msg}`, ToastAndroid.SHORT);
+    Toast.show({
+      text: `${msg}`,
+      buttonText: 'Okey',
+      duration: 3000,
+    });
   };
 
   setModalVisible = (status) => {

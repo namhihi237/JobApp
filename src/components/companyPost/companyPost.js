@@ -13,6 +13,9 @@ import {
 import {connect} from 'react-redux';
 import {getCompanyPost} from '../../redux/actions';
 
+import {Toast} from 'native-base';
+
+import {from} from 'form-data';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
@@ -26,7 +29,11 @@ class CompanyPost extends Component {
   }
 
   showToast = (msg) => {
-    ToastAndroid.show(`${msg}`, ToastAndroid.SHORT);
+    Toast.show({
+      text: `${msg}`,
+      buttonText: 'Okey',
+      duration: 3000,
+    });
   };
 
   setModalVisible = (visible) => {

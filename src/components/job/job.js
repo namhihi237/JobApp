@@ -12,7 +12,6 @@ import {
   ToastAndroid,
   FlatList,
   Dimensions,
-  SafeAreaView,
   TouchableOpacity,
   Modal,
   TextInput,
@@ -27,11 +26,10 @@ import {getJob, applyJob, searchJob} from '../../redux/actions';
 import {getData} from '../../utils';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-
+import {Toast} from 'native-base';
 class Job extends Component {
+  _isMounted = false;
   constructor(props) {
-    _isMounted = false;
-
     super(props);
     this.state = {
       search: '',
@@ -48,7 +46,11 @@ class Job extends Component {
   }
 
   showToast = (msg) => {
-    ToastAndroid.show(`${msg}`, ToastAndroid.SHORT);
+    Toast.show({
+      text: `${msg}`,
+      buttonText: 'Okey',
+      duration: 3000,
+    });
   };
 
   updateSearch = (search) => {
@@ -113,10 +115,12 @@ class Job extends Component {
 
   footerList = () => {
     return (
-      <View>
-        <ActivityIndicator
-          loading={this.state.isLoading}
-          size={'large'}></ActivityIndicator>
+      <View style={{flex: 1}}>
+        {this.state.isLoading && (
+          <View style={styles.loading}>
+            <ActivityIndicator />
+          </View>
+        )}
       </View>
     );
   };
@@ -151,7 +155,7 @@ class Job extends Component {
     this._isMounted = false;
   }
   render() {
-    const {search, modalVisible, item} = this.state;
+    const {modalVisible, item} = this.state;
 
     if (this.props.status != 200 && this.props.status != 304) {
       return (
@@ -164,7 +168,7 @@ class Job extends Component {
     return (
       <View>
         <Loader status={this.props.loading}></Loader>
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
           <View style={styles.searchContaier}>
             <TextInput
               style={styles.searchInput}
@@ -184,7 +188,7 @@ class Job extends Component {
             renderItem={this.renderItem}
             onEndReached={this.handleLoadMore}
             ListFooterComponent={this.footerList}></FlatList>
-        </SafeAreaView>
+        </View>
         <View style={styles.centeredView}>
           <Modal
             style={styles.search}
@@ -330,5 +334,16 @@ const styles = StyleSheet.create({
   },
   containerButton: {
     flexDirection: 'row',
+  },
+  loading: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    opacity: 0.5,
+    backgroundColor: 'black',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

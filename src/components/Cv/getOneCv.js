@@ -1,18 +1,18 @@
 import React, {Component} from 'react';
 import {Loader} from '../../common';
+import {Avatar} from 'react-native-elements';
+import _ from 'lodash';
 import {
   StyleSheet,
   View,
   Text,
-  ToastAndroid,
   Dimensions,
   TouchableOpacity,
-  Image,
   ScrollView,
 } from 'react-native';
 import {connect} from 'react-redux';
 import {getCv} from '../../redux/actions/getCv';
-
+import {Toast} from 'native-base';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
@@ -23,7 +23,11 @@ class getOneCv extends Component {
   }
 
   showToast = (msg) => {
-    ToastAndroid.show(`${msg}`, ToastAndroid.SHORT);
+    Toast.show({
+      text: `${msg}`,
+      buttonText: 'Okey',
+      duration: 3000,
+    });
   };
 
   setModalVisible = (visible) => {
@@ -33,7 +37,7 @@ class getOneCv extends Component {
   componentDidMount() {
     const unsubscribe = this.props.navigation.addListener('focus', async () => {
       await this.props.getCv();
-      this.showToast(this.props.msg);
+      // this.showToast(this.props.msg);
     });
 
     return unsubscribe;
@@ -44,46 +48,68 @@ class getOneCv extends Component {
   };
 
   render() {
-    console.log(this.props.cv);
     if (this.props.status != 200 && this.props.status != 304) {
       return (
-        <View>
-          <Text>No data</Text>
+        <View style={styles.container}>
+          <ScrollView style={styles.scroll}>
+            <View>
+              <Text style={styles.titleList}>My CV</Text>
+            </View>
+          </ScrollView>
+          <TouchableOpacity
+            style={styles.buttonAdd}
+            onPress={this.moveToCreateCv}>
+            <Text style={styles.textAdd}>+</Text>
+          </TouchableOpacity>
         </View>
       );
     }
     return (
       <View style={styles.container}>
         <ScrollView style={styles.scroll}>
-          <Loader status={this.props.loading}></Loader>
+          {/* <Loader status={this.props.loading}></Loader> */}
           <View>
             <Text style={styles.titleList}>My CV</Text>
             <View style={styles.cv}>
               <View style={styles.imgContainer}>
-                <Image
+                {/* <Image
                   style={styles.tinyLogo}
                   source={{uri: this.props.cv.image}}
+                /> */}
+                <Avatar
+                  // style={styles.tinyLogo}
+                  containerStyle={{marginLeft: 10, marginTop: 15}}
+                  activeOpacity={0.7}
+                  rounded
+                  size="large"
+                  source={{
+                    uri:
+                      _.get(this.props.cv, 'image') ||
+                      'https://res.cloudinary.com/do-an-cnpm/image/upload/v1618073475/person_j0pvho.png',
+                  }}
                 />
 
                 <View>
                   <Text style={styles.textName}>
-                    {this.props.cv.iterName || `Le Trung Nam`}
+                    {_.get(this.props.cv, 'iterName') || `Le Trung Nam`}
                   </Text>
                   <Text style={styles.textemail}>
-                    Email: {this.props.cv.email || `Trungnam23799@gmail.com`}
+                    Email:{' '}
+                    {_.get(this.props.cv, 'email') || `Trungnam23799@gmail.com`}
                   </Text>
                   <Text style={styles.textemail}>
-                    Brithday: {this.props.cv.birthday || `23/07/1999`}
+                    Brithday: {_.get(this.props.cv, 'birthday') || `23/07/1999`}
                   </Text>
                 </View>
               </View>
               <View style={styles.content}>
                 <Text style={styles.textLabel}>
-                  Personal Skill: {this.props.cv.personalSkill || 'Toeic 900+'}
+                  Personal Skill:{' '}
+                  {_.get(this.props.cv, 'personalSkill') || 'Toeic 900+'}
                 </Text>
                 <Text style={styles.textLabel}>
                   Skill:{' '}
-                  {this.props.cv.skill.join(' ,') ||
+                  {(_.get(this.props.cv, 'skill') || []).join(', ') ||
                     `
                   - C++, Java
                   - Git, GitHub
@@ -91,13 +117,13 @@ class getOneCv extends Component {
                 </Text>
                 <Text style={styles.textLabel}>
                   Experience:{' '}
-                  {this.props.cv.experience ||
+                  {_.get(this.props.cv, 'experience') ||
                     `
                   - 2020 - 2021 : Madison
                   - 2021 -2022 : FPT`}
                 </Text>
                 <Text style={styles.textLabel}>
-                  Description: {this.props.cv.description}
+                  Description: {_.get(this.props.cv, 'description')}
                 </Text>
               </View>
             </View>
@@ -142,6 +168,7 @@ const styles = StyleSheet.create({
   tinyLogo: {
     width: 100,
     height: 100,
+    marginTop: 10,
     borderRadius: 50,
   },
   item: {
@@ -182,6 +209,11 @@ const styles = StyleSheet.create({
     height: 60,
     backgroundColor: '#ee6e73',
     borderRadius: 100,
+    shadowColor: 'rgba(0, 0, 0, 0.1)',
+    shadowOpacity: 0.8,
+    elevation: 6,
+    shadowRadius: 15,
+    shadowOffset: {width: 1, height: 13},
   },
   textAdd: {
     fontSize: 30,
@@ -200,7 +232,7 @@ const styles = StyleSheet.create({
     fontSize: 30,
     color: 'green',
     marginLeft: 20,
-    marginTop: 15,
+    marginTop: 5,
   },
   cv: {
     display: 'flex',
