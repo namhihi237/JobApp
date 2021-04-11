@@ -8,6 +8,8 @@ import {Forgot} from './forgotPassword';
 import {Confirm} from './confirmCode';
 import {UpdatePassword} from './updatePassword';
 import {Cv} from './Cv';
+import {ApplyList} from './list-apply';
+
 export {
   Landing,
   Login,
@@ -20,4 +22,5 @@ export {
   Confirm,
   UpdatePassword,
   Cv,
+  ApplyList,
 };

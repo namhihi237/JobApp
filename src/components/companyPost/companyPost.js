@@ -24,7 +24,6 @@ class CompanyPost extends Component {
     this.state = {
       dataAccept: [],
       dataWait: [],
-      reload: true,
     };
   }
 
@@ -41,6 +40,18 @@ class CompanyPost extends Component {
     this.setState({modalVisible: visible});
   };
 
+  showAlertAccept = (postId) =>
+    Alert.alert('Option', `Pick your option `, [
+      {
+        text: 'Cancel',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+      {text: 'Apply List', onPress: () => this.moveToApplyList()},
+      {text: 'Done', onPress: () => console.log('OK Pressed')},
+      // {text: 'Delete', onPress: async () => await this.deletePost(postId)},
+    ]);
+
   showAlert = (postId) =>
     Alert.alert('Option', `Pick your option `, [
       {
@@ -56,17 +67,20 @@ class CompanyPost extends Component {
     Alert.alert('Confirm', `Are you sure you want to delete`, [
       {
         text: 'Cancel',
-        onPress: () => console.log('Cancel Pressed'),
         style: 'cancel',
       },
       {
         text: 'OK',
         onPress: async () => {
           await this.props.deletePost(postId);
-          if (this.props.Delstatus == 200 || this.props.Delstatus == 304)
+          if (this.props.Delstatus == 200 || this.props.Delstatus == 304) {
             this.showToast(this.props.delMsg, 'success');
-          else this.showToast(this.props.delMsg, 'warning');
-          this.setState({reload: !this.state.reload});
+            await this.props.getCompanyPost();
+            this.setState({
+              dataWait: this.props.posts.filter((e) => e.accept == false),
+              dataAccept: this.props.posts.filter((e) => e.accept == true),
+            });
+          } else this.showToast(this.props.delMsg, 'warning');
         },
       },
     ]);
@@ -74,7 +88,7 @@ class CompanyPost extends Component {
 
   renderItemAccept = ({item, index, separators}) => (
     <TouchableOpacity
-      onLongPress={() => this.showAlert(item._id)}
+      onLongPress={() => this.showAlertAccept(item._id)}
       onShowUnderlay={separators.highlight}
       onHideUnderlay={separators.unhighlight}>
       <View style={styles.item}>
@@ -119,6 +133,10 @@ class CompanyPost extends Component {
 
   moveToCreatePost = () => {
     this.props.navigation.navigate('CreatePost');
+  };
+
+  moveToApplyList = () => {
+    this.props.navigation.navigate('ApplyList');
   };
 
   componentWillUnmount() {
