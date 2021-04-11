@@ -151,9 +151,11 @@ class Job extends Component {
     }
     return null;
   };
+
   componentWillUnmount() {
     this._isMounted = false;
   }
+
   render() {
     const {modalVisible, item} = this.state;
 

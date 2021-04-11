@@ -12,4 +12,5 @@ export const apiUrl = {
   UPDATE_PASS_URL: `${baseUrl}/api/v1/auth/change-password`,
   CREATE_CV_URL: `${baseUrl}/api/v1/cv`,
   GET_A_CV: `${baseUrl}/api/v1/cv/user`,
+  DELETE_POST_URL: `${baseUrl}/api/v1/posts`,
 };

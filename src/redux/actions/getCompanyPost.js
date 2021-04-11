@@ -19,7 +19,6 @@ export const getCompanyPost = () => async (dispatch) => {
     const result = await axios.get(GET_COMPANY_POST, {
       headers: {Authorization: `Bearer ${token}`},
     });
-    console.log(result.status);
     dispatch({type: GET_COMPAY_POST_SUCCESS, payload: result.data});
   } catch (error) {
     const msg = _.get(error.response, 'data.msg') || "Cant't connect network";

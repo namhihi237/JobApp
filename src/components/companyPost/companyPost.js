@@ -4,35 +4,36 @@ import {
   StyleSheet,
   View,
   Text,
-  ToastAndroid,
   FlatList,
   Dimensions,
   TouchableOpacity,
   Alert,
 } from 'react-native';
 import {connect} from 'react-redux';
-import {getCompanyPost} from '../../redux/actions';
-
+import {getCompanyPost, deletePost} from '../../redux/actions';
 import {Toast} from 'native-base';
+import {getData} from '../../utils';
 
-import {from} from 'form-data';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 class CompanyPost extends Component {
+  _isMounted = false;
   constructor(props) {
     super(props);
     this.state = {
       dataAccept: [],
       dataWait: [],
+      reload: true,
     };
   }
 
-  showToast = (msg) => {
+  showToast = (msg, type) => {
     Toast.show({
       text: `${msg}`,
       buttonText: 'Okey',
       duration: 3000,
+      type,
     });
   };
 
@@ -40,8 +41,40 @@ class CompanyPost extends Component {
     this.setState({modalVisible: visible});
   };
 
+  showAlert = (postId) =>
+    Alert.alert('Option', `Pick your option `, [
+      {
+        text: 'Cancel',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+      {text: 'Edit', onPress: () => console.log('OK Pressed')},
+      {text: 'Delete', onPress: async () => await this.deletePost(postId)},
+    ]);
+
+  deletePost = async (postId) => {
+    Alert.alert('Confirm', `Are you sure you want to delete`, [
+      {
+        text: 'Cancel',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+      {
+        text: 'OK',
+        onPress: async () => {
+          await this.props.deletePost(postId);
+          if (this.props.Delstatus == 200 || this.props.Delstatus == 304)
+            this.showToast(this.props.delMsg, 'success');
+          else this.showToast(this.props.delMsg, 'warning');
+          this.setState({reload: !this.state.reload});
+        },
+      },
+    ]);
+  };
+
   renderItemAccept = ({item, index, separators}) => (
     <TouchableOpacity
+      onLongPress={() => this.showAlert(item._id)}
       onShowUnderlay={separators.highlight}
       onHideUnderlay={separators.unhighlight}>
       <View style={styles.item}>
@@ -55,7 +88,7 @@ class CompanyPost extends Component {
 
   renderItemWait = ({item, index, separators}) => (
     <TouchableOpacity
-      onPress={() => Alert.alert('ok')}
+      onLongPress={() => this.showAlert(item._id)}
       onShowUnderlay={separators.highlight}
       onHideUnderlay={separators.unhighlight}>
       <View style={styles.item}>
@@ -72,22 +105,25 @@ class CompanyPost extends Component {
   };
 
   componentDidMount() {
+    this._isMounted = true;
     const unsubscribe = this.props.navigation.addListener('focus', async () => {
       await this.props.getCompanyPost();
       this.showToast(this.props.msg);
-      console.log('status ', this.props.status);
       this.setState({
         dataWait: this.props.posts.filter((e) => e.accept == false),
         dataAccept: this.props.posts.filter((e) => e.accept == true),
       });
     });
-
     return unsubscribe;
   }
 
   moveToCreatePost = () => {
     this.props.navigation.navigate('CreatePost');
   };
+
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
 
   render() {
     const {dataAccept, dataWait} = this.state;
@@ -101,8 +137,8 @@ class CompanyPost extends Component {
     return (
       <View style={styles.container}>
         <Loader status={this.props.loading}></Loader>
-        <View>
-          <Text style={styles.titleList}>Accepted post list</Text>
+        <View style={{minHeight: 300}}>
+          <Text style={styles.titleList}>Accepted</Text>
           <FlatList
             horizontal={true}
             data={dataAccept}
@@ -112,7 +148,7 @@ class CompanyPost extends Component {
         </View>
         <View style={styles.line} />
         <View>
-          <Text style={styles.titleList}>Waiting post list</Text>
+          <Text style={styles.titleList}>Waiting</Text>
           <FlatList
             horizontal={true}
             data={dataWait}
@@ -131,6 +167,7 @@ class CompanyPost extends Component {
 }
 const mapDispatchToProps = {
   getCompanyPost,
+  deletePost,
 };
 
 const mapStateToProps = (state) => {
@@ -141,6 +178,8 @@ const mapStateToProps = (state) => {
     posts,
     status,
     msg,
+    delMsg: state.deletePost.msg,
+    Delstatus: state.deletePost.status,
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(CompanyPost);
