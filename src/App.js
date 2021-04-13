@@ -30,13 +30,11 @@ import {
 import {store} from './redux/store';
 import {Provider} from 'react-redux';
 import {storeData, getData} from './utils';
-import getOneCv from './components/Cv/getOneCv';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const CompanyPostStack = createStackNavigator();
-const IterStack = createStackNavigator();
 class C2 extends Component {
   render() {
     return (
@@ -85,22 +83,6 @@ class SettingDrawer extends Component {
   }
 }
 
-class IterNav extends Component {
-  render() {
-    return (
-      <IterStack.Navigator initialRouteName="Loading">
-        <Stack.Screen
-          name="My CV"
-          component={getOneCv}
-          options={{
-            headerShown: false,
-          }}
-        />
-        <Stack.Screen name="CreateCv" component={Cv} />
-      </IterStack.Navigator>
-    );
-  }
-}
 class tabBarForIter extends Component {
   render() {
     return (
@@ -121,7 +103,7 @@ class tabBarForIter extends Component {
           inactiveTintColor: 'gray',
         }}>
         <Tab.Screen name="Home" component={Job} />
-        <Tab.Screen name="My CV" component={IterNav} />
+
         <Tab.Screen name="Setting" component={SettingDrawer} />
       </Tab.Navigator>
     );
