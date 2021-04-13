@@ -16,7 +16,6 @@ import {
   getCv,
   searchJob,
   deletePost,
-  listApply,
 } from '../reducer/';
 
 const AppReduces = combineReducers({
@@ -34,7 +33,6 @@ const AppReduces = combineReducers({
   getCv,
   searchJob,
   deletePost,
-  listApply,
 });
 
 const rootReducer = (state, action) => {

@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
-import {Loader} from '../../common';
 import {Avatar} from 'react-native-elements';
+import axios from 'axios';
 import _ from 'lodash';
+import {getData} from '../../utils';
 import {
   StyleSheet,
   View,
@@ -10,16 +11,17 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
-import {connect} from 'react-redux';
-import {getCv} from '../../redux/actions/getCv';
 import {Toast} from 'native-base';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-class getOneCv extends Component {
+export default class CvByCompany extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      cv: null,
+      status: null,
+    };
   }
 
   showToast = (msg) => {
@@ -35,24 +37,38 @@ class getOneCv extends Component {
   };
 
   componentDidMount() {
+    const cvId = this.props.route.params.cvId;
+
     const unsubscribe = this.props.navigation.addListener('focus', async () => {
-      await this.props.getCv();
+      try {
+        const token = await getData('token');
+
+        const result = await axios.get(
+          `https://job-it-cnpmp.herokuapp.com/api/v1/cv/${cvId}`,
+          {
+            headers: {Authorization: `Bearer ${token}`},
+          },
+        );
+        const cv = result.data.cv;
+        const status = result.data.status;
+        this.setState({cv, status});
+      } catch (error) {
+        // console.log(_.get(error.response, 'data.msg'));
+        // console.log(error);
+      }
     });
 
     return unsubscribe;
   }
 
-  moveToCreateCv = () => {
-    this.props.navigation.navigate('CreateCv');
-  };
-
   render() {
-    if (this.props.status != 200 && this.props.status != 304) {
+    const {status, cv} = this.state;
+    if (status != 200 && status != 304) {
       return (
         <View style={styles.container}>
           <ScrollView style={styles.scroll}>
             <View>
-              <Text style={styles.titleList}>My CV</Text>
+              <Text style={styles.titleList}>CV</Text>
             </View>
           </ScrollView>
           <TouchableOpacity
@@ -71,44 +87,37 @@ class getOneCv extends Component {
             <Text style={styles.titleList}>My CV</Text>
             <View style={styles.cv}>
               <View style={styles.imgContainer}>
-                {/* <Image
-                  style={styles.tinyLogo}
-                  source={{uri: this.props.cv.image}}
-                /> */}
                 <Avatar
-                  // style={styles.tinyLogo}
                   containerStyle={{marginLeft: 10, marginTop: 15}}
                   activeOpacity={0.7}
                   rounded
                   size="large"
                   source={{
                     uri:
-                      _.get(this.props.cv, 'image') ||
+                      _.get(cv, 'image') ||
                       'https://res.cloudinary.com/do-an-cnpm/image/upload/v1618073475/person_j0pvho.png',
                   }}
                 />
 
                 <View>
                   <Text style={styles.textName}>
-                    {_.get(this.props.cv, 'iterName') || `Le Trung Nam`}
+                    {_.get(cv, 'iterName') || `Le Trung Nam`}
                   </Text>
                   <Text style={styles.textemail}>
-                    Email:{' '}
-                    {_.get(this.props.cv, 'email') || `Trungnam23799@gmail.com`}
+                    Email: {_.get(cv, 'email') || `Trungnam23799@gmail.com`}
                   </Text>
                   <Text style={styles.textemail}>
-                    Brithday: {_.get(this.props.cv, 'birthday') || `23/07/1999`}
+                    Brithday: {_.get(cv, 'birthday') || `23/07/1999`}
                   </Text>
                 </View>
               </View>
               <View style={styles.content}>
                 <Text style={styles.textLabel}>
-                  Personal Skill:{' '}
-                  {_.get(this.props.cv, 'personalSkill') || 'Toeic 900+'}
+                  Personal Skill: {_.get(cv, 'personalSkill') || 'Toeic 900+'}
                 </Text>
                 <Text style={styles.textLabel}>
                   Skill:{' '}
-                  {(_.get(this.props.cv, 'skill') || []).join(', ') ||
+                  {(_.get(cv, 'skill') || []).join(', ') ||
                     `
                   - C++, Java
                   - Git, GitHub
@@ -116,13 +125,13 @@ class getOneCv extends Component {
                 </Text>
                 <Text style={styles.textLabel}>
                   Experience:{' '}
-                  {_.get(this.props.cv, 'experience') ||
+                  {_.get(cv, 'experience') ||
                     `
                   - 2020 - 2021 : Madison
                   - 2021 -2022 : FPT`}
                 </Text>
                 <Text style={styles.textLabel}>
-                  Description: {_.get(this.props.cv, 'description')}
+                  Description: {_.get(cv, 'description')}
                 </Text>
               </View>
             </View>
@@ -137,20 +146,6 @@ class getOneCv extends Component {
     );
   }
 }
-const mapDispatchToProps = {
-  getCv,
-};
-
-const mapStateToProps = (state) => {
-  const {loading, cv, status, msg} = state.getCv;
-  return {
-    loading,
-    cv,
-    status,
-    msg,
-  };
-};
-export default connect(mapStateToProps, mapDispatchToProps)(getOneCv);
 
 const styles = StyleSheet.create({
   scroll: {

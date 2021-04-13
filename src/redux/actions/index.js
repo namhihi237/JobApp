@@ -12,7 +12,6 @@ import {createIterCv} from './createIterCv';
 import {getCv} from './getCv';
 import {searchJob} from './searchJob';
 import {deletePost} from './deletePost';
-import {listApply} from './listApply';
 
 export {
   login,
@@ -29,5 +28,4 @@ export {
   getCv,
   searchJob,
   deletePost,
-  listApply,
 };

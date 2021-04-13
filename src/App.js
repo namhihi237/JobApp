@@ -25,6 +25,7 @@ import {
   UpdatePassword,
   Cv,
   ApplyList,
+  CvByCompany,
 } from './components';
 import {store} from './redux/store';
 import {Provider} from 'react-redux';
@@ -140,6 +141,7 @@ class CompanyPostnav extends Component {
         />
         <Stack.Screen name="CreatePost" component={CreatePost} />
         <Stack.Screen name="ApplyList" component={ApplyList} />
+        <Stack.Screen name="CV" component={CvByCompany} />
       </CompanyPostStack.Navigator>
     );
   }

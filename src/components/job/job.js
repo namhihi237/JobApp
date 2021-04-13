@@ -9,7 +9,6 @@ import {
   StyleSheet,
   View,
   Text,
-  ToastAndroid,
   FlatList,
   Dimensions,
   TouchableOpacity,

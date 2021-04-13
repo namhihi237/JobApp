@@ -47,7 +47,7 @@ class CompanyPost extends Component {
         onPress: () => console.log('Cancel Pressed'),
         style: 'cancel',
       },
-      {text: 'Apply List', onPress: () => this.moveToApplyList()},
+      {text: 'Apply List', onPress: () => this.moveToApplyList(postId)},
       {text: 'Done', onPress: () => console.log('OK Pressed')},
       // {text: 'Delete', onPress: async () => await this.deletePost(postId)},
     ]);
@@ -135,8 +135,8 @@ class CompanyPost extends Component {
     this.props.navigation.navigate('CreatePost');
   };
 
-  moveToApplyList = () => {
-    this.props.navigation.navigate('ApplyList');
+  moveToApplyList = (postId) => {
+    this.props.navigation.navigate('ApplyList', {postId});
   };
 
   componentWillUnmount() {
