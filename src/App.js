@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {Root} from 'native-base';
 import {
   createDrawerNavigator,
   DrawerContentScrollView,
@@ -23,6 +24,8 @@ import {
   Confirm,
   UpdatePassword,
   Cv,
+  ApplyList,
+  CvByCompany,
 } from './components';
 import {store} from './redux/store';
 import {Provider} from 'react-redux';
@@ -119,6 +122,8 @@ class CompanyPostnav extends Component {
           }}
         />
         <Stack.Screen name="CreatePost" component={CreatePost} />
+        <Stack.Screen name="ApplyList" component={ApplyList} />
+        <Stack.Screen name="CV" component={CvByCompany} />
       </CompanyPostStack.Navigator>
     );
   }
@@ -187,23 +192,28 @@ export class App extends Component {
   render() {
     return (
       <Provider store={store}>
-        <NavigationContainer>
-          <Stack.Navigator
-            initialRouteName="Loading"
-            screenOptions={{
-              headerShown: false,
-            }}>
-            <Stack.Screen name="Loading" component={Landing} />
-            <Stack.Screen name="Login" component={Login} />
-            <Stack.Screen name="ForgotPassword" component={Forgot} />
-            <Stack.Screen name="ConfirmCode" component={Confirm} />
-            <Stack.Screen name="UpdatePassword" component={UpdatePassword} />
-            <Stack.Screen name="RegisterIter" component={RegisterIter} />
-            <Stack.Screen name="RegisterCompany" component={RegisterCompany} />
-            <Stack.Screen name="MainIter" component={tabBarForIter} />
-            <Stack.Screen name="MainCompany" component={tabBarForCompany} />
-          </Stack.Navigator>
-        </NavigationContainer>
+        <Root>
+          <NavigationContainer>
+            <Stack.Navigator
+              initialRouteName="Loading"
+              screenOptions={{
+                headerShown: false,
+              }}>
+              <Stack.Screen name="Loading" component={Landing} />
+              <Stack.Screen name="Login" component={Login} />
+              <Stack.Screen name="ForgotPassword" component={Forgot} />
+              <Stack.Screen name="ConfirmCode" component={Confirm} />
+              <Stack.Screen name="UpdatePassword" component={UpdatePassword} />
+              <Stack.Screen name="RegisterIter" component={RegisterIter} />
+              <Stack.Screen
+                name="RegisterCompany"
+                component={RegisterCompany}
+              />
+              <Stack.Screen name="MainIter" component={tabBarForIter} />
+              <Stack.Screen name="MainCompany" component={tabBarForCompany} />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </Root>
       </Provider>
     );
   }

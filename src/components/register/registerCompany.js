@@ -1,11 +1,6 @@
 import React, {Component} from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  TouchableOpacity,
-  ToastAndroid,
-} from 'react-native';
+import {Toast} from 'native-base';
+import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
 import {TextInput} from 'react-native-gesture-handler';
 import {registerCompany} from '../../redux/actions';
 import {connect} from 'react-redux';
@@ -22,7 +17,11 @@ class Register extends Component {
     };
   }
   showToast = (msg) => {
-    ToastAndroid.show(`${msg}`, ToastAndroid.LONG);
+    Toast.show({
+      text: `${msg}`,
+      buttonText: 'Okey',
+      duration: 3000,
+    });
   };
 
   changeTextEmail = (text) => {

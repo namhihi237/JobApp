@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, useCallback} from 'react';
 import {Loader} from '../../common';
 import {connect} from 'react-redux';
 import {confirmCode} from '../../redux/actions';
@@ -6,6 +6,10 @@ import {confirmCode} from '../../redux/actions';
 import SelectMultiple from 'react-native-select-multiple';
 import {createIterCv} from '../../redux/actions';
 import {dataSkill} from '../../constant';
+import {Toast} from 'native-base';
+import {storeData, getData} from '../../utils';
+import _ from 'lodash';
+import * as ImagePicker from 'react-native-image-picker';
 import {
   StyleSheet,
   View,
@@ -17,9 +21,12 @@ import {
   Modal,
   TouchableWithoutFeedback,
   Keyboard,
-  ToastAndroid,
   ScrollView,
+  Button,
+  Image,
 } from 'react-native';
+import FormData from 'form-data';
+import axios from 'axios';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
@@ -33,11 +40,27 @@ class Cv extends Component {
       description: '',
       textSkill: '',
       modalVisible: false,
+      photo: null,
     };
   }
 
+  handleChoosePhoto = () => {
+    const options = {
+      noData: true,
+    };
+    ImagePicker.launchImageLibrary(options, (response) => {
+      if (response.uri) {
+        this.setState({photo: response});
+      }
+    });
+  };
+
   showToast = (msg) => {
-    ToastAndroid.show(`${msg}`, ToastAndroid.LONG);
+    Toast.show({
+      text: `${msg}`,
+      buttonText: 'Okey',
+      duration: 3000,
+    });
   };
 
   setModalVisible = (status) => {
@@ -77,15 +100,27 @@ class Cv extends Component {
     const {selectedSkill, personalSkill, experience, description} = this.state;
     try {
       const skill = selectedSkill.map((e) => e.value);
-      const data = {skill, personalSkill, experience, description};
+      const image = await this.handleUpload();
+      console.log(image);
+      const data = {
+        skill,
+        personalSkill,
+        experience,
+        description,
+        image,
+        birthday: '23/07/1999',
+      };
+
       await this.props.createIterCv(data);
+
       this.showToast(this.props.msg);
       if (this.props.status != 200 && this.props.state != 304) {
         return;
       }
+
       this.props.navigation.goBack();
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   };
   onSelectionsChangesKill = (selectedSkill) => {
@@ -104,15 +139,74 @@ class Cv extends Component {
       </View>
     );
   };
+  createFormData = (photo) => {
+    const data = new FormData();
 
+    data.append('file', {
+      name: photo.fileName,
+      type: photo.type,
+      uri:
+        Platform.OS === 'android'
+          ? photo.uri
+          : photo.uri.replace('file://', ''),
+    });
+
+    return data;
+  };
+
+  handleUpload = async () => {
+    try {
+      const token = await getData('token');
+      const result = await axios.get(
+        `https://job-it-cnpmp.herokuapp.com/api/v1/images`,
+        {
+          headers: {Authorization: `Bearer ${token}`},
+        },
+      );
+      const {signature, timestamp} = _.get(result, 'data.payload');
+      const upload = await axios.post(
+        `https://api.cloudinary.com/v1_1/do-an-cnpm/image/upload?api_key=484176915684615&timestamp=${timestamp}&signature=${signature}`,
+        this.createFormData(this.state.photo),
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        },
+      );
+      return upload.data.url || null;
+      //upload.data.url
+      // await axios.post(`https://job-it-cnpmp.herokuapp.com/api/v1/images`, {
+      //   imageUrl: upload.data.url,
+      // });
+    } catch (error) {
+      return null;
+    }
+  };
   render() {
-    const {modalVisible, textSkill} = this.state;
+    const {modalVisible, textSkill, photo} = this.state;
     return (
       <ScrollView showsVerticalScrollIndicator={false}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
           <KeyboardAvoidingView style={{flex: 1}}>
             <Loader status={this.props.loading} msg={'Creating '}></Loader>
             <View style={styles.container}>
+              <View
+                style={{
+                  flex: 1,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                {photo && (
+                  <React.Fragment>
+                    <Image
+                      source={{uri: photo.uri}}
+                      style={{width: 100, height: 100}}
+                    />
+                  </React.Fragment>
+                )}
+                <Button title="Choose Photo" onPress={this.handleChoosePhoto} />
+              </View>
+
               <View style={{flexDirection: 'row'}}>
                 <TextInput
                   value={textSkill}
@@ -201,7 +295,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flex: 1,
     display: 'flex',
-    height: (windowHeight * 7) / 10,
+    height: (windowHeight * 8) / 10,
   },
   textInput: {
     borderColor: 'black',

@@ -1,5 +1,4 @@
 const baseUrl = 'https://job-it-cnpmp.herokuapp.com';
-// const baseUrl = 'http://c5e18a06d2a7.ngrok.io';
 export const apiUrl = {
   LOGIN_URL: `${baseUrl}/api/v1/auth/login`,
   REGISTER_ITER_URL: `${baseUrl}/api/v1/auth/register-iter`,
@@ -13,4 +12,6 @@ export const apiUrl = {
   UPDATE_PASS_URL: `${baseUrl}/api/v1/auth/change-password`,
   CREATE_CV_URL: `${baseUrl}/api/v1/cv`,
   GET_A_CV: `${baseUrl}/api/v1/cv/user`,
+  DELETE_POST_URL: `${baseUrl}/api/v1/posts`,
+  // LIST_ITER_APPLY_URL: `${baseUrl}/api/v1/posts/{_id}/apply-list`,
 };

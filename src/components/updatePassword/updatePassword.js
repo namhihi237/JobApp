@@ -2,14 +2,13 @@ import React, {Component} from 'react';
 import {Loader} from '../../common';
 import {connect} from 'react-redux';
 import {updatePass} from '../../redux/actions';
-
+import {Toast} from 'native-base';
 import {
   StyleSheet,
   View,
   Text,
   TouchableOpacity,
   TextInput,
-  ToastAndroid,
 } from 'react-native';
 class UpdatePassword extends Component {
   constructor(props) {
@@ -22,7 +21,11 @@ class UpdatePassword extends Component {
   }
 
   showToast = (msg) => {
-    ToastAndroid.show(`${msg}`, ToastAndroid.LONG);
+    Toast.show({
+      text: `${msg}`,
+      buttonText: 'Okey',
+      duration: 3000,
+    });
   };
 
   changeTextCode = (text) => {

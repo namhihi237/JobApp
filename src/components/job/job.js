@@ -1,49 +1,33 @@
 import React, {Component} from 'react';
-import {SearchBar} from 'react-native-elements';
 import {Loader} from '../../common';
+import axios from 'axios';
+import {apiUrl} from '../../api/api';
+const {GET_JOBS_URL} = apiUrl;
+
 import _ from 'lodash';
 import {
   StyleSheet,
   View,
   Text,
-  ToastAndroid,
   FlatList,
   Dimensions,
-  SafeAreaView,
   TouchableOpacity,
   Modal,
   TextInput,
   TouchableHighlight,
+  ActivityIndicator,
 } from 'react-native';
+
+import {JobDetail} from './jobDtail';
 
 import {connect} from 'react-redux';
 import {getJob, applyJob, searchJob} from '../../redux/actions';
 import {getData} from '../../utils';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-
-class JobDetail extends Component {
-  _isMounted = false;
-  constructor(props) {
-    super(props);
-  }
-  render() {
-    const {item} = this.props;
-    return (
-      <View style={styles.itemDetail}>
-        <Text style={styles.text}>Company Name: {item.companyName}</Text>
-        <Text style={styles.text}>Address: {item.address}</Text>
-        <Text style={styles.text}>Description: {item.description}</Text>
-        <Text style={styles.text}>Salary: {item.salary}</Text>
-        <Text style={styles.text}>Skill: {item.skill.join(', ')}</Text>
-        <Text style={styles.text}>Position: {item.position.join(', ')}</Text>
-        <Text style={styles.text}>End time: {item.endTime}</Text>
-      </View>
-    );
-  }
-}
-
+import {Toast} from 'native-base';
 class Job extends Component {
+  _isMounted = false;
   constructor(props) {
     super(props);
     this.state = {
@@ -52,11 +36,20 @@ class Job extends Component {
       item: null,
       role: '',
       posts: [],
+      loadingmore: false,
+      refreshing: false,
+      page: 1,
+      isLoading: false,
     };
+    this.handleLoadMore = this.handleLoadMore.bind(this);
   }
 
   showToast = (msg) => {
-    ToastAndroid.show(`${msg}`, ToastAndroid.SHORT);
+    Toast.show({
+      text: `${msg}`,
+      buttonText: 'Okey',
+      duration: 3000,
+    });
   };
 
   updateSearch = (search) => {
@@ -90,11 +83,46 @@ class Job extends Component {
       await this.props.getJob();
       const role = await getData('role');
 
-      this.setState({role, posts: this.props.posts});
+      this.setState({role, posts: this.props.posts, page: 1});
     });
 
     return unsubscribe;
   }
+
+  async handleLoadMore() {
+    try {
+      await this.setState({page: this.state.page + 1, isLoading: true});
+
+      if (this.state.page > this.props.numPages) {
+        return;
+      }
+      const result = await axios.get(
+        `${GET_JOBS_URL}?page=${this.state.page}&take=${10}`,
+      );
+      const addPost = result.data.data.posts;
+      const currentPage = result.data.data.currentPage;
+      let newPost = [...this.state.posts, ...addPost];
+      this.setState({
+        posts: newPost,
+        isLoading: false,
+        page: currentPage + 1,
+      });
+    } catch (error) {
+      return;
+    }
+  }
+
+  footerList = () => {
+    return (
+      <View style={{flex: 1}}>
+        {this.state.isLoading && (
+          <View style={styles.loading}>
+            <ActivityIndicator />
+          </View>
+        )}
+      </View>
+    );
+  };
 
   setModalVisible = (visible) => {
     this.setState({modalVisible: visible});
@@ -123,8 +151,12 @@ class Job extends Component {
     return null;
   };
 
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
+
   render() {
-    const {search, modalVisible, item} = this.state;
+    const {modalVisible, item} = this.state;
 
     if (this.props.status != 200 && this.props.status != 304) {
       return (
@@ -137,15 +169,13 @@ class Job extends Component {
     return (
       <View>
         <Loader status={this.props.loading}></Loader>
-        <SafeAreaView>
+        <View style={styles.container}>
           <View style={styles.searchContaier}>
-            <SearchBar
-              placeholder="Type Here..."
+            <TextInput
+              style={styles.searchInput}
               onChangeText={this.updateSearch}
-              value={search}
-              placeholderTextColor="#aa5f5f"
-              showLoading={true}
-            />
+              placeholder="Type Here..."
+              placeholderTextColor="#aa5f5f"></TextInput>
             <TouchableOpacity
               style={styles.searchButton}
               onPress={this.searchItem}>
@@ -156,8 +186,10 @@ class Job extends Component {
             style={styles.flatlist}
             data={this.state.posts}
             keyExtractor={this.keyExtractor}
-            renderItem={this.renderItem}></FlatList>
-        </SafeAreaView>
+            renderItem={this.renderItem}
+            onEndReached={this.handleLoadMore}
+            ListFooterComponent={this.footerList}></FlatList>
+        </View>
         <View style={styles.centeredView}>
           <Modal
             style={styles.search}
@@ -211,18 +243,36 @@ const mapStateToProps = (state) => {
 export default connect(mapStateToProps, mapDispatchToProps)(Job);
 
 const styles = StyleSheet.create({
-  search: {
-    borderBottomRightRadius: 10,
-    height: 50,
+  container: {
+    paddingBottom: 80,
+  },
+  searchInput: {
+    height: 40,
+    width: windowWidth * 0.8,
+    borderColor: '#003f5c',
+    borderWidth: 2,
+    padding: 2,
+    borderRadius: 6,
   },
   flatlist: {
-    // backgroundColor: '#003f5c',
     marginTop: 1,
   },
+  searchContaier: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: windowWidth,
+    paddingLeft: 3,
+    paddingRight: 3,
+    paddingTop: 2,
+  },
   searchButton: {
-    height: 30,
-    width: 50,
-    backgroundColor: '#afaa',
+    height: 40,
+    width: windowWidth * 0.18,
+    backgroundColor: '#3c9e69',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 5,
   },
   item: {
     height: (windowHeight - 10) / 6,
@@ -250,24 +300,7 @@ const styles = StyleSheet.create({
 
     elevation: 10,
   },
-  itemDetail: {
-    height: (windowHeight - 10) / 4,
-    marginBottom: 10,
-    marginLeft: 5,
-    marginRight: 5,
-    backgroundColor: '#6ca2c1',
-    shadowOpacity: 0.6,
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-    paddingLeft: 10,
-    paddingTop: 5,
-    borderRadius: 10,
-  },
-  text: {
-    fontSize: 15,
-    // fontWeight: 'bold',
-  },
+
   // modal
   centeredView: {
     flex: 1,
@@ -304,5 +337,16 @@ const styles = StyleSheet.create({
   },
   containerButton: {
     flexDirection: 'row',
+  },
+  loading: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    opacity: 0.5,
+    backgroundColor: 'black',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

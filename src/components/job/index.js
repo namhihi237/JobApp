@@ -1,2 +1,3 @@
 import Job from './job';
-export {Job};
+import {JobDetail} from './jobDtail';
+export {Job, JobDetail};
