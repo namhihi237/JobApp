@@ -9,6 +9,7 @@ import {Confirm} from './confirmCode';
 import {UpdatePassword} from './updatePassword';
 import {Cv, CvByCompany} from './Cv';
 import {ApplyList} from './list-apply';
+import {changePass} from './changePass'
 
 export {
   Landing,
@@ -24,4 +25,5 @@ export {
   Cv,
   ApplyList,
   CvByCompany,
+  changePass
 };
