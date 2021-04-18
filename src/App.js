@@ -26,6 +26,7 @@ import {
   Cv,
   ApplyList,
   CvByCompany,
+  changePass,
 } from './components';
 import {store} from './redux/store';
 import {Provider} from 'react-redux';
@@ -76,7 +77,7 @@ class SettingDrawer extends Component {
             </DrawerContentScrollView>
           );
         }}>
-        <Drawer.Screen name="C2" component={C2} />
+        <Drawer.Screen name="C2" component={changePass} />
         <Drawer.Screen name="C3" component={C3} />
       </Drawer.Navigator>
     );
