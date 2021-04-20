@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {Animated} from 'react-native';
 import {getData, storeData} from '../../utils';
 
 import {
@@ -8,11 +9,43 @@ import {
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
+import {Easing} from 'react-native-reanimated';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 export class Landing extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      marginLeftAnimA: new Animated.Value(0),
+      marginRightAnimB: new Animated.Value(windowWidth - 80),
+    };
+  }
+
+  componentDidMount() {
+    Animated.parallel([
+      this.createAnimation(
+        this.state.marginLeftAnimA,
+        1000,
+        windowWidth / 2 - 60,
+      ),
+      this.createAnimation(
+        this.state.marginRightAnimB,
+        1000,
+        windowWidth / 2 - 20,
+      ),
+    ]).start();
+  }
+  createAnimation = (value, duration, tovalue, delay = 0) => {
+    return Animated.timing(value, {
+      toValue: tovalue,
+      duration,
+      easing: Easing.linear,
+      delay,
+      useNativeDriver: true,
+    });
+  };
   moveToLoginAccount = async () => {
     const token = await getData('token');
 
@@ -33,11 +66,20 @@ export class Landing extends Component {
   };
 
   render() {
+    const {marginLeftAnimA, marginRightAnimB} = this.state;
     return (
       <View style={styles.container}>
         <View style={styles.ovalContainer}>
-          <View style={styles.oval1}></View>
-          <View style={styles.oval2}></View>
+          <Animated.View
+            style={{
+              ...styles.oval1,
+              translateX: marginRightAnimB,
+            }}></Animated.View>
+          <Animated.View
+            style={{
+              ...styles.oval2,
+              translateX: marginLeftAnimA,
+            }}></Animated.View>
         </View>
         <View style={styles.buttonEmailContainer}>
           <TouchableOpacity style={styles.loginEmailBtn} onPress={this.clear}>
@@ -62,10 +104,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   ovalContainer: {
-    width: 130,
+    width: windowWidth,
     height: 80,
-    left: windowWidth * 0.328,
     top: windowHeight * 0.16,
+    // backgroundColor: 'red',
   },
   oval1: {
     position: 'absolute',
@@ -73,7 +115,6 @@ const styles = StyleSheet.create({
     height: 80,
     borderRadius: 100 / 2,
     backgroundColor: '#596DFF',
-    left: (50 % -80) / 2 - 24.5,
   },
   oval2: {
     position: 'absolute',
@@ -81,7 +122,6 @@ const styles = StyleSheet.create({
     height: 80,
     borderRadius: 100 / 2,
     backgroundColor: 'rgba(250, 96, 125, 0.5)',
-    left: (50 % -80) / 2 + 25.5,
   },
   buttonEmailContainer: {
     display: 'flex',
