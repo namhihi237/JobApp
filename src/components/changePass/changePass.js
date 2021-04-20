@@ -40,7 +40,6 @@ class changePass extends Component {
       password: this.state.oldPass,
       newPassword: this.state.newPass,
     };
-    console.log(data);
     await this.props.changePassword(data);
     if (this.props.msg == 'Success') {
       this.props.navigation.navigate('');
@@ -93,7 +92,6 @@ const mapDispatchToProps = {
 };
 
 const mapStateToProps = (state) => {
-  console.log(state.changePassword);
   return {
     msg: state.changePassword.msg,
     loading: state.changePassword.loading,

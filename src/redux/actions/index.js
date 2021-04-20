@@ -13,7 +13,6 @@ import {getCv} from './getCv';
 import {searchJob} from './searchJob';
 import {deletePost} from './deletePost';
 import {changePassword} from './changePassword';
-
 export {
   login,
   registerIter,
@@ -29,5 +28,5 @@ export {
   getCv,
   searchJob,
   deletePost,
-  changePassword
+  changePassword,
 };
