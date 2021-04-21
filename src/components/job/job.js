@@ -16,6 +16,7 @@ import {
   TextInput,
   TouchableHighlight,
   ActivityIndicator,
+  Image,
 } from 'react-native';
 
 import {JobDetail} from './jobDtail';
@@ -63,13 +64,23 @@ class Job extends Component {
 
   renderItem = ({item}) => (
     <View style={styles.item}>
-      <Text style={styles.text}>Company Name: {item.companyName}</Text>
-      <Text style={styles.text}>Salary: {item.salary}</Text>
-      <Text style={styles.text}>Skill: {item.skill.join(', ')}</Text>
-      <Text style={styles.text}>Position: {item.position.join(', ')}</Text>
-      <TouchableOpacity onPress={() => this.showDetail(item)}>
-        <Text style={{color: 'green'}}>Detail</Text>
-      </TouchableOpacity>
+      <View style={styles.logoContainer}>
+        <Image
+          source={require('../../assets/image/fpt.jpg')}
+          style={styles.logo}></Image>
+        <View style={{padding: 1, marginLeft: 3}}>
+          <Text style={{...styles.text, fontSize: 20}}>
+            {' '}
+            {item.companyName}
+          </Text>
+          <Text style={styles.text}>Salary: {item.salary}</Text>
+          <Text style={styles.text}>Skill: {item.skill.join(', ')}</Text>
+          <Text style={styles.text}>Position: {item.position.join(', ')}</Text>
+          <TouchableOpacity onPress={() => this.showDetail(item)}>
+            <Text style={{color: 'green'}}>Detail</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
     </View>
   );
 
@@ -275,7 +286,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   item: {
-    height: (windowHeight - 10) / 6,
+    height: (windowHeight - 10) / 5,
     marginBottom: 10,
     marginLeft: 5,
     marginRight: 5,
@@ -299,6 +310,15 @@ const styles = StyleSheet.create({
     shadowRadius: 6.27,
 
     elevation: 10,
+  },
+  logoContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+  },
+  logo: {
+    marginTop: 10,
+    width: 80,
+    height: 80,
   },
 
   // modal

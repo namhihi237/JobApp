@@ -8,9 +8,6 @@ import {applyJob} from './applyJob';
 import {forgotPassword} from './forgotPassword';
 import {confirmCode} from './confirmCode';
 import {updatePass} from './updatePass';
-
-import {createIterCv} from './createIterCv';
-import {getCv} from './getCv';
 import {createIterCv} from './createIterCv';
 import {getCv} from './getCv';
 import {searchJob} from './searchJob';
@@ -32,5 +29,5 @@ export {
   getCv,
   searchJob,
   deletePost,
-  changePassword
+  changePassword,
 };
