@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {Loader} from '../../common';
+import ToggleSwitch from 'toggle-switch-react-native';
 import {Avatar} from 'react-native-elements';
 import _ from 'lodash';
 import {
@@ -13,13 +14,19 @@ import {
 import {connect} from 'react-redux';
 import {getCv} from '../../redux/actions/getCv';
 import {Toast} from 'native-base';
+import {apiUrl} from '../../api/api';
+import {getData} from '../../utils';
+import axios from 'axios';
+
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 class getOneCv extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      sendEmail: false,
+    };
   }
 
   showToast = (msg) => {
@@ -37,13 +44,35 @@ class getOneCv extends Component {
   componentDidMount() {
     const unsubscribe = this.props.navigation.addListener('focus', async () => {
       await this.props.getCv();
+      this.setState({sendEmail: this.props.cv.receiveMail});
     });
 
     return unsubscribe;
-  } 
+  }
 
   moveToCreateCv = () => {
     this.props.navigation.navigate('CreateCv');
+  };
+
+  onOffSendMail = async (isOn) => {
+    try {
+      if (!this.props.cv) {
+        this.showToast('You need create Cv');
+        return;
+      }
+      const token = await getData('token');
+      const res = await axios.get(
+        `http://934dd087d196.ngrok.io/api/v1/cv/receive-mail?receive=${isOn}`,
+        {
+          headers: {Authorization: `Bearer ${token}`},
+        },
+      );
+      console.log(res);
+      this.setState({sendEmail: isOn});
+      this.showToast(res.data.msg);
+    } catch (error) {
+      console.log('error===', error);
+    }
   };
 
   render() {
@@ -69,12 +98,17 @@ class getOneCv extends Component {
           {/* <Loader status={this.props.loading}></Loader> */}
           <View>
             <Text style={styles.titleList}>My CV</Text>
+            <ToggleSwitch
+              isOn={this.state.sendEmail}
+              onColor="green"
+              offColor="red"
+              label="Send email job"
+              labelStyle={{color: 'black', fontWeight: '900'}}
+              size="small"
+              onToggle={(isOn) => this.onOffSendMail(isOn)}
+            />
             <View style={styles.cv}>
               <View style={styles.imgContainer}>
-                {/* <Image
-                  style={styles.tinyLogo}
-                  source={{uri: this.props.cv.image}}
-                /> */}
                 <Avatar
                   // style={styles.tinyLogo}
                   containerStyle={{marginLeft: 10, marginTop: 15}}
