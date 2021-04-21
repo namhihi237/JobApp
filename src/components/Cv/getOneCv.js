@@ -61,15 +61,15 @@ class getOneCv extends Component {
         return;
       }
       const token = await getData('token');
-      const res = await axios.get(
-        `http://934dd087d196.ngrok.io/api/v1/cv/receive-mail?receive=${isOn}`,
+      const res = await axios.post(
+        `${apiUrl.BASE_URL}/api/v1/cv/receive-mail`,
+        {receive: isOn},
         {
           headers: {Authorization: `Bearer ${token}`},
         },
       );
-      console.log(res);
       this.setState({sendEmail: isOn});
-      this.showToast(res.data.msg);
+      // this.showToast(res.data.msg);
     } catch (error) {
       console.log('error===', error);
     }
