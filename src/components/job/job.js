@@ -279,6 +279,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     marginLeft: 5,
     marginRight: 5,
+
     backgroundColor: '#aecce2',
     shadowOpacity: 0.6,
     flex: 1,
@@ -286,6 +287,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     paddingLeft: 10,
     paddingTop: 5,
+
     borderRadius: 7,
     // shawdow
     shadowColor: '#000',
