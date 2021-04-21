@@ -7,9 +7,9 @@ import {CreatePost} from './createPost';
 import {Forgot} from './forgotPassword';
 import {Confirm} from './confirmCode';
 import {UpdatePassword} from './updatePassword';
-import {Cv, CvByCompany} from './Cv';
+import {Cv, CvByCompany, getOneCv} from './Cv';
 import {ApplyList} from './list-apply';
-import {changePass} from './changePass'
+import {changePass} from './changePass';
 
 export {
   Landing,
@@ -25,5 +25,6 @@ export {
   Cv,
   ApplyList,
   CvByCompany,
-  changePass
+  changePass,
+  getOneCv,
 };

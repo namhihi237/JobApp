@@ -8,12 +8,11 @@ const {CHANGE_PASSWORD_URL} = apiUrl;
 
 export const changePassword = (data) => async (dispatch) => {
   dispatch({type: CHANGE_PASS});
- 
+
   try {
     const token = await getData('token');
     const result = await axios.post(CHANGE_PASSWORD_URL, data, {
-        headers: {Authorization: `Bearer ${token}`},
-        
+      headers: {Authorization: `Bearer ${token}`},
     });
     dispatch({type: CHANGE_PASS_SUCCESS, payload: result.msg});
   } catch (error) {

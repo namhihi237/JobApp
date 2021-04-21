@@ -36,15 +36,16 @@ class changePass extends Component {
       this.showToast('Old Password or new Password is empty!');
       return;
     }
-    const data = {password: this.state.oldPass, newPassword: this.state.newPass};
-    console.log(data);
+    const data = {
+      password: this.state.oldPass,
+      newPassword: this.state.newPass,
+    };
     await this.props.changePassword(data);
-    if(this.props.msg == 'Success'){
+    if (this.props.msg == 'Success') {
       this.props.navigation.navigate('');
     }
     this.showToast(this.props.msg);
-   // console.log(this.props);
-    
+    // console.log(this.props);
   };
 
   changeTextOldPass = (text) => {
@@ -77,13 +78,11 @@ class changePass extends Component {
           />
         </View>
 
-
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.loginBtn} onPress={this.moveToMain}>
             <Text style={styles.loginText}>CHANGE</Text>
           </TouchableOpacity>
         </View>
-        
       </View>
     );
   }
@@ -93,12 +92,10 @@ const mapDispatchToProps = {
 };
 
 const mapStateToProps = (state) => {
-    console.log(state.changePassword);
   return {
     msg: state.changePassword.msg,
     loading: state.changePassword.loading,
   };
-  
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(changePass);
@@ -135,7 +132,7 @@ const styles = StyleSheet.create({
   },
   inputText: {
     height: 60,
-    color: 'white',
+    color: 'black',
   },
 
   buttonLogin: {

@@ -27,6 +27,7 @@ import {
   ApplyList,
   CvByCompany,
   changePass,
+  getOneCv,
 } from './components';
 import {store} from './redux/store';
 import {Provider} from 'react-redux';
@@ -36,15 +37,9 @@ const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const CompanyPostStack = createStackNavigator();
-class C2 extends Component {
-  render() {
-    return (
-      <View>
-        <Text>HS</Text>
-      </View>
-    );
-  }
-}
+
+const IterStack = createStackNavigator();
+
 
 class C3 extends Component {
   render() {
@@ -77,7 +72,7 @@ class SettingDrawer extends Component {
             </DrawerContentScrollView>
           );
         }}>
-        <Drawer.Screen name="C2" component={changePass} />
+        <Drawer.Screen name="Change password" component={changePass} />
         <Drawer.Screen name="C3" component={C3} />
       </Drawer.Navigator>
     );

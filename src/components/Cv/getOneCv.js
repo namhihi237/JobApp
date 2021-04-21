@@ -40,7 +40,7 @@ class getOneCv extends Component {
     });
 
     return unsubscribe;
-  }
+  } 
 
   moveToCreateCv = () => {
     this.props.navigation.navigate('CreateCv');

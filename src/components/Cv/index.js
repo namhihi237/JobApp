@@ -1,3 +1,4 @@
 import Cv from './Cv';
 import CvByCompany from './CvByCompany';
-export {Cv, CvByCompany};
+import getOneCv from './getOneCv';
+export {Cv, CvByCompany, getOneCv};
