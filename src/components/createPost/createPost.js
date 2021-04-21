@@ -17,6 +17,7 @@ import {
 import {Toast} from 'native-base';
 import {connect} from 'react-redux';
 import {createPost} from '../../redux/actions';
+
 import {dataPosition, dataSkill} from '../../constant';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -258,16 +259,12 @@ const mapStateToProps = (state) => {
 };
 export default connect(mapStateToProps, mapDispatchToProps)(CreatePost);
 const styles = StyleSheet.create({
-  container: {
-    justifyContent: 'center',
-    flex: 1,
-    display: 'flex',
-    height: (windowHeight * 7) / 10,
-  },
+  container: {},
   textInput: {
     borderColor: 'black',
     borderWidth: 1,
     height: 40,
+
     width: 260,
     marginBottom: 15,
     paddingLeft: 6,
@@ -284,13 +281,11 @@ const styles = StyleSheet.create({
     paddingLeft: 6,
     textAlignVertical: 'top',
     marginLeft: 50,
-    borderRadius: 5,
   },
   buttonChoice: {
     height: 30,
     width: 50,
     backgroundColor: 'green',
-    borderRadius: 5,
     alignItems: 'center',
     justifyContent: 'center',
     marginLeft: 5,
@@ -321,6 +316,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 10,
     elevation: 2,
+
     marginLeft: 35,
     marginRight: 35,
     marginTop: 15,

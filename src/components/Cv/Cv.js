@@ -1,6 +1,8 @@
 import React, {Component, useCallback} from 'react';
 import {Loader} from '../../common';
 import {connect} from 'react-redux';
+import {confirmCode} from '../../redux/actions';
+
 import SelectMultiple from 'react-native-select-multiple';
 import {createIterCv} from '../../redux/actions';
 import {dataSkill} from '../../constant';

@@ -37,7 +37,9 @@ const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const CompanyPostStack = createStackNavigator();
+
 const IterStack = createStackNavigator();
+
 
 class C3 extends Component {
   render() {
@@ -77,22 +79,6 @@ class SettingDrawer extends Component {
   }
 }
 
-class IterNav extends Component {
-  render() {
-    return (
-      <IterStack.Navigator initialRouteName="Loading">
-        <Stack.Screen
-          name="My CV"
-          component={getOneCv}
-          options={{
-            headerShown: false,
-          }}
-        />
-        <Stack.Screen name="CreateCv" component={Cv} />
-      </IterStack.Navigator>
-    );
-  }
-}
 class tabBarForIter extends Component {
   render() {
     return (
@@ -113,7 +99,7 @@ class tabBarForIter extends Component {
           inactiveTintColor: 'gray',
         }}>
         <Tab.Screen name="Home" component={Job} />
-        <Tab.Screen name="My CV" component={IterNav} />
+
         <Tab.Screen name="Setting" component={SettingDrawer} />
       </Tab.Navigator>
     );
