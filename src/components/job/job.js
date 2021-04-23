@@ -320,7 +320,8 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
   },
-
+  // test
+  show : {},
   // modal
   centeredView: {
     flex: 1,
