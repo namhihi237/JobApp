@@ -70,21 +70,27 @@ class Job extends Component {
           source={require('../../assets/image/fpt.jpg')}
           style={styles.logo}></Image>
         <View style={{padding: 1, marginLeft: 10}}>
-          <Text style={{...styles.text, fontSize: 20}}>
-            {' '}
+          <Text style={{...styles.text, fontSize: 20}} numberOfLines={1}>
+            {item.title}
+          </Text>
+          <Text style={{...styles.text, fontSize: 15}} numberOfLines={1}>
             {item.companyName}
           </Text>
           <View style={styles.fiedlsText}>
             <FontAwesome5 name={'money-bill'} style={styles.iconText} />
-            <Text style={styles.text}> {item.salary}</Text>
+            <Text style={styles.text} numberOfLines={1}>
+              {item.salary}
+            </Text>
           </View>
           <View style={styles.fiedlsText}>
             <FontAwesome5 name={'code'} style={styles.iconText} />
-            <Text style={styles.text}> {item.skill.join(', ')}</Text>
+            <Text style={styles.text} numberOfLines={1}>
+              {item.skill.join(', ')}
+            </Text>
           </View>
           <View style={styles.fiedlsText}>
             <FontAwesome5 name={'briefcase'} style={styles.iconText} />
-            <Text style={{...styles.text, marginLeft: 11}}>
+            <Text style={{...styles.text, marginLeft: 11}} numberOfLines={1}>
               {item.position.join(', ')}
             </Text>
           </View>
@@ -94,7 +100,7 @@ class Job extends Component {
               flexDirection: 'row',
               justifyContent: 'space-between',
               width: (windowWidth * 1.8) / 3,
-              marginTop: 15,
+              marginTop: 5,
             }}>
             <TouchableOpacity onPress={() => this.showDetail(item)} style={{}}>
               <Text style={{color: 'green'}}>See more</Text>
@@ -141,6 +147,7 @@ class Job extends Component {
       const addPost = result.data.data.posts;
       const currentPage = result.data.data.currentPage;
       let newPost = [...this.state.posts, ...addPost];
+
       this.setState({
         posts: newPost,
         isLoading: false,
@@ -201,7 +208,6 @@ class Job extends Component {
       return (
         <View>
           <Loader status={this.props.loading}></Loader>
-          <Text>No data</Text>
         </View>
       );
     }
@@ -228,6 +234,7 @@ class Job extends Component {
           </View>
           <FlatList
             style={styles.flatlist}
+            scrollEventThrottle={16}
             data={this.state.posts}
             keyExtractor={this.keyExtractor}
             renderItem={this.renderItem}
@@ -369,7 +376,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   logo: {
-    marginTop: 10,
+    marginTop: 25,
     width: 80,
     height: 80,
   },

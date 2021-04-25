@@ -1,13 +1,24 @@
 import React, {Component} from 'react';
 import {Toast} from 'native-base';
 import {Loader} from '../../common';
-import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  ImageBackground,
+  Dimensions,
+  Keyboard,
+  TouchableWithoutFeedback,
+} from 'react-native';
 
 import {TextInput} from 'react-native-gesture-handler';
 import {connect} from 'react-redux';
 import {login} from '../../redux/actions';
 import {getData} from '../../utils';
 
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 class Login extends Component {
   constructor(props) {
     super(props);
@@ -72,44 +83,52 @@ class Login extends Component {
   };
   render() {
     return (
-      <View style={styles.container}>
-        <Loader status={this.props.loading} msg={'Signing in '}></Loader>
-        <View style={styles.inputView}>
-          <TextInput
-            onChangeText={this.changeTextEmail}
-            style={styles.inputText}
-            placeholder="Email..."
-            placeholderTextColor="#003f5c"
-          />
-        </View>
-        <View style={styles.inputView}>
-          <TextInput
-            onChangeText={this.changeTextPass}
-            style={styles.inputText}
-            placeholder="Password..."
-            placeholderTextColor="#003f5c"
-            secureTextEntry={true}
-          />
-        </View>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <ImageBackground
+          source={require('../../assets/image/bg_login1.png')}
+          style={{
+            width: windowWidth,
+            height: windowHeight + 20,
+            ...styles.container,
+          }}>
+          <Loader status={this.props.loading} msg={'Signing in '}></Loader>
+          <View style={styles.inputView}>
+            <TextInput
+              onChangeText={this.changeTextEmail}
+              style={styles.inputText}
+              placeholder="Email. . ."
+              placeholderTextColor="#003f5c"
+            />
+          </View>
+          <View style={styles.inputView}>
+            <TextInput
+              onChangeText={this.changeTextPass}
+              style={styles.inputText}
+              placeholder="Password..."
+              placeholderTextColor="#003f5c"
+              secureTextEntry={true}
+            />
+          </View>
 
-        <TouchableOpacity onPress={this.moveToForgotPassword}>
-          <Text style={styles.forgot}>Forgot Password?</Text>
-        </TouchableOpacity>
-
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.loginBtn} onPress={this.moveToMain}>
-            <Text style={styles.loginText}>LOGIN</Text>
+          <TouchableOpacity onPress={this.moveToForgotPassword}>
+            <Text style={styles.forgot}>Forgot Password?</Text>
           </TouchableOpacity>
-        </View>
-        <TouchableOpacity
-          onPress={this.moveToRegisterIter}
-          style={{marginBottom: 10}}>
-          <Text style={styles.loginText}>Signup for Iter</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={this.moveToRegisterCompany}>
-          <Text style={styles.loginText}>Signup for Company</Text>
-        </TouchableOpacity>
-      </View>
+
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity style={styles.loginBtn} onPress={this.moveToMain}>
+              <Text style={styles.loginText}>LOGIN</Text>
+            </TouchableOpacity>
+          </View>
+          <TouchableOpacity
+            onPress={this.moveToRegisterIter}
+            style={{marginBottom: 10}}>
+            <Text style={styles.loginText}>Signup for Iter</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={this.moveToRegisterCompany}>
+            <Text style={styles.loginText}>Signup for Company</Text>
+          </TouchableOpacity>
+        </ImageBackground>
+      </TouchableWithoutFeedback>
     );
   }
 }
@@ -129,7 +148,6 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#a5e8a4',
     flex: 1,
   },
   forgot: {
@@ -138,7 +156,7 @@ const styles = StyleSheet.create({
   },
   loginBtn: {
     width: '80%',
-    backgroundColor: '#fb5b5a',
+    backgroundColor: 'rgba(251, 91, 90, 0.8)',
     borderRadius: 25,
     height: 50,
     alignItems: 'center',
@@ -148,7 +166,9 @@ const styles = StyleSheet.create({
   },
   inputView: {
     width: '80%',
-    backgroundColor: '#465881',
+    backgroundColor: 'rgba(70, 88, 129 , 0.7)',
+    borderWidth: 1,
+    borderColor: '#3a455b',
     borderRadius: 25,
     height: 50,
     marginBottom: 20,
