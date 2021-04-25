@@ -36,14 +36,16 @@ class CreatePost extends Component {
       description: '',
       textSkill: '',
       textPos: '',
+      title: '',
     };
   }
 
-  showToast = (msg) => {
+  showToast = (text, type, duration = 2000, buttonText = 'Okey') => {
     Toast.show({
-      text: `${msg}`,
-      buttonText: 'Okey',
-      duration: 3000,
+      text,
+      buttonText,
+      duration,
+      type,
     });
   };
 
@@ -63,6 +65,10 @@ class CreatePost extends Component {
 
   onChangeSalary = (salary) => {
     this.setState({salary});
+  };
+
+  onChangeTitle = (title) => {
+    this.setState({title});
   };
 
   onChangeAddress = (address) => {
@@ -93,7 +99,7 @@ class CreatePost extends Component {
 
   createCompanyPost = async () => {
     if (!this.validateData()) {
-      this.showToast('Data is empty!');
+      this.showToast('Data is empty!', 'warning', 2000, 'Okey');
       return;
     }
     const {
@@ -111,7 +117,7 @@ class CreatePost extends Component {
       const data = {skill, position, salary, address, endTime, description};
       console.log(data);
       await this.props.createPost(data);
-      this.showToast(this.props.msg);
+      this.showToast(this.props.msg, 'info', 2000, 'Okey');
       if (this.props.status != 200) {
         return;
       }
@@ -158,16 +164,20 @@ class CreatePost extends Component {
     return (
       <ScrollView showsVerticalScrollIndicator={false}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-          <KeyboardAvoidingView style={{flex: 1}}>
+          <KeyboardAvoidingView style={{flex: 1, paddingTop: 15}}>
             <Loader status={this.props.loading} msg={'Creating '}></Loader>
             <View style={styles.container}>
+              <TextInput
+                style={styles.textInput}
+                onChangeText={this.onChangeTitle}
+                placeholder="Title. . ."></TextInput>
               <View style={{flexDirection: 'row'}}>
                 <TextInput
                   value={textSkill}
                   style={styles.textInput}
                   editable={false}
                   selectTextOnFocus={false}
-                  placeholder="Skill..."></TextInput>
+                  placeholder="Skills. . ."></TextInput>
                 <TouchableOpacity
                   style={styles.buttonChoice}
                   onPress={this.showModalSkill}>
@@ -180,7 +190,7 @@ class CreatePost extends Component {
                   style={styles.textInput}
                   editable={false}
                   selectTextOnFocus={false}
-                  placeholder="Position..."></TextInput>
+                  placeholder="Positions. . ."></TextInput>
                 <TouchableOpacity
                   style={styles.buttonChoice}
                   onPress={this.showModalPosition}>
@@ -190,21 +200,21 @@ class CreatePost extends Component {
               <TextInput
                 style={styles.textInput}
                 onChangeText={this.onChangeSalary}
-                placeholder="Salary..."></TextInput>
+                placeholder="Salary. . ."></TextInput>
               <TextInput
                 style={styles.textInput}
                 onChangeText={this.onChangeAddress}
-                placeholder="Address..."></TextInput>
+                placeholder="Address. . ."></TextInput>
               <TextInput
                 style={styles.textInput}
                 onChangeText={this.onChangeEndTime}
-                placeholder="End Time..."></TextInput>
+                placeholder="End Time. . ."></TextInput>
               <TextInput
                 onChangeText={this.onChangeDescription}
                 multiline={true}
                 numberOfLines={4}
                 style={styles.desInput}
-                placeholder="Description"
+                placeholder="Description. . ."
                 autoCorrect={false}
               />
               <TouchableOpacity
@@ -261,16 +271,14 @@ export default connect(mapStateToProps, mapDispatchToProps)(CreatePost);
 const styles = StyleSheet.create({
   container: {},
   textInput: {
-    borderColor: 'black',
-    borderWidth: 1,
+    borderColor: '#3f51b5',
     height: 40,
-
+    borderBottomWidth: 2,
     width: 260,
     marginBottom: 15,
     paddingLeft: 6,
     marginLeft: 50,
     color: 'black',
-    borderRadius: 5,
   },
   desInput: {
     borderColor: 'black',
@@ -285,10 +293,11 @@ const styles = StyleSheet.create({
   buttonChoice: {
     height: 30,
     width: 50,
-    backgroundColor: 'green',
+    backgroundColor: '#a7abcc',
     alignItems: 'center',
     justifyContent: 'center',
     marginLeft: 5,
+    padding: 3,
   },
 
   centeredView: {

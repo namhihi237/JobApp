@@ -77,7 +77,7 @@ class Job extends Component {
           <Text style={styles.text}>Skill: {item.skill.join(', ')}</Text>
           <Text style={styles.text}>Position: {item.position.join(', ')}</Text>
           <TouchableOpacity onPress={() => this.showDetail(item)}>
-            <Text style={{color: 'green'}}>Detail</Text>
+            <Text style={{color: 'green'}}>See more</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -185,7 +185,7 @@ class Job extends Component {
             <TextInput
               style={styles.searchInput}
               onChangeText={this.updateSearch}
-              placeholder="Type Here..."
+              placeholder="Keyword (skill, company, position,...)"
               placeholderTextColor="#aa5f5f"></TextInput>
             <TouchableOpacity
               style={styles.searchButton}
@@ -256,17 +256,22 @@ export default connect(mapStateToProps, mapDispatchToProps)(Job);
 const styles = StyleSheet.create({
   container: {
     paddingBottom: 80,
+    marginBottom: 20,
   },
   searchInput: {
     height: 40,
     width: windowWidth * 0.8,
     borderColor: '#003f5c',
-    borderWidth: 2,
-    padding: 2,
+    marginLeft: 3,
+    // borderWidth: 2,
+    padding: 1,
     borderRadius: 6,
   },
   flatlist: {
-    marginTop: 1,
+    marginTop: 3,
+    marginBottom: 3,
+    paddingTop: 10,
+    paddingBottom: 100,
   },
   searchContaier: {
     display: 'flex',
@@ -320,8 +325,6 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
   },
-  // test
-  show : {},
   // modal
   centeredView: {
     flex: 1,

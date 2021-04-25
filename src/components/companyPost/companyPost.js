@@ -12,7 +12,6 @@ import {
 import {connect} from 'react-redux';
 import {getCompanyPost, deletePost} from '../../redux/actions';
 import {Toast} from 'native-base';
-import {getData} from '../../utils';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -27,11 +26,11 @@ class CompanyPost extends Component {
     };
   }
 
-  showToast = (msg, type) => {
+  showToast = (text, type, duration = 2000, buttonText = 'Okey') => {
     Toast.show({
-      text: `${msg}`,
-      buttonText: 'Okey',
-      duration: 3000,
+      text,
+      buttonText,
+      duration,
       type,
     });
   };
@@ -49,7 +48,6 @@ class CompanyPost extends Component {
       },
       {text: 'Apply List', onPress: () => this.moveToApplyList(postId)},
       {text: 'Done', onPress: () => console.log('OK Pressed')},
-      // {text: 'Delete', onPress: async () => await this.deletePost(postId)},
     ]);
 
   showAlert = (postId) =>
@@ -74,13 +72,13 @@ class CompanyPost extends Component {
         onPress: async () => {
           await this.props.deletePost(postId);
           if (this.props.Delstatus == 200 || this.props.Delstatus == 304) {
-            this.showToast(this.props.delMsg, 'success');
+            this.showToast(this.props.delMsg, 'success', 2000);
             await this.props.getCompanyPost();
             this.setState({
               dataWait: this.props.posts.filter((e) => e.accept == false),
               dataAccept: this.props.posts.filter((e) => e.accept == true),
             });
-          } else this.showToast(this.props.delMsg, 'warning');
+          } else this.showToast(this.props.delMsg, 'warning', 2000);
         },
       },
     ]);
@@ -122,7 +120,6 @@ class CompanyPost extends Component {
     this._isMounted = true;
     const unsubscribe = this.props.navigation.addListener('focus', async () => {
       await this.props.getCompanyPost();
-      this.showToast(this.props.msg);
       this.setState({
         dataWait: this.props.posts.filter((e) => e.accept == false),
         dataAccept: this.props.posts.filter((e) => e.accept == true),
