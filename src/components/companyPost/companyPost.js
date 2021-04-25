@@ -226,10 +226,10 @@ const styles = StyleSheet.create({
   item: {
     padding: 20,
     marginVertical: 8,
-    marginLeft: 10,
-    marginRight: 10,
+    marginLeft: 20,
+    marginRight: 20,
     backgroundColor: '#b8c2d1',
-    width: windowWidth - 20,
+    width: windowWidth - 40,
     height: 150,
     borderRadius: 10,
     shadowColor: 'black',

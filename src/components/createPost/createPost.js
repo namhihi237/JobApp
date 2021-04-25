@@ -85,6 +85,7 @@ class CreatePost extends Component {
 
   validateData = () => {
     const {
+      title,
       salary,
       description,
       address,
@@ -92,7 +93,7 @@ class CreatePost extends Component {
       selectedSkill,
       selectedPos,
     } = this.state;
-    if (!salary || !description || !address || !endTime) return false;
+    if (!salary || !description || !address || !endTime || !title) return false;
     if (selectedSkill.length == 0 || selectedPos.length == 0) return false;
     return true;
   };
@@ -109,13 +110,21 @@ class CreatePost extends Component {
       endTime,
       selectedSkill,
       selectedPos,
+      title,
     } = this.state;
 
     try {
       const skill = selectedSkill.map((e) => e.value);
       const position = selectedPos.map((e) => e.value);
-      const data = {skill, position, salary, address, endTime, description};
-      console.log(data);
+      const data = {
+        skill,
+        position,
+        salary,
+        address,
+        endTime,
+        description,
+        title,
+      };
       await this.props.createPost(data);
       this.showToast(this.props.msg, 'info', 2000, 'Okey');
       if (this.props.status != 200) {

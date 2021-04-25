@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, View, Text, Dimensions} from 'react-native';
+import {StyleSheet, View, Text, Dimensions, ScrollView} from 'react-native';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -13,13 +13,15 @@ export class JobDetail extends Component {
     const {item} = this.props;
     return (
       <View style={styles.itemDetail}>
-        <Text style={styles.text}>Company Name: {item.companyName}</Text>
-        <Text style={styles.text}>Address: {item.address}</Text>
-        <Text style={styles.text}>Description: {item.description}</Text>
-        <Text style={styles.text}>Salary: {item.salary}</Text>
-        <Text style={styles.text}>Skill: {item.skill.join(', ')}</Text>
-        <Text style={styles.text}>Position: {item.position.join(', ')}</Text>
-        <Text style={styles.text}>End time: {item.endTime}</Text>
+        <ScrollView>
+          <Text style={styles.text}>Company Name: {item.companyName}</Text>
+          <Text style={styles.text}>Address: {item.address}</Text>
+          <Text style={styles.text}>Description: {item.description}</Text>
+          <Text style={styles.text}>Salary: {item.salary}</Text>
+          <Text style={styles.text}>Skill: {item.skill.join(', ')}</Text>
+          <Text style={styles.text}>Position: {item.position.join(', ')}</Text>
+          <Text style={styles.text}>End time: {item.endTime}</Text>
+        </ScrollView>
       </View>
     );
   }
@@ -27,11 +29,13 @@ export class JobDetail extends Component {
 
 const styles = StyleSheet.create({
   itemDetail: {
-    height: (windowHeight - 10) / 4,
+    minHeight: (windowHeight - 10) / 4,
+    maxHeight: (windowHeight - 10) / 3,
+    width: (windowWidth * 2.3) / 3,
     marginBottom: 10,
     marginLeft: 5,
     marginRight: 5,
-    backgroundColor: '#6ca2c1',
+    backgroundColor: '#9bacb5',
     shadowOpacity: 0.6,
     flex: 1,
     display: 'flex',
