@@ -5,6 +5,8 @@ import {apiUrl} from '../../api/api';
 const {GET_JOBS_URL} = apiUrl;
 
 import _ from 'lodash';
+import {connect} from 'react-redux';
+import {Toast} from 'native-base';
 import {
   StyleSheet,
   View,
@@ -20,13 +22,11 @@ import {
 } from 'react-native';
 
 import {JobDetail} from './jobDtail';
-
-import {connect} from 'react-redux';
 import {getJob, applyJob, searchJob} from '../../redux/actions';
 import {getData} from '../../utils';
+
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-import {Toast} from 'native-base';
 class Job extends Component {
   _isMounted = false;
   constructor(props) {
@@ -194,6 +194,7 @@ class Job extends Component {
             </TouchableOpacity>
           </View>
           <FlatList
+            // distanceBetweenItem={12}
             style={styles.flatlist}
             data={this.state.posts}
             keyExtractor={this.keyExtractor}

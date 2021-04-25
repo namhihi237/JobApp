@@ -12,19 +12,56 @@ import {
 import {connect} from 'react-redux';
 import {getCompanyPost, deletePost} from '../../redux/actions';
 import {Toast} from 'native-base';
+import {TabView, SceneMap} from 'react-native-tab-view';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 class CompanyPost extends Component {
   _isMounted = false;
+
   constructor(props) {
     super(props);
     this.state = {
       dataAccept: [],
       dataWait: [],
+      index: 0,
+      routes: [
+        {key: 'Waiting', title: 'Waiting'},
+        {key: 'Accepted', title: 'Accepted'},
+      ],
     };
   }
+
+  AcceptRoute = () => (
+    <FlatList
+      horizontal={false}
+      data={this.state.dataAccept}
+      renderItem={this.renderItemAccept}
+      keyExtractor={this.keyExtractor}
+    />
+  );
+
+  WaitingRoute = () => (
+    <View style={styles.waitingContainer}>
+      <FlatList
+        horizontal={false}
+        data={this.state.dataWait}
+        renderItem={this.renderItemWait}
+        keyExtractor={this.keyExtractor}
+      />
+      <TouchableOpacity
+        style={styles.buttonAdd}
+        onPress={this.moveToCreatePost}>
+        <Text style={styles.textAdd}>+</Text>
+      </TouchableOpacity>
+    </View>
+  );
+
+  renderScene = SceneMap({
+    Accepted: this.AcceptRoute,
+    Waiting: this.WaitingRoute,
+  });
 
   showToast = (text, type, duration = 2000, buttonText = 'Okey') => {
     Toast.show({
@@ -37,6 +74,10 @@ class CompanyPost extends Component {
 
   setModalVisible = (visible) => {
     this.setState({modalVisible: visible});
+  };
+
+  setIndex = (index) => {
+    this.setState({index});
   };
 
   showAlertAccept = (postId) =>
@@ -141,7 +182,7 @@ class CompanyPost extends Component {
   }
 
   render() {
-    const {dataAccept, dataWait} = this.state;
+    const {index, routes} = this.state;
     if (this.props.status != 200 && this.props.status != 304) {
       return (
         <View>
@@ -150,33 +191,12 @@ class CompanyPost extends Component {
       );
     }
     return (
-      <View style={styles.container}>
-        <Loader status={this.props.loading}></Loader>
-        <View style={{minHeight: 300}}>
-          <Text style={styles.titleList}>Accepted</Text>
-          <FlatList
-            horizontal={true}
-            data={dataAccept}
-            renderItem={this.renderItemAccept}
-            keyExtractor={this.keyExtractor}
-          />
-        </View>
-        <View style={styles.line} />
-        <View>
-          <Text style={styles.titleList}>Waiting</Text>
-          <FlatList
-            horizontal={true}
-            data={dataWait}
-            renderItem={this.renderItemWait}
-            keyExtractor={this.keyExtractor}
-          />
-        </View>
-        <TouchableOpacity
-          style={styles.buttonAdd}
-          onPress={this.moveToCreatePost}>
-          <Text style={styles.textAdd}>+</Text>
-        </TouchableOpacity>
-      </View>
+      <TabView
+        navigationState={{index, routes}}
+        renderScene={this.renderScene}
+        onIndexChange={this.setIndex}
+        initialLayout={{width: windowWidth}}
+      />
     );
   }
 }
@@ -200,15 +220,16 @@ const mapStateToProps = (state) => {
 export default connect(mapStateToProps, mapDispatchToProps)(CompanyPost);
 
 const styles = StyleSheet.create({
-  container: {
+  waitingContainer: {
     flex: 1,
   },
   item: {
     padding: 20,
     marginVertical: 8,
-    marginHorizontal: 16,
+    marginLeft: 10,
+    marginRight: 10,
     backgroundColor: '#b8c2d1',
-    width: 200,
+    width: windowWidth - 20,
     height: 150,
     borderRadius: 10,
     shadowColor: 'black',
