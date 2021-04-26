@@ -14,12 +14,12 @@ export class JobDetail extends Component {
     return (
       <View style={styles.itemDetail}>
         <ScrollView>
+          <Text style={styles.text}>Title: {item.title}</Text>
           <Text style={styles.text}>Company Name: {item.companyName}</Text>
           <Text style={styles.text}>Address: {item.address}</Text>
           <Text style={styles.text}>Description: {item.description}</Text>
           <Text style={styles.text}>Salary: {item.salary}</Text>
           <Text style={styles.text}>Skill: {item.skill.join(', ')}</Text>
-          <Text style={styles.text}>Position: {item.position.join(', ')}</Text>
           <Text style={styles.text}>End time: {item.endTime}</Text>
         </ScrollView>
       </View>

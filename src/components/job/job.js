@@ -89,19 +89,12 @@ class Job extends Component {
             </Text>
           </View>
           <View style={styles.fiedlsText}>
-            <FontAwesome5 name={'briefcase'} style={styles.iconText} />
-            <Text style={{...styles.text, marginLeft: 11}} numberOfLines={1}>
-              {item.position.join(', ')}
+            <FontAwesome5 name={'map-marker-alt'} style={styles.iconText} />
+            <Text style={styles.text} numberOfLines={1}>
+              {item.address}
             </Text>
           </View>
-          <View
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              width: (windowWidth * 1.8) / 3,
-              marginTop: 5,
-            }}>
+          <View style={styles.seeMore}>
             <TouchableOpacity onPress={() => this.showDetail(item)} style={{}}>
               <Text style={{color: 'green'}}>See more</Text>
             </TouchableOpacity>
@@ -300,6 +293,13 @@ const styles = StyleSheet.create({
   fiedlsText: {
     display: 'flex',
     flexDirection: 'row',
+  },
+  seeMore: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: (windowWidth * 1.8) / 3,
+    marginTop: 5,
   },
   searchInput: {
     height: 50,

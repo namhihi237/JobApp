@@ -18,7 +18,7 @@ import {Toast} from 'native-base';
 import {connect} from 'react-redux';
 import {createPost} from '../../redux/actions';
 
-import {dataPosition, dataSkill} from '../../constant';
+import {dataSkill} from '../../constant';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
@@ -29,7 +29,6 @@ class CreatePost extends Component {
       modalVisible: false,
       skill: false,
       selectedSkill: [],
-      selectedPos: [],
       salary: '',
       address: '',
       endTime: '',
@@ -57,10 +56,6 @@ class CreatePost extends Component {
 
   showModalSkill = () => {
     this.setState({modalVisible: true, skill: true});
-  };
-
-  showModalPosition = () => {
-    this.setState({modalVisible: true, skill: false});
   };
 
   onChangeSalary = (salary) => {
@@ -91,10 +86,9 @@ class CreatePost extends Component {
       address,
       endTime,
       selectedSkill,
-      selectedPos,
     } = this.state;
     if (!salary || !description || !address || !endTime || !title) return false;
-    if (selectedSkill.length == 0 || selectedPos.length == 0) return false;
+    if (selectedSkill.length == 0) return false;
     return true;
   };
 
@@ -109,16 +103,13 @@ class CreatePost extends Component {
       address,
       endTime,
       selectedSkill,
-      selectedPos,
       title,
     } = this.state;
 
     try {
       const skill = selectedSkill.map((e) => e.value);
-      const position = selectedPos.map((e) => e.value);
       const data = {
         skill,
-        position,
         salary,
         address,
         endTime,
@@ -147,16 +138,6 @@ class CreatePost extends Component {
   };
 
   showSkill = () => {
-    if (!this.state.skill)
-      return (
-        <View style={{height: 300, width: 200}}>
-          <SelectMultiple
-            items={dataPosition}
-            selectedItems={this.state.selectedPos}
-            onSelectionsChange={this.onSelectionsChangePos}
-          />
-        </View>
-      );
     return (
       <View style={{height: 300, width: 200}}>
         <SelectMultiple
@@ -190,19 +171,6 @@ class CreatePost extends Component {
                 <TouchableOpacity
                   style={styles.buttonChoice}
                   onPress={this.showModalSkill}>
-                  <Text>choice</Text>
-                </TouchableOpacity>
-              </View>
-              <View style={{flexDirection: 'row'}}>
-                <TextInput
-                  value={textPos}
-                  style={styles.textInput}
-                  editable={false}
-                  selectTextOnFocus={false}
-                  placeholder="Positions. . ."></TextInput>
-                <TouchableOpacity
-                  style={styles.buttonChoice}
-                  onPress={this.showModalPosition}>
                   <Text>choice</Text>
                 </TouchableOpacity>
               </View>
