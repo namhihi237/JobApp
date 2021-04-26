@@ -45,20 +45,6 @@ export class FormInfo extends Component {
 
   showCheckBox = () => {
     this.setModalVisible(true);
-    // return (
-
-    // <View style={{height: 300}}>
-    //   <CheckboxList
-    //     headerName="Movies"
-    //     theme="red"
-    //     listItems={data}
-    //     onChange={({ids, items}) => console.log('My updated list :: ', ids)}
-    //     listItemStyle={{borderBottomColor: '#eee', borderBottomWidth: 1}}
-    //     checkboxProp={{boxType: 'square'}}
-    //     // onLoading={() => <LoaderComponent />}
-    //   />
-    // </View>
-    // );
   };
 
   render() {
@@ -79,11 +65,6 @@ export class FormInfo extends Component {
             </TouchableOpacity>
           </View>
           <View style={{flexDirection: 'row'}}>
-            <TextInput
-              style={styles.textInput}
-              editable={false}
-              selectTextOnFocus={false}
-              placeholder="Position..."></TextInput>
             <TouchableOpacity
               style={styles.buttonChoice}
               onPress={this.showCheckBox}>
@@ -113,7 +94,6 @@ export class FormInfo extends Component {
             transparent={true}
             visible={modalVisible}
             onRequestClose={() => {
-              // Alert.alert('Modal has been closed.');
             }}>
             <View style={styles.centeredView}>
               <View style={styles.modalView}>

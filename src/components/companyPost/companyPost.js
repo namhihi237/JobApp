@@ -131,10 +131,10 @@ class CompanyPost extends Component {
       onShowUnderlay={separators.highlight}
       onHideUnderlay={separators.unhighlight}>
       <View style={styles.item}>
+        <Text style={styles.text}>Titile: {item.title}</Text>
         <Text style={styles.text}>Company Name: {item.companyName}</Text>
         <Text style={styles.text}>Salary: {item.salary}</Text>
         <Text style={styles.text}>Skill: {item.skill.join(', ')}</Text>
-        <Text style={styles.text}>Position: {item.position.join(', ')}</Text>
       </View>
     </TouchableOpacity>
   );
@@ -145,10 +145,10 @@ class CompanyPost extends Component {
       onShowUnderlay={separators.highlight}
       onHideUnderlay={separators.unhighlight}>
       <View style={styles.item}>
+        <Text style={styles.text}>Titile: {item.title}</Text>
         <Text style={styles.text}>Company Name: {item.companyName}</Text>
         <Text style={styles.text}>Salary: {item.salary}</Text>
         <Text style={styles.text}>Skill: {item.skill.join(', ')}</Text>
-        <Text style={styles.text}>Position: {item.position.join(', ')}</Text>
       </View>
     </TouchableOpacity>
   );

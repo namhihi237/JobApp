@@ -1,7 +1,6 @@
-import React, {Component, useCallback} from 'react';
+import React, {Component} from 'react';
 import {Loader} from '../../common';
 import {connect} from 'react-redux';
-import {confirmCode} from '../../redux/actions';
 
 import SelectMultiple from 'react-native-select-multiple';
 import {createIterCv} from '../../redux/actions';
@@ -119,9 +118,7 @@ class Cv extends Component {
       }
 
       this.props.navigation.goBack();
-    } catch (error) {
-      // console.log(error);
-    }
+    } catch (error) {}
   };
   onSelectionsChangesKill = (selectedSkill) => {
     const skills = selectedSkill.map((e) => e.value).join(', ');
@@ -174,14 +171,11 @@ class Cv extends Component {
         },
       );
       return upload.data.url || null;
-      //upload.data.url
-      // await axios.post(`https://job-it-cnpmp.herokuapp.com/api/v1/images`, {
-      //   imageUrl: upload.data.url,
-      // });
     } catch (error) {
       return null;
     }
   };
+
   render() {
     const {modalVisible, textSkill, photo} = this.state;
     return (
