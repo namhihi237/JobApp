@@ -12,9 +12,6 @@ import {
 import {connect} from 'react-redux';
 import {getProfile} from '../../redux/actions/getProfile';
 import {Toast} from 'native-base';
-import {apiUrl} from '../../api/api';
-import {getData} from '../../utils';
-import axios from 'axios';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -23,7 +20,6 @@ class Profile extends Component {
   constructor(props) {
     super(props);
     this.state = {
-
     };
   }
 
@@ -43,7 +39,6 @@ class Profile extends Component {
     const unsubscribe = this.props.navigation.addListener('focus', async () => {
       await this.props.getProfile();
     });
-
     return unsubscribe;
   }
 
@@ -104,7 +99,6 @@ const styles = StyleSheet.create({
   scroll: {
     minHeight: windowHeight,
   },
-
   container: {
     flex: 1,
     backgroundColor: '#ffff',
