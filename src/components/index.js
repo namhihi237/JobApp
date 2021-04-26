@@ -10,7 +10,7 @@ import {UpdatePassword} from './updatePassword';
 import {Cv, CvByCompany, getOneCv} from './Cv';
 import {ApplyList} from './list-apply';
 import {changePass} from './changePass';
-
+import {Profile} from './profile'
 export {
   Landing,
   Login,
@@ -27,4 +27,5 @@ export {
   CvByCompany,
   changePass,
   getOneCv,
+  Profile
 };

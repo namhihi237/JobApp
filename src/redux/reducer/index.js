@@ -13,6 +13,7 @@ import {getCv} from './getCv';
 import {searchJob} from './searchJob';
 import {deletePost} from './deletePost';
 import {changePassword} from './changePassword';
+import {getProfile} from './getProfile';
 
 export {
   login,
@@ -30,4 +31,5 @@ export {
   searchJob,
   deletePost,
   changePassword,
+  getProfile
 };

@@ -28,6 +28,7 @@ import {
   CvByCompany,
   changePass,
   getOneCv,
+  Profile,
 } from './components';
 import {store} from './redux/store';
 import {Provider} from 'react-redux';
@@ -71,7 +72,7 @@ class SettingDrawer extends Component {
           );
         }}>
         <Drawer.Screen name="C2" component={changePass} />
-        <Drawer.Screen name="C3" component={C3} />
+        <Drawer.Screen name="C3" component={Profile} />
       </Drawer.Navigator>
     );
   }
