@@ -18,7 +18,7 @@ import {Toast} from 'native-base';
 import {connect} from 'react-redux';
 import {createPost} from '../../redux/actions';
 
-import { dataSkill} from '../../constant';
+import {dataSkill} from '../../constant';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
@@ -29,7 +29,6 @@ class CreatePost extends Component {
       modalVisible: false,
       skill: false,
       selectedSkill: [],
-      selectedPos: [],
       salary: '',
       address: '',
       endTime: '',
@@ -87,10 +86,9 @@ class CreatePost extends Component {
       address,
       endTime,
       selectedSkill,
-      selectedPos,
     } = this.state;
     if (!salary || !description || !address || !endTime || !title) return false;
-    if (selectedSkill.length == 0 || selectedPos.length == 0) return false;
+    if (selectedSkill.length == 0) return false;
     return true;
   };
 
