@@ -1,10 +1,15 @@
 import React, {Component} from 'react';
+import _ from 'lodash';
+import {connect} from 'react-redux';
+import {Toast} from 'native-base';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {Loader} from '../../common';
 import axios from 'axios';
 import {apiUrl} from '../../api/api';
-const {GET_JOBS_URL} = apiUrl;
+import {JobDetail} from './jobDtail';
+import {getJob, applyJob, searchJob} from '../../redux/actions';
+import {getData} from '../../utils';
 
-import _ from 'lodash';
 import {
   StyleSheet,
   View,
@@ -16,16 +21,13 @@ import {
   TextInput,
   TouchableHighlight,
   ActivityIndicator,
+  Image,
 } from 'react-native';
 
-import {JobDetail} from './jobDtail';
-
-import {connect} from 'react-redux';
-import {getJob, applyJob, searchJob} from '../../redux/actions';
-import {getData} from '../../utils';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-import {Toast} from 'native-base';
+const {GET_JOBS_URL} = apiUrl;
+
 class Job extends Component {
   _isMounted = false;
   constructor(props) {
@@ -63,13 +65,56 @@ class Job extends Component {
 
   renderItem = ({item}) => (
     <View style={styles.item}>
-      <Text style={styles.text}>Company Name: {item.companyName}</Text>
-      <Text style={styles.text}>Salary: {item.salary}</Text>
-      <Text style={styles.text}>Skill: {item.skill.join(', ')}</Text>
-      <Text style={styles.text}>Position: {item.position.join(', ')}</Text>
-      <TouchableOpacity onPress={() => this.showDetail(item)}>
-        <Text style={{color: 'green'}}>Detail</Text>
-      </TouchableOpacity>
+      <View style={styles.logoContainer}>
+        <Image
+          source={require('../../assets/image/fpt.jpg')}
+          style={styles.logo}></Image>
+        <View style={{padding: 1, marginLeft: 10}}>
+          <Text style={{...styles.text, fontSize: 20}} numberOfLines={1}>
+            {item.title}
+          </Text>
+          <Text style={{...styles.text, fontSize: 15}} numberOfLines={1}>
+            {item.companyName}
+          </Text>
+          <View style={styles.fiedlsText}>
+            <FontAwesome5 name={'money-bill'} style={styles.iconText} />
+            <Text style={styles.text} numberOfLines={1}>
+              {item.salary}
+            </Text>
+          </View>
+          <View style={styles.fiedlsText}>
+            <FontAwesome5 name={'code'} style={styles.iconText} />
+            <Text style={styles.text} numberOfLines={1}>
+              {item.skill.join(', ')}
+            </Text>
+          </View>
+          <View style={styles.fiedlsText}>
+            <FontAwesome5 name={'briefcase'} style={styles.iconText} />
+            <Text style={{...styles.text, marginLeft: 11}} numberOfLines={1}>
+              {item.position.join(', ')}
+            </Text>
+          </View>
+          <View
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              width: (windowWidth * 1.8) / 3,
+              marginTop: 5,
+            }}>
+            <TouchableOpacity onPress={() => this.showDetail(item)} style={{}}>
+              <Text style={{color: 'green'}}>See more</Text>
+            </TouchableOpacity>
+            <View style={styles.fiedlsText}>
+              <FontAwesome5
+                name={'history'}
+                style={{...styles.iconText, color: 'red'}}
+              />
+              <Text style={{marginLeft: 10}}>{item.endTime}</Text>
+            </View>
+          </View>
+        </View>
+      </View>
     </View>
   );
 
@@ -102,6 +147,7 @@ class Job extends Component {
       const addPost = result.data.data.posts;
       const currentPage = result.data.data.currentPage;
       let newPost = [...this.state.posts, ...addPost];
+
       this.setState({
         posts: newPost,
         isLoading: false,
@@ -162,7 +208,6 @@ class Job extends Component {
       return (
         <View>
           <Loader status={this.props.loading}></Loader>
-          <Text>No data</Text>
         </View>
       );
     }
@@ -171,19 +216,25 @@ class Job extends Component {
         <Loader status={this.props.loading}></Loader>
         <View style={styles.container}>
           <View style={styles.searchContaier}>
-            <TextInput
-              style={styles.searchInput}
-              onChangeText={this.updateSearch}
-              placeholder="Type Here..."
-              placeholderTextColor="#aa5f5f"></TextInput>
-            <TouchableOpacity
-              style={styles.searchButton}
-              onPress={this.searchItem}>
-              <Text>Search</Text>
-            </TouchableOpacity>
+            <View style={{...styles.searchInput}}>
+              <TextInput
+                style={{height: 40}}
+                onChangeText={this.updateSearch}
+                placeholder="Keyword (skill, company, position,...)"
+                placeholderTextColor="#aa5f5f"></TextInput>
+              <TouchableOpacity
+                style={styles.searchButton}
+                onPress={this.searchItem}>
+                <FontAwesome5
+                  name={'search'}
+                  style={{fontSize: 22, marginBottom: 3}}
+                />
+              </TouchableOpacity>
+            </View>
           </View>
           <FlatList
             style={styles.flatlist}
+            scrollEventThrottle={16}
             data={this.state.posts}
             keyExtractor={this.keyExtractor}
             renderItem={this.renderItem}
@@ -198,7 +249,7 @@ class Job extends Component {
             visible={modalVisible}>
             <View style={styles.centeredView}>
               <View style={styles.modalView}>
-                <Text style={styles.modalText}>Job Detail</Text>
+                <Text style={{fontSize: 30}}>Job Detail</Text>
                 <JobDetail item={item}></JobDetail>
                 <View style={styles.containerButton}>
                   <TouchableHighlight
@@ -244,18 +295,33 @@ export default connect(mapStateToProps, mapDispatchToProps)(Job);
 
 const styles = StyleSheet.create({
   container: {
-    paddingBottom: 80,
+    height: windowHeight - 26,
+  },
+  fiedlsText: {
+    display: 'flex',
+    flexDirection: 'row',
   },
   searchInput: {
-    height: 40,
-    width: windowWidth * 0.8,
-    borderColor: '#003f5c',
-    borderWidth: 2,
-    padding: 2,
-    borderRadius: 6,
+    height: 50,
+    width: windowWidth - 10,
+    borderColor: '#7e8591',
+    marginLeft: 3,
+    marginRight: 3,
+    borderWidth: 3,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 1,
+    paddingLeft: 15,
+    borderRadius: 50,
+    backgroundColor: '#c7cadd',
+    opacity: 0.7,
   },
   flatlist: {
-    marginTop: 1,
+    marginTop: 3,
+    marginBottom: 3,
+    paddingTop: 10,
+    paddingBottom: 100,
   },
   searchContaier: {
     display: 'flex',
@@ -269,18 +335,17 @@ const styles = StyleSheet.create({
   searchButton: {
     height: 40,
     width: windowWidth * 0.18,
-    backgroundColor: '#3c9e69',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 5,
   },
   item: {
-    height: (windowHeight - 10) / 6,
-    marginBottom: 10,
-    marginLeft: 5,
-    marginRight: 5,
+    height: (windowHeight - 10) / 5,
+    marginBottom: 15,
+    marginLeft: 15,
+    marginRight: 15,
 
-    backgroundColor: '#aecce2',
+    // backgroundColor: '#aecce2',
+    backgroundColor: '#fff',
     shadowOpacity: 0.6,
     flex: 1,
     display: 'flex',
@@ -293,14 +358,28 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 5,
+      height: 8,
     },
+
     shadowOpacity: 0.34,
     shadowRadius: 6.27,
 
     elevation: 10,
   },
-
+  iconText: {marginTop: 4, marginLeft: 5},
+  text: {
+    marginBottom: 1,
+    marginLeft: 5,
+  },
+  logoContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+  },
+  logo: {
+    marginTop: 25,
+    width: 80,
+    height: 80,
+  },
   // modal
   centeredView: {
     flex: 1,
@@ -310,10 +389,10 @@ const styles = StyleSheet.create({
   },
   modalView: {
     margin: 20,
-    backgroundColor: 'white',
+    backgroundColor: 'rgba(103, 104, 107 , 0.95)',
     borderRadius: 20,
-    height: 300,
-    width: 300,
+    minHeight: (windowHeight * 1.25) / 3,
+    width: windowWidth / 1.15,
     padding: 20,
     alignItems: 'center',
     shadowColor: '#000',

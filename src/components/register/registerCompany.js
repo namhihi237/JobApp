@@ -1,6 +1,14 @@
 import React, {Component} from 'react';
 import {Toast} from 'native-base';
-import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  Keyboard,
+  ImageBackground,
+  TouchableWithoutFeedback,
+} from 'react-native';
 import {TextInput} from 'react-native-gesture-handler';
 import {registerCompany} from '../../redux/actions';
 import {connect} from 'react-redux';
@@ -70,51 +78,57 @@ class Register extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        <Loader status={this.props.loading} msg={'Register'}></Loader>
-        <View style={styles.inputView}>
-          <TextInput
-            style={styles.inputText}
-            placeholder="Email..."
-            placeholderTextColor="#003f5c"
-            onChangeText={this.changeTextEmail}
-          />
-        </View>
-        <View style={styles.inputView}>
-          <TextInput
-            style={styles.inputText}
-            placeholder="Password..."
-            placeholderTextColor="#003f5c"
-            secureTextEntry={true}
-            onChangeText={this.changeTextPass}
-          />
-        </View>
-        <View style={styles.inputView}>
-          <TextInput
-            style={styles.inputText}
-            placeholder="Confirm password"
-            placeholderTextColor="#003f5c"
-            secureTextEntry={true}
-            onChangeText={this.changeTextConfirmPass}
-          />
-        </View>
-        <View style={styles.inputView}>
-          <TextInput
-            style={styles.inputText}
-            placeholder="Name..."
-            placeholderTextColor="#003f5c"
-            onChangeText={this.changeTextCompanyName}
-          />
-        </View>
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.loginBtn} onPress={this.registerAcc}>
-            <Text style={styles.loginText}>SIGNUP ACCOUNT COMPANY</Text>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <ImageBackground
+          source={require('../../assets/image/bg_register.png')}
+          style={styles.container}>
+          <Loader status={this.props.loading} msg={'Register'}></Loader>
+          <View style={styles.inputView}>
+            <TextInput
+              style={styles.inputText}
+              placeholder="Email..."
+              placeholderTextColor="#003f5c"
+              onChangeText={this.changeTextEmail}
+            />
+          </View>
+          <View style={styles.inputView}>
+            <TextInput
+              style={styles.inputText}
+              placeholder="Password..."
+              placeholderTextColor="#003f5c"
+              secureTextEntry={true}
+              onChangeText={this.changeTextPass}
+            />
+          </View>
+          <View style={styles.inputView}>
+            <TextInput
+              style={styles.inputText}
+              placeholder="Confirm password..."
+              placeholderTextColor="#003f5c"
+              secureTextEntry={true}
+              onChangeText={this.changeTextConfirmPass}
+            />
+          </View>
+          <View style={styles.inputView}>
+            <TextInput
+              style={styles.inputText}
+              placeholder="Company Name..."
+              placeholderTextColor="#003f5c"
+              onChangeText={this.changeTextCompanyName}
+            />
+          </View>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              style={styles.loginBtn}
+              onPress={this.registerAcc}>
+              <Text style={styles.loginText}>SIGNUP ACCOUNT COMPANY</Text>
+            </TouchableOpacity>
+          </View>
+          <TouchableOpacity onPress={this.moveToLogin}>
+            <Text style={styles.loginText}>SignIn</Text>
           </TouchableOpacity>
-        </View>
-        <TouchableOpacity onPress={this.moveToLogin}>
-          <Text style={styles.loginText}>SignIn</Text>
-        </TouchableOpacity>
-      </View>
+        </ImageBackground>
+      </TouchableWithoutFeedback>
     );
   }
 }
@@ -155,7 +169,7 @@ const styles = StyleSheet.create({
   },
   inputView: {
     width: '80%',
-    backgroundColor: '#465881',
+    backgroundColor: 'rgba(70, 88, 129, 0.8)',
     borderRadius: 25,
     height: 50,
     marginBottom: 20,

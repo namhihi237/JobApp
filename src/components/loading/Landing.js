@@ -8,6 +8,7 @@ import {
   Text,
   TouchableOpacity,
   Dimensions,
+  ImageBackground,
 } from 'react-native';
 import {Easing} from 'react-native-reanimated';
 
@@ -68,7 +69,9 @@ export class Landing extends Component {
   render() {
     const {marginLeftAnimA, marginRightAnimB} = this.state;
     return (
-      <View style={styles.container}>
+      <ImageBackground
+        style={styles.container}
+        source={require('../../assets/image/landing.jpg')}>
         <View style={styles.ovalContainer}>
           <Animated.View
             style={{
@@ -93,7 +96,7 @@ export class Landing extends Component {
             <Text style={styles.loginText}>Login with Account</Text>
           </TouchableOpacity>
         </View>
-      </View>
+      </ImageBackground>
     );
   }
 }
@@ -107,7 +110,6 @@ const styles = StyleSheet.create({
     width: windowWidth,
     height: 80,
     top: windowHeight * 0.16,
-    // backgroundColor: 'red',
   },
   oval1: {
     position: 'absolute',
@@ -143,8 +145,10 @@ const styles = StyleSheet.create({
   },
   loginEmailBtn: {
     width: '100%',
-    backgroundColor: '#3364B7',
+    backgroundColor: 'rgba(51, 100, 183, 0.3)',
+    borderWidth: 1,
     borderRadius: 10,
+    borderColor: '#20498c',
     height: 50,
     alignItems: 'center',
     justifyContent: 'center',
@@ -153,7 +157,9 @@ const styles = StyleSheet.create({
   },
   loginBtn: {
     width: '100%',
-    backgroundColor: '#3364B7',
+    borderColor: '#20498c',
+    backgroundColor: 'rgba(51, 100, 183, 0.3)',
+    borderWidth: 1,
     borderRadius: 10,
     height: 50,
     alignItems: 'center',
