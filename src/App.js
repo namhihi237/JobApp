@@ -71,8 +71,8 @@ class SettingDrawer extends Component {
             </DrawerContentScrollView>
           );
         }}>
-        <Drawer.Screen name="C2" component={changePass} />
-        <Drawer.Screen name="C3" component={Profile} />
+        <Drawer.Screen name="Change Password" component={changePass} />
+        <Drawer.Screen name="My Profile" component={Profile} />
       </Drawer.Navigator>
     );
   }
