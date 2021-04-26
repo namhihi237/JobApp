@@ -95,7 +95,6 @@ class getOneCv extends Component {
     return (
       <View style={styles.container}>
         <ScrollView style={styles.scroll}>
-          {/* <Loader status={this.props.loading}></Loader> */}
           <View>
             <Text style={styles.titleList}>My CV</Text>
             <ToggleSwitch
@@ -110,7 +109,6 @@ class getOneCv extends Component {
             <View style={styles.cv}>
               <View style={styles.imgContainer}>
                 <Avatar
-                  // style={styles.tinyLogo}
                   containerStyle={{marginLeft: 10, marginTop: 15}}
                   activeOpacity={0.7}
                   rounded
@@ -193,7 +191,7 @@ const styles = StyleSheet.create({
 
   container: {
     flex: 1,
-    backgroundColor: '#45fad3',
+    backgroundColor: '#c7c8d6',
     margin: 5,
     borderRadius: 10,
     padding: 10,
@@ -255,7 +253,6 @@ const styles = StyleSheet.create({
   textLabel: {
     fontSize: 20,
     marginBottom: 10,
-    color: 'red',
   },
   textContent: {
     fontSize: 30,
@@ -263,7 +260,6 @@ const styles = StyleSheet.create({
   },
   textName: {
     fontSize: 30,
-    color: 'green',
     marginLeft: 20,
     marginTop: 5,
   },
@@ -273,7 +269,14 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   imgContainer: {
-    backgroundColor: '#8bdb85',
+    backgroundColor: 'rgba(113, 115, 127,0.9)',
+    shadowOffset: {
+      width: 0,
+      height: 8,
+    },
+    elevation: 10,
+    shadowColor: '#000',
+    shadowOpacity: 0.54,
     display: 'flex',
     flexDirection: 'row',
     borderBottomRightRadius: 80,
