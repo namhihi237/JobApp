@@ -3,13 +3,10 @@ import _ from 'lodash';
 import {connect} from 'react-redux';
 import {Toast} from 'native-base';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import {Loader} from '../../common';
-import axios from 'axios';
-import {apiUrl} from '../../api/api';
 import {JobDetail} from './jobDtail';
-import {getJob, applyJob, searchJob} from '../../redux/actions';
+import {applyJob, searchJob} from '../../redux/actions';
 import {getData} from '../../utils';
-
+import {Header} from 'react-native-elements';
 import {
   StyleSheet,
   View,
@@ -20,15 +17,13 @@ import {
   Modal,
   TextInput,
   TouchableHighlight,
-  ActivityIndicator,
   Image,
 } from 'react-native';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-const {GET_JOBS_URL} = apiUrl;
 
-class Job extends Component {
+class Search extends Component {
   _isMounted = false;
   constructor(props) {
     super(props);
@@ -38,12 +33,7 @@ class Job extends Component {
       item: null,
       role: '',
       posts: [],
-      loadingmore: false,
-      refreshing: false,
-      page: 1,
-      isLoading: false,
     };
-    this.handleLoadMore = this.handleLoadMore.bind(this);
   }
 
   showToast = (msg) => {
@@ -61,15 +51,13 @@ class Job extends Component {
   searchItem = async () => {
     // await this.props.searchJob(this.state.search);
     // this.setState({posts: this.props.postsSearch});
-    if (this.state.search == '') return;
-    this.props.navigation.navigate('Search', {search: this.state.search});
   };
 
   renderItem = ({item}) => (
     <View style={styles.item}>
       <View style={styles.logoContainer}>
         <Image
-          source={{uri: _.get(item.company[0], 'image')}}
+          source={require('../../assets/image/fpt.jpg')}
           style={styles.logo}></Image>
         <View style={{padding: 1, marginLeft: 10}}>
           <Text style={{...styles.text, fontSize: 20}} numberOfLines={1}>
@@ -119,51 +107,14 @@ class Job extends Component {
 
   componentDidMount() {
     this._isMounted = true;
-    const unsubscribe = this.props.navigation.addListener('focus', async () => {
-      await this.props.getJob();
+    return this.props.navigation.addListener('focus', async () => {
+      await this.setState({search: this.props.route.params.search});
+      await this.props.searchJob(this.state.search);
       const role = await getData('role');
-
-      this.setState({role, posts: this.props.posts, page: 1});
+      console.log(this.props.postsSearch);
+      this.setState({role, posts: this.props.postsSearch});
     });
-
-    return unsubscribe;
   }
-
-  async handleLoadMore() {
-    try {
-      await this.setState({page: this.state.page + 1, isLoading: true});
-
-      if (this.state.page > this.props.numPages) {
-        return;
-      }
-      const result = await axios.get(
-        `${GET_JOBS_URL}?page=${this.state.page}&take=${10}`,
-      );
-      const addPost = result.data.data.posts;
-      const currentPage = result.data.data.currentPage;
-      let newPost = [...this.state.posts, ...addPost];
-
-      this.setState({
-        posts: newPost,
-        isLoading: false,
-        page: currentPage + 1,
-      });
-    } catch (error) {
-      return;
-    }
-  }
-
-  footerList = () => {
-    return (
-      <View style={{flex: 1}}>
-        {this.state.isLoading && (
-          <View style={styles.loading}>
-            <ActivityIndicator />
-          </View>
-        )}
-      </View>
-    );
-  };
 
   setModalVisible = (visible) => {
     this.setState({modalVisible: visible});
@@ -200,16 +151,15 @@ class Job extends Component {
     const {modalVisible, item} = this.state;
 
     if (this.props.status != 200 && this.props.status != 304) {
-      return (
-        <View>
-          <Loader status={this.props.loading}></Loader>
-        </View>
-      );
+      return <View>{/* <Loader status={this.props.loading}></Loader> */}</View>;
     }
     return (
       <View>
-        <Loader status={this.props.loading}></Loader>
+        {/* <Loader status={this.props.loading}></Loader> */}
         <View style={styles.container}>
+          <View style={styles.bgHeader}>
+            <Text style={styles.headerStyle}>Back</Text>
+          </View>
           <View style={styles.searchContaier}>
             <View style={{...styles.searchInput}}>
               <TextInput
@@ -233,8 +183,7 @@ class Job extends Component {
             data={this.state.posts}
             keyExtractor={this.keyExtractor}
             renderItem={this.renderItem}
-            onEndReached={this.handleLoadMore}
-            ListFooterComponent={this.footerList}></FlatList>
+            onEndReached={this.handleLoadMore}></FlatList>
         </View>
         <View style={styles.centeredView}>
           <Modal
@@ -265,28 +214,21 @@ class Job extends Component {
   }
 }
 const mapDispatchToProps = {
-  getJob,
   applyJob,
   searchJob,
 };
 
 const mapStateToProps = (state) => {
-  const {loading, status, msg} = state.getJob;
-
   let postsSearch = _.get(state.searchJob, 'data.posts') || [];
   return {
-    loading,
-    posts: _.get(state.getJob, 'data.posts') || [],
-    status,
-    msg,
-    currentPage: _.get(state.getJob, 'data.scurrentPage') || null,
-    numPages: _.get(state.getJob, 'data.numPages') || null,
     postsSearch,
     statusApply: state.applyJob.status,
     msgApply: state.applyJob.msg,
+    loading: _.get(state.searchJob, 'loading'),
+    status: state.searchJob.status,
   };
 };
-export default connect(mapStateToProps, mapDispatchToProps)(Job);
+export default connect(mapStateToProps, mapDispatchToProps)(Search);
 
 const styles = StyleSheet.create({
   container: {
@@ -419,15 +361,15 @@ const styles = StyleSheet.create({
   containerButton: {
     flexDirection: 'row',
   },
-  loading: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
-    opacity: 0.5,
-    backgroundColor: 'black',
+  bgHeader: {
+    backgroundColor: '#0288D1',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  headerStyle: {
+    fontSize: 25,
+    textAlign: 'center',
+    margin: 10,
+    color: '#fff',
   },
 });

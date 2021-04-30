@@ -13,7 +13,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import {connect} from 'react-redux';
-import {getProfile} from '../../redux/actions/getProfile';
+import {getProfile} from '../../redux/actions';
 import {Toast} from 'native-base';
 import axios from 'axios';
 
@@ -54,14 +54,13 @@ class Profile extends Component {
   handleUpload = async () => {
     try {
       const token = await getData('token');
-      console.log(token);
       const result = await axios.get(
         `https://job-it-cnpmp.herokuapp.com/api/v1/images`,
         {
           headers: {Authorization: `Bearer ${token}`},
         },
       );
-      console.log(result.data);
+
       const {signature, timestamp} = _.get(result, 'data.payload');
       const upload = await axios.post(
         `https://api.cloudinary.com/v1_1/do-an-cnpm/image/upload?api_key=484176915684615&timestamp=${timestamp}&signature=${signature}`,
@@ -84,11 +83,9 @@ class Profile extends Component {
           headers: {Authorization: `Bearer ${token}`},
         },
       );
-      console.log('oke');
       this.showToast(res.data.msg);
       await this.props.getProfile();
     } catch (error) {
-      console.log(error);
       return null;
     }
   };
@@ -104,9 +101,9 @@ class Profile extends Component {
           ? photo.uri
           : photo.uri.replace('file://', ''),
     });
-
     return data;
   };
+
   componentDidMount() {
     const unsubscribe = this.props.navigation.addListener('focus', async () => {
       await this.props.getProfile();
@@ -155,7 +152,6 @@ class Profile extends Component {
                   {_.get(this.props.user, 'fullName') || `Le Trung Nam`}
                 </Text>
                 <Text style={styles.textemail}>
-                  Email:{' '}
                   {_.get(this.props.user, 'email') || `Trungnam23799@gmail.com`}
                 </Text>
               </View>

@@ -13,7 +13,7 @@ import {connect} from 'react-redux';
 import {getCompanyPost, deletePost} from '../../redux/actions';
 import {Toast} from 'native-base';
 import {TabView, SceneMap} from 'react-native-tab-view';
-
+import _ from 'lodash';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
@@ -132,7 +132,9 @@ class CompanyPost extends Component {
       onHideUnderlay={separators.unhighlight}>
       <View style={styles.item}>
         <Text style={styles.text}>Titile: {item.title}</Text>
-        <Text style={styles.text}>Company Name: {item.companyName}</Text>
+        <Text style={styles.text}>
+          Company Name: {_.get(item, 'company[0].companyName')}
+        </Text>
         <Text style={styles.text}>Salary: {item.salary}</Text>
         <Text style={styles.text}>Skill: {item.skill.join(', ')}</Text>
       </View>
@@ -146,7 +148,9 @@ class CompanyPost extends Component {
       onHideUnderlay={separators.unhighlight}>
       <View style={styles.item}>
         <Text style={styles.text}>Titile: {item.title}</Text>
-        <Text style={styles.text}>Company Name: {item.companyName}</Text>
+        <Text style={styles.text}>
+          Company Name: {_.get(item, 'company[0].companyName')}
+        </Text>
         <Text style={styles.text}>Salary: {item.salary}</Text>
         <Text style={styles.text}>Skill: {item.skill.join(', ')}</Text>
       </View>
@@ -184,11 +188,7 @@ class CompanyPost extends Component {
   render() {
     const {index, routes} = this.state;
     if (this.props.status != 200 && this.props.status != 304) {
-      return (
-        <View>
-          <Text>No data</Text>
-        </View>
-      );
+      return <View></View>;
     }
     return (
       <TabView
@@ -207,7 +207,6 @@ const mapDispatchToProps = {
 
 const mapStateToProps = (state) => {
   const {loading, posts, status, msg} = state.getCompanyPost;
-
   return {
     loading,
     posts,

@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
-import {View, Text} from 'react-native';
 import 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+
 import {Root} from 'native-base';
 import {
   createDrawerNavigator,
@@ -29,6 +29,7 @@ import {
   changePass,
   getOneCv,
   Profile,
+  Search,
 } from './components';
 import {store} from './redux/store';
 import {Provider} from 'react-redux';
@@ -39,23 +40,14 @@ const Tab = createBottomTabNavigator();
 
 const CompanyPostStack = createStackNavigator();
 const IterStack = createStackNavigator();
-
-class C3 extends Component {
-  render() {
-    return (
-      <View>
-        <Text>Company</Text>
-      </View>
-    );
-  }
-}
+const HomeStack = createStackNavigator();
 
 const Drawer = createDrawerNavigator();
 class SettingDrawer extends Component {
   render() {
     return (
       <Drawer.Navigator
-        initialRouteName="C2"
+        initialRouteName="My Profile"
         drawerContent={(props) => {
           return (
             <DrawerContentScrollView {...props}>
@@ -71,8 +63,8 @@ class SettingDrawer extends Component {
             </DrawerContentScrollView>
           );
         }}>
-        <Drawer.Screen name="Change Password" component={changePass} />
         <Drawer.Screen name="My Profile" component={Profile} />
+        <Drawer.Screen name="Change Password" component={changePass} />
       </Drawer.Navigator>
     );
   }
@@ -117,7 +109,7 @@ class tabBarForIter extends Component {
           activeTintColor: 'tomato',
           inactiveTintColor: 'gray',
         }}>
-        <Tab.Screen name="Home" component={Job} />
+        <Tab.Screen name="Home" component={HomeJob} />
         <Tab.Screen name="My CV" component={IterNav} />
         <Tab.Screen name="Setting" component={SettingDrawer} />
       </Tab.Navigator>
@@ -151,6 +143,33 @@ class CompanyPostnav extends Component {
     );
   }
 }
+
+class HomeJob extends Component {
+  render() {
+    return (
+      <HomeStack.Navigator
+        initialRouteName="Home"
+        screenOptions={{
+          headerShown: false,
+        }}>
+        <Stack.Screen
+          name="Home"
+          component={Job}
+          screenOptions={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="Search"
+          component={Search}
+          screenOptions={{
+            headerShown: true,
+          }}
+        />
+      </HomeStack.Navigator>
+    );
+  }
+}
 class tabBarForCompany extends Component {
   render() {
     return (
@@ -170,7 +189,7 @@ class tabBarForCompany extends Component {
           activeTintColor: 'tomato',
           inactiveTintColor: 'gray',
         }}>
-        <Tab.Screen name="Home" component={Job} />
+        <Tab.Screen name="Home" component={HomeJob} />
         <Tab.Screen name="My Post" component={CompanyPostnav} />
         <Tab.Screen
           name="Setting"

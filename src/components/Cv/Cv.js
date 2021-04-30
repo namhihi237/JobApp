@@ -34,7 +34,7 @@ class Cv extends Component {
     super(props);
     this.state = {
       selectedSkill: [],
-      personalSkill: '',
+      softSkill: '',
       experience: '',
       description: '',
       textSkill: '',
@@ -72,8 +72,8 @@ class Cv extends Component {
     this.setState({modalVisible: true, skill: true});
   };
 
-  onChangePersonalSkill = (personalSkill) => {
-    this.setState({personalSkill});
+  onChangesoftSkill = (softSkill) => {
+    this.setState({softSkill});
   };
 
   onChangeExperience = (experience) => {
@@ -85,8 +85,8 @@ class Cv extends Component {
   };
 
   validateData = () => {
-    const {selectedSkill, personalSkill, experience, description} = this.state;
-    if (!personalSkill || !experience || !description) return false;
+    const {selectedSkill, softSkill, experience, description} = this.state;
+    if (!softSkill || !experience || !description) return false;
     if (selectedSkill.length == 0) return false;
     return true;
   };
@@ -96,14 +96,14 @@ class Cv extends Component {
       this.showToast('Data is empty');
       return;
     }
-    const {selectedSkill, personalSkill, experience, description} = this.state;
+    const {selectedSkill, softSkill, experience, description} = this.state;
     try {
       const skill = selectedSkill.map((e) => e.value);
       const image = await this.handleUpload();
       console.log(image);
       const data = {
         skill,
-        personalSkill,
+        softSkill,
         experience,
         description,
         image,
@@ -120,6 +120,7 @@ class Cv extends Component {
       this.props.navigation.goBack();
     } catch (error) {}
   };
+
   onSelectionsChangesKill = (selectedSkill) => {
     const skills = selectedSkill.map((e) => e.value).join(', ');
     this.setState({selectedSkill, textSkill: skills});
@@ -136,6 +137,7 @@ class Cv extends Component {
       </View>
     );
   };
+
   createFormData = (photo) => {
     const data = new FormData();
 
@@ -147,7 +149,7 @@ class Cv extends Component {
           ? photo.uri
           : photo.uri.replace('file://', ''),
     });
-
+    console.log(data);
     return data;
   };
 
@@ -161,6 +163,7 @@ class Cv extends Component {
         },
       );
       const {signature, timestamp} = _.get(result, 'data.payload');
+      // upload
       const upload = await axios.post(
         `https://api.cloudinary.com/v1_1/do-an-cnpm/image/upload?api_key=484176915684615&timestamp=${timestamp}&signature=${signature}`,
         this.createFormData(this.state.photo),
@@ -216,10 +219,10 @@ class Cv extends Component {
               </View>
               <TextInput
                 style={styles.desInput}
-                onChangeText={this.onChangePersonalSkill}
+                onChangeText={this.onChangesoftSkill}
                 multiline={true}
                 numberOfLines={4}
-                placeholder="Personal Skill"></TextInput>
+                placeholder="Soft Skill"></TextInput>
               <TextInput
                 style={styles.textInput}
                 onChangeText={this.onChangeExperience}

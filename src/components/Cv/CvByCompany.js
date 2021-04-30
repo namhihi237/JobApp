@@ -113,7 +113,7 @@ export default class CvByCompany extends Component {
               </View>
               <View style={styles.content}>
                 <Text style={styles.textLabel}>
-                  Personal Skill: {_.get(cv, 'personalSkill') || 'Toeic 900+'}
+                  Soft skill: {_.get(cv, 'softSkill') || 'Toeic 900+'}
                 </Text>
                 <Text style={styles.textLabel}>
                   Skill:{' '}

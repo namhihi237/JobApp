@@ -16,8 +16,8 @@ import {
   searchJob,
   deletePost,
   changePassword,
-  getProfile
-} from '../reducer/';
+  getProfile,
+} from '../reducer';
 
 const AppReduces = combineReducers({
   login,
@@ -35,7 +35,7 @@ const AppReduces = combineReducers({
   searchJob,
   deletePost,
   changePassword,
-  getProfile
+  getProfile,
 });
 const rootReducer = (state, action) => {
   return AppReduces(state, action);

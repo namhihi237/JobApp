@@ -135,8 +135,8 @@ class getOneCv extends Component {
               </View>
               <View style={styles.content}>
                 <Text style={styles.textLabel}>
-                  Personal Skill:{' '}
-                  {_.get(this.props.cv, 'personalSkill') || 'Toeic 900+'}
+                  Soft skill:{' '}
+                  {_.get(this.props.cv, 'softSkill') || 'Toeic 900+'}
                 </Text>
                 <Text style={styles.textLabel}>
                   Skill:{' '}

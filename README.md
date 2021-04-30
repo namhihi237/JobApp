@@ -9,6 +9,11 @@ Clone project
 - Chạy project (đã cài android studio và biến môi trường)
   npm react-native run-anndroid
 
+## Build file apk
+
+`cd android`
+`./gradlew assembleRelease`
+
 ## file demo
 
 Link download: `https://drive.google.com/drive/folders/1DkCbHEJgGcZn2KuBsgOGc_DfP4v0c6ah?usp=sharing`
