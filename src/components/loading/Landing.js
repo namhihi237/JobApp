@@ -169,5 +169,6 @@ const styles = StyleSheet.create({
   },
   loginText: {
     fontSize: 19,
+    fontFamily: 'Sarpanch-SemiBold',
   },
 });

@@ -133,7 +133,7 @@ class CompanyPost extends Component {
       <View style={styles.item}>
         <Text style={styles.text}>Titile: {item.title}</Text>
         <Text style={styles.text}>
-          Company Name: {_.get(item, 'company[0].companyName')}
+          Company Name: {_.get(item.company[0], 'companyName')}
         </Text>
         <Text style={styles.text}>Salary: {item.salary}</Text>
         <Text style={styles.text}>Skill: {item.skill.join(', ')}</Text>
@@ -149,7 +149,7 @@ class CompanyPost extends Component {
       <View style={styles.item}>
         <Text style={styles.text}>Titile: {item.title}</Text>
         <Text style={styles.text}>
-          Company Name: {_.get(item, 'company[0].companyName')}
+          Company Name: {_.get(item.company[0], 'companyName')}
         </Text>
         <Text style={styles.text}>Salary: {item.salary}</Text>
         <Text style={styles.text}>Skill: {item.skill.join(', ')}</Text>
@@ -165,7 +165,7 @@ class CompanyPost extends Component {
     this._isMounted = true;
     const unsubscribe = this.props.navigation.addListener('focus', async () => {
       await this.props.getCompanyPost();
-      this.setState({
+      await this.setState({
         dataWait: this.props.posts.filter((e) => e.accept == false),
         dataAccept: this.props.posts.filter((e) => e.accept == true),
       });
@@ -261,6 +261,14 @@ const styles = StyleSheet.create({
     height: 60,
     backgroundColor: '#ee6e73',
     borderRadius: 100,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 8,
+    },
+    shadowOpacity: 0.34,
+    shadowRadius: 6.27,
+    elevation: 10,
   },
   textAdd: {
     fontSize: 30,

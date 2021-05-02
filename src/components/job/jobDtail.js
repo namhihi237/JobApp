@@ -14,10 +14,8 @@ export class JobDetail extends Component {
     return (
       <View style={styles.itemDetail}>
         <ScrollView>
-          <Text style={styles.text}>Title: {item.title}</Text>
-          <Text style={styles.text}>
-            Company Name: {item.company[0].companyName}
-          </Text>
+          <Text style={styles.text}>{item.title}</Text>
+          <Text style={styles.text}>{item.company[0].companyName}</Text>
           <Text style={styles.text}>Address: {item.address}</Text>
           <Text style={styles.text}>Description: {item.description}</Text>
           <Text style={styles.text}>Salary: {item.salary}</Text>
@@ -47,7 +45,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   text: {
-    fontSize: 15,
+    fontSize: 16,
     // fontWeight: 'bold',
+    fontFamily: 'TimesNewRoman',
   },
 });

@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 import SelectMultiple from 'react-native-select-multiple';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {Loader} from '../../common';
 import {
   StyleSheet,
@@ -34,10 +36,15 @@ class CreatePost extends Component {
       endTime: '',
       description: '',
       textSkill: '',
-      textPos: '',
       title: '',
+      date: new Date(),
+      showDate: false,
     };
   }
+
+  showDatepicker = () => {
+    this.setState({showDate: true});
+  };
 
   showToast = (text, type, duration = 2000, buttonText = 'Okey') => {
     Toast.show({
@@ -132,9 +139,16 @@ class CreatePost extends Component {
     this.setState({selectedSkill, textSkill: skills});
   };
 
-  onSelectionsChangePos = (selectedPos) => {
-    const pos = selectedPos.map((e) => e.value).join(' ,');
-    this.setState({selectedPos, textPos: pos});
+  onChangeDate = (evemt, selectedDate) => {
+    const currentDate = selectedDate || this.state.date;
+
+    this.setState({
+      date: currentDate,
+      endTime: `${currentDate.getDate()}/${
+        currentDate.getMonth() + 1
+      }/${currentDate.getFullYear()}`,
+      showDate: false,
+    });
   };
 
   showSkill = () => {
@@ -150,21 +164,24 @@ class CreatePost extends Component {
   };
 
   render() {
-    const {modalVisible, textSkill, textPos} = this.state;
+    const {modalVisible, textSkill, date} = this.state;
     return (
       <ScrollView showsVerticalScrollIndicator={false}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
           <KeyboardAvoidingView style={{flex: 1, paddingTop: 15}}>
             <Loader status={this.props.loading} msg={'Creating '}></Loader>
             <View style={styles.container}>
-              <TextInput
-                style={styles.textInput}
-                onChangeText={this.onChangeTitle}
-                placeholder="Title. . ."></TextInput>
-              <View style={{flexDirection: 'row'}}>
+              <View style={styles.choice}>
+                <TextInput
+                  style={{...styles.textInputChoice, marginLeft: 20}}
+                  onChangeText={this.onChangeTitle}
+                  placeholder="Title. . ."></TextInput>
+              </View>
+              <View style={styles.choice}>
+                <FontAwesome5 name={'code'} style={styles.icon} />
                 <TextInput
                   value={textSkill}
-                  style={styles.textInput}
+                  style={styles.textInputChoice}
                   editable={false}
                   selectTextOnFocus={false}
                   placeholder="Skills. . ."></TextInput>
@@ -174,18 +191,43 @@ class CreatePost extends Component {
                   <Text>choice</Text>
                 </TouchableOpacity>
               </View>
-              <TextInput
-                style={styles.textInput}
-                onChangeText={this.onChangeSalary}
-                placeholder="Salary. . ."></TextInput>
-              <TextInput
-                style={styles.textInput}
-                onChangeText={this.onChangeAddress}
-                placeholder="Address. . ."></TextInput>
-              <TextInput
-                style={styles.textInput}
-                onChangeText={this.onChangeEndTime}
-                placeholder="End Time. . ."></TextInput>
+              <View style={styles.containerInput}>
+                <FontAwesome5 name={'money-bill'} style={styles.icon} />
+                <TextInput
+                  style={styles.textInputChoice}
+                  onChangeText={this.onChangeSalary}
+                  placeholder="Salary. . ."></TextInput>
+              </View>
+              <View style={styles.containerInput}>
+                <FontAwesome5 name={'map-marker-alt'} style={styles.icon} />
+                <TextInput
+                  style={styles.textInputChoice}
+                  onChangeText={this.onChangeAddress}
+                  placeholder="Address. . ."></TextInput>
+              </View>
+
+              <View style={styles.choice}>
+                <FontAwesome5 name={'history'} style={styles.icon} />
+                <TextInput
+                  value={this.state.endTime}
+                  style={styles.textInputChoice}
+                  editable={false}
+                  selectTextOnFocus={false}
+                  placeholder="End time. . ."></TextInput>
+                <TouchableOpacity
+                  style={styles.buttonChoice}
+                  onPress={this.showDatepicker}>
+                  <Text>choice</Text>
+                </TouchableOpacity>
+              </View>
+              {this.state.showDate && (
+                <DateTimePicker
+                  testID="dateTimePicker"
+                  value={date}
+                  mode={'date'}
+                  onChange={this.onChangeDate}
+                />
+              )}
               <TextInput
                 onChangeText={this.onChangeDescription}
                 multiline={true}
@@ -195,7 +237,7 @@ class CreatePost extends Component {
                 autoCorrect={false}
               />
               <TouchableOpacity
-                style={styles.openButton}
+                style={styles.buttonCreate}
                 onPress={this.createCompanyPost}>
                 <Text style={styles.textStyle}>Create</Text>
               </TouchableOpacity>
@@ -204,10 +246,7 @@ class CreatePost extends Component {
               <Modal
                 animationType="slide"
                 transparent={true}
-                visible={modalVisible}
-                onRequestClose={() => {
-                  // Alert.alert('Modal has been closed.');
-                }}>
+                visible={modalVisible}>
                 <View style={styles.centeredView}>
                   <View style={styles.modalView}>
                     <Text style={styles.modalText}>Choice Skill</Text>
@@ -246,26 +285,33 @@ const mapStateToProps = (state) => {
 };
 export default connect(mapStateToProps, mapDispatchToProps)(CreatePost);
 const styles = StyleSheet.create({
-  container: {},
+  container: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   textInput: {
     borderColor: '#3f51b5',
     height: 40,
     borderBottomWidth: 2,
-    width: 260,
+    width: windowWidth * 0.8,
     marginBottom: 15,
     paddingLeft: 6,
-    marginLeft: 50,
     color: 'black',
   },
+  textInputChoice: {
+    height: 40,
+    width: windowWidth * 0.6,
+    color: 'black',
+    marginLeft: 10,
+  },
   desInput: {
-    borderColor: 'black',
+    borderColor: '#3f51b5',
     borderWidth: 1,
     height: 100,
-    width: 260,
+    width: windowWidth * 0.8,
     marginBottom: 15,
     paddingLeft: 6,
     textAlignVertical: 'top',
-    marginLeft: 50,
   },
   buttonChoice: {
     height: 30,
@@ -273,8 +319,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#a7abcc',
     alignItems: 'center',
     justifyContent: 'center',
-    marginLeft: 5,
     padding: 3,
+    marginTop: 5,
+    borderColor: '#737796',
+    borderWidth: 1,
   },
 
   centeredView: {
@@ -285,24 +333,27 @@ const styles = StyleSheet.create({
   },
   modalView: {
     margin: 20,
-    backgroundColor: 'white',
+    backgroundColor: '#d5dee2',
     borderRadius: 20,
-    height: 500,
+    height: 450,
     width: 300,
     padding: 20,
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 8,
     },
+    shadowOpacity: 0.34,
+    shadowRadius: 6.27,
+    elevation: 10,
   },
   openButton: {
     backgroundColor: '#2196F3',
-    borderRadius: 20,
+    borderRadius: 10,
     padding: 10,
     elevation: 2,
-
+    width: 60,
     marginLeft: 35,
     marginRight: 35,
     marginTop: 15,
@@ -317,5 +368,39 @@ const styles = StyleSheet.create({
   },
   modalText: {
     fontSize: 20,
+    marginBottom: 10,
+  },
+  choice: {
+    flexDirection: 'row',
+    borderBottomWidth: 2,
+    width: windowWidth * 0.8,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    borderBottomColor: '#3f51b5',
+    marginBottom: 15,
+  },
+  buttonCreate: {
+    backgroundColor: '#a4bfad',
+    width: 100,
+    padding: 10,
+    borderRadius: 6,
+    elevation: 2,
+    borderColor: '#737796',
+    borderWidth: 1,
+  },
+  icon: {
+    marginTop: 12,
+    color: '#36e23f',
+  },
+  containerInput: {
+    display: 'flex',
+    flexDirection: 'row',
+    borderBottomWidth: 2,
+    width: windowWidth * 0.8,
+    display: 'flex',
+    flexDirection: 'row',
+    borderBottomColor: '#3f51b5',
+    marginBottom: 15,
   },
 });

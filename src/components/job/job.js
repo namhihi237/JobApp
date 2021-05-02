@@ -7,7 +7,7 @@ import {Loader} from '../../common';
 import axios from 'axios';
 import {apiUrl} from '../../api/api';
 import {JobDetail} from './jobDtail';
-import {getJob, applyJob, searchJob} from '../../redux/actions';
+import {getJob, applyJob} from '../../redux/actions';
 import {getData} from '../../utils';
 
 import {
@@ -59,8 +59,6 @@ class Job extends Component {
   };
 
   searchItem = async () => {
-    // await this.props.searchJob(this.state.search);
-    // this.setState({posts: this.props.postsSearch});
     if (this.state.search == '') return;
     this.props.navigation.navigate('Search', {search: this.state.search});
   };
@@ -120,6 +118,7 @@ class Job extends Component {
   componentDidMount() {
     this._isMounted = true;
     const unsubscribe = this.props.navigation.addListener('focus', async () => {
+      this.setState({search: ''});
       await this.props.getJob();
       const role = await getData('role');
 
@@ -215,6 +214,7 @@ class Job extends Component {
               <TextInput
                 style={{height: 40}}
                 onChangeText={this.updateSearch}
+                value={this.state.search}
                 placeholder="Keyword (skill, company, position,...)"
                 placeholderTextColor="#aa5f5f"></TextInput>
               <TouchableOpacity
@@ -244,7 +244,9 @@ class Job extends Component {
             visible={modalVisible}>
             <View style={styles.centeredView}>
               <View style={styles.modalView}>
-                <Text style={{fontSize: 30}}>Job Detail</Text>
+                <Text style={{fontSize: 30, fontFamily: 'Sailors Slant'}}>
+                  Job Detail
+                </Text>
                 <JobDetail item={item}></JobDetail>
                 <View style={styles.containerButton}>
                   <TouchableHighlight
@@ -267,13 +269,11 @@ class Job extends Component {
 const mapDispatchToProps = {
   getJob,
   applyJob,
-  searchJob,
 };
 
 const mapStateToProps = (state) => {
   const {loading, status, msg} = state.getJob;
 
-  let postsSearch = _.get(state.searchJob, 'data.posts') || [];
   return {
     loading,
     posts: _.get(state.getJob, 'data.posts') || [],
@@ -281,7 +281,6 @@ const mapStateToProps = (state) => {
     msg,
     currentPage: _.get(state.getJob, 'data.scurrentPage') || null,
     numPages: _.get(state.getJob, 'data.numPages') || null,
-    postsSearch,
     statusApply: state.applyJob.status,
     msgApply: state.applyJob.msg,
   };
@@ -301,7 +300,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: (windowWidth * 1.8) / 3,
-    marginTop: 5,
+    marginTop: 1,
   },
   searchInput: {
     height: 50,
@@ -372,6 +371,8 @@ const styles = StyleSheet.create({
   text: {
     marginBottom: 1,
     marginLeft: 5,
+    fontFamily: 'TimesNewRoman',
+    fontSize: 16,
   },
   logoContainer: {
     display: 'flex',

@@ -6,7 +6,6 @@ import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
 import {TextInput} from 'react-native-gesture-handler';
 import {connect} from 'react-redux';
 import {changePassword} from '../../redux/actions';
-import {getData} from '../../utils';
 
 class changePass extends Component {
   constructor(props) {
@@ -63,7 +62,7 @@ class changePass extends Component {
           <TextInput
             onChangeText={this.changeTextOldPass}
             style={styles.inputText}
-            placeholder="Type password"
+            placeholder="Type password..."
             placeholderTextColor="#003f5c"
             secureTextEntry={true}
           />
@@ -72,7 +71,16 @@ class changePass extends Component {
           <TextInput
             onChangeText={this.changeTextNewPass}
             style={styles.inputText}
-            placeholder="Type New Password..."
+            placeholder="New Password..."
+            placeholderTextColor="#003f5c"
+            secureTextEntry={true}
+          />
+        </View>
+        <View style={styles.inputView}>
+          <TextInput
+            onChangeText={this.changeTextNewPass}
+            style={styles.inputText}
+            placeholder="Confirm Password..."
             placeholderTextColor="#003f5c"
             secureTextEntry={true}
           />

@@ -6,7 +6,6 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {JobDetail} from './jobDtail';
 import {applyJob, searchJob} from '../../redux/actions';
 import {getData} from '../../utils';
-import {Header} from 'react-native-elements';
 import {
   StyleSheet,
   View,
@@ -49,8 +48,9 @@ class Search extends Component {
   };
 
   searchItem = async () => {
-    // await this.props.searchJob(this.state.search);
-    // this.setState({posts: this.props.postsSearch});
+    if (this.state.search == '') return;
+    await this.props.searchJob(this.state.search);
+    this.setState({posts: this.props.postsSearch});
   };
 
   renderItem = ({item}) => (
@@ -111,7 +111,6 @@ class Search extends Component {
       await this.setState({search: this.props.route.params.search});
       await this.props.searchJob(this.state.search);
       const role = await getData('role');
-      console.log(this.props.postsSearch);
       this.setState({role, posts: this.props.postsSearch});
     });
   }
@@ -147,6 +146,10 @@ class Search extends Component {
     this._isMounted = false;
   }
 
+  backToHome = () => {
+    this.props.navigation.popToTop();
+  };
+
   render() {
     const {modalVisible, item} = this.state;
 
@@ -158,25 +161,37 @@ class Search extends Component {
         {/* <Loader status={this.props.loading}></Loader> */}
         <View style={styles.container}>
           <View style={styles.bgHeader}>
-            <Text style={styles.headerStyle}>Back</Text>
-          </View>
-          <View style={styles.searchContaier}>
-            <View style={{...styles.searchInput}}>
-              <TextInput
-                style={{height: 40}}
-                onChangeText={this.updateSearch}
-                placeholder="Keyword (skill, company, position,...)"
-                placeholderTextColor="#aa5f5f"></TextInput>
-              <TouchableOpacity
-                style={styles.searchButton}
-                onPress={this.searchItem}>
-                <FontAwesome5
-                  name={'search'}
-                  style={{fontSize: 22, marginBottom: 3}}
-                />
-              </TouchableOpacity>
+            <TouchableOpacity
+              onPress={this.backToHome}
+              style={styles.buttonBack}>
+              <FontAwesome5
+                name={'arrow-left'}
+                style={{
+                  fontSize: 22,
+                  marginBottom: 3,
+                }}
+              />
+            </TouchableOpacity>
+            <View style={styles.searchContaier}>
+              <View style={{...styles.searchInput}}>
+                <TextInput
+                  style={{height: 40}}
+                  value={this.state.search}
+                  onChangeText={this.updateSearch}
+                  placeholder="Keyword (skill, company, position,...)"
+                  placeholderTextColor="#aa5f5f"></TextInput>
+                <TouchableOpacity
+                  style={styles.searchButton}
+                  onPress={this.searchItem}>
+                  <FontAwesome5
+                    name={'search'}
+                    style={{fontSize: 22, marginBottom: 3}}
+                  />
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
+
           <FlatList
             style={styles.flatlist}
             scrollEventThrottle={16}
@@ -247,7 +262,7 @@ const styles = StyleSheet.create({
   },
   searchInput: {
     height: 50,
-    width: windowWidth - 10,
+    width: windowWidth * 0.85,
     borderColor: '#7e8591',
     marginLeft: 3,
     marginRight: 3,
@@ -271,7 +286,8 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: windowWidth,
+    width: 200,
+    flex: 9,
     paddingLeft: 3,
     paddingRight: 3,
     paddingTop: 2,
@@ -287,8 +303,6 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     marginLeft: 15,
     marginRight: 15,
-
-    // backgroundColor: '#aecce2',
     backgroundColor: '#fff',
     shadowOpacity: 0.6,
     flex: 1,
@@ -296,9 +310,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     paddingLeft: 10,
     paddingTop: 5,
-
     borderRadius: 7,
-    // shawdow
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -362,14 +374,30 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   bgHeader: {
-    backgroundColor: '#0288D1',
-    justifyContent: 'center',
+    backgroundColor: 'rgba(249, 242, 242, 0.8)',
+    justifyContent: 'space-around',
     alignItems: 'center',
+    display: 'flex',
+    flexDirection: 'row',
+    shadowOffset: {
+      width: 0,
+      height: 8,
+    },
+    paddingBottom: 3,
+    shadowOpacity: 0.34,
+    shadowRadius: 6.27,
+
+    elevation: 10,
   },
   headerStyle: {
     fontSize: 25,
     textAlign: 'center',
     margin: 10,
-    color: '#fff',
+    color: '#000',
+  },
+  buttonBack: {
+    flex: 1,
+    textAlign: 'center',
+    alignItems: 'center',
   },
 });

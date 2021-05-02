@@ -1,17 +1,11 @@
 import React, {Component} from 'react';
 import {Avatar} from 'react-native-elements';
-import axios from 'axios';
 import _ from 'lodash';
-import {getData} from '../../utils';
-import {
-  StyleSheet,
-  View,
-  Text,
-  Dimensions,
-  TouchableOpacity,
-  ScrollView,
-} from 'react-native';
+import {StyleSheet, View, Text, Dimensions, ScrollView} from 'react-native';
 import {Toast} from 'native-base';
+import {getData} from '../../utils';
+import axios from 'axios';
+
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
@@ -52,10 +46,7 @@ export default class CvByCompany extends Component {
         const cv = result.data.cv;
         const status = result.data.status;
         this.setState({cv, status});
-      } catch (error) {
-        // console.log(_.get(error.response, 'data.msg'));
-        // console.log(error);
-      }
+      } catch (error) {}
     });
 
     return unsubscribe;
@@ -66,25 +57,14 @@ export default class CvByCompany extends Component {
     if (status != 200 && status != 304) {
       return (
         <View style={styles.container}>
-          <ScrollView style={styles.scroll}>
-            <View>
-              <Text style={styles.titleList}>CV</Text>
-            </View>
-          </ScrollView>
-          <TouchableOpacity
-            style={styles.buttonAdd}
-            onPress={this.moveToCreateCv}>
-            <Text style={styles.textAdd}>+</Text>
-          </TouchableOpacity>
+          <ScrollView style={styles.scroll}></ScrollView>
         </View>
       );
     }
     return (
       <View style={styles.container}>
         <ScrollView style={styles.scroll}>
-          {/* <Loader status={this.props.loading}></Loader> */}
           <View>
-            <Text style={styles.titleList}>My CV</Text>
             <View style={styles.cv}>
               <View style={styles.imgContainer}>
                 <Avatar
@@ -113,35 +93,32 @@ export default class CvByCompany extends Component {
               </View>
               <View style={styles.content}>
                 <Text style={styles.textLabel}>
-                  Soft skill: {_.get(cv, 'softSkill') || 'Toeic 900+'}
-                </Text>
-                <Text style={styles.textLabel}>
-                  Skill:{' '}
-                  {(_.get(cv, 'skill') || []).join(', ') ||
+                  Skill:{`\n`}
+                  {_.get(cv, 'skill') ||
                     `
                   - C++, Java
                   - Git, GitHub
                   `}
                 </Text>
                 <Text style={styles.textLabel}>
-                  Experience:{' '}
+                  Soft skill:{`\n`}
+                  {_.get(cv, 'softSkill') || 'Toeic 900+'}
+                </Text>
+
+                <Text style={styles.textLabel}>
+                  Experience:{`\n`}
                   {_.get(cv, 'experience') ||
                     `
                   - 2020 - 2021 : Madison
                   - 2021 -2022 : FPT`}
                 </Text>
                 <Text style={styles.textLabel}>
-                  Description: {_.get(cv, 'description')}
+                  Description:{`\n`} {_.get(cv, 'description')}
                 </Text>
               </View>
             </View>
           </View>
         </ScrollView>
-        <TouchableOpacity
-          style={styles.buttonAdd}
-          onPress={this.moveToCreateCv}>
-          <Text style={styles.textAdd}>+</Text>
-        </TouchableOpacity>
       </View>
     );
   }
@@ -154,69 +131,16 @@ const styles = StyleSheet.create({
 
   container: {
     flex: 1,
-    backgroundColor: '#45fad3',
+    backgroundColor: '#c7c8d6',
     margin: 5,
     borderRadius: 10,
     padding: 10,
   },
-  tinyLogo: {
-    width: 100,
-    height: 100,
-    marginTop: 10,
-    borderRadius: 50,
-  },
-  item: {
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
-    backgroundColor: '#b8c2d1',
-    width: 200,
-    height: 150,
-    borderRadius: 10,
-    shadowColor: 'black',
-    shadowOpacity: 0.26,
-    shadowOffset: {width: 0, height: 2},
-    shadowRadius: 10,
-    elevation: 3,
-  },
-  line: {
-    height: 1,
-    backgroundColor: 'black',
-    marginLeft: 8,
-    marginRight: 8,
-    marginTop: 10,
-  },
-  titleList: {
-    fontSize: 30,
-    textAlign: 'center',
-    fontWeight: 'bold',
-  },
-  buttonAdd: {
-    borderWidth: 1,
-    borderColor: 'rgba(0,0,0,0.2)',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 60,
-    position: 'absolute',
-    bottom: 10,
-    right: 10,
-    height: 60,
-    backgroundColor: '#ee6e73',
-    borderRadius: 100,
-    shadowColor: 'rgba(0, 0, 0, 0.1)',
-    shadowOpacity: 0.8,
-    elevation: 6,
-    shadowRadius: 15,
-    shadowOffset: {width: 1, height: 13},
-  },
-  textAdd: {
-    fontSize: 30,
-    fontWeight: '900',
-  },
+
   textLabel: {
     fontSize: 20,
     marginBottom: 10,
-    color: 'red',
+    fontFamily: 'Sailors Slant',
   },
   textContent: {
     fontSize: 30,
@@ -224,9 +148,9 @@ const styles = StyleSheet.create({
   },
   textName: {
     fontSize: 30,
-    color: 'green',
     marginLeft: 20,
     marginTop: 5,
+    fontFamily: 'Sarpanch-ExtraBold',
   },
   cv: {
     display: 'flex',
@@ -234,7 +158,14 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   imgContainer: {
-    backgroundColor: '#8bdb85',
+    backgroundColor: 'rgba(113, 115, 127,0.9)',
+    shadowOffset: {
+      width: 0,
+      height: 8,
+    },
+    elevation: 10,
+    shadowColor: '#000',
+    shadowOpacity: 0.54,
     display: 'flex',
     flexDirection: 'row',
     borderBottomRightRadius: 80,
@@ -247,8 +178,9 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   textemail: {
-    fontSize: 15,
+    fontSize: 16,
     marginLeft: 9,
     marginTop: 5,
+    fontFamily: 'TimesNewRoman',
   },
 });

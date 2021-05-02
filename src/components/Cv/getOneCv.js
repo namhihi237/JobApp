@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import {Loader} from '../../common';
 import ToggleSwitch from 'toggle-switch-react-native';
 import {Avatar} from 'react-native-elements';
 import _ from 'lodash';
@@ -61,7 +60,7 @@ class getOneCv extends Component {
         return;
       }
       const token = await getData('token');
-      const res = await axios.post(
+      await axios.post(
         `${apiUrl.BASE_URL}/api/v1/cv/receive-mail`,
         {receive: isOn},
         {
@@ -69,10 +68,7 @@ class getOneCv extends Component {
         },
       );
       this.setState({sendEmail: isOn});
-      // this.showToast(res.data.msg);
-    } catch (error) {
-      console.log('error===', error);
-    }
+    } catch (error) {}
   };
 
   render() {
@@ -135,26 +131,27 @@ class getOneCv extends Component {
               </View>
               <View style={styles.content}>
                 <Text style={styles.textLabel}>
-                  Soft skill:{' '}
-                  {_.get(this.props.cv, 'softSkill') || 'Toeic 900+'}
-                </Text>
-                <Text style={styles.textLabel}>
-                  Skill:{' '}
-                  {(_.get(this.props.cv, 'skill') || []).join(', ') ||
+                  Skill:{`\n`}
+                  {_.get(this.props.cv, 'skill') ||
                     `
                   - C++, Java
                   - Git, GitHub
                   `}
                 </Text>
                 <Text style={styles.textLabel}>
-                  Experience:{' '}
+                  Soft skill:{`\n`}
+                  {_.get(this.props.cv, 'softSkill') || 'Toeic 900+'}
+                </Text>
+
+                <Text style={styles.textLabel}>
+                  Experience:{`\n`}
                   {_.get(this.props.cv, 'experience') ||
                     `
                   - 2020 - 2021 : Madison
                   - 2021 -2022 : FPT`}
                 </Text>
                 <Text style={styles.textLabel}>
-                  Description: {_.get(this.props.cv, 'description')}
+                  Description:{`\n`} {_.get(this.props.cv, 'description')}
                 </Text>
               </View>
             </View>
@@ -227,6 +224,7 @@ const styles = StyleSheet.create({
     fontSize: 30,
     textAlign: 'center',
     fontWeight: 'bold',
+    fontFamily: 'Sarpanch-SemiBold',
   },
   buttonAdd: {
     borderWidth: 1,
@@ -253,6 +251,7 @@ const styles = StyleSheet.create({
   textLabel: {
     fontSize: 20,
     marginBottom: 10,
+    fontFamily: 'Sailors Slant',
   },
   textContent: {
     fontSize: 30,
@@ -262,6 +261,7 @@ const styles = StyleSheet.create({
     fontSize: 30,
     marginLeft: 20,
     marginTop: 5,
+    fontFamily: 'Sarpanch-ExtraBold',
   },
   cv: {
     display: 'flex',
@@ -289,8 +289,9 @@ const styles = StyleSheet.create({
     padding: 5,
   },
   textemail: {
-    fontSize: 15,
+    fontSize: 16,
     marginLeft: 9,
     marginTop: 5,
+    fontFamily: 'TimesNewRoman',
   },
 });

@@ -10,6 +10,7 @@ import {
   Text,
   Dimensions,
   ScrollView,
+  Image,
   TouchableOpacity,
 } from 'react-native';
 import {connect} from 'react-redux';
@@ -115,49 +116,49 @@ class Profile extends Component {
     const {photo} = this.state;
     return (
       <View style={styles.container}>
-        <ScrollView style={styles.scroll}>
-          <View>
-            <View
+        <View style={styles.cv}>
+          <TouchableOpacity
+            onPress={async () => await this.handleUpload()}
+            style={{
+              flexDirection: 'row-reverse',
+              display: 'flex',
+            }}>
+            <FontAwesome5
+              name={'save'}
               style={{
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-              }}>
-              <Text style={styles.titleList}>PROFILE</Text>
-              <TouchableOpacity onPress={async () => await this.handleUpload()}>
-                <FontAwesome5
-                  name={'save'}
-                  style={{fontSize: 30, color: '#356fb7'}}
-                />
-              </TouchableOpacity>
-            </View>
-            <View style={styles.cv}>
-              <View style={styles.imgContainer}>
-                <Avatar
-                  containerStyle={{marginLeft: 10, marginTop: 15}}
-                  activeOpacity={0.7}
-                  rounded
-                  size="xlarge"
-                  onPress={this.handleChoosePhoto}
-                  source={{
-                    uri:
-                      _.get(photo, 'uri') ||
-                      _.get(this.props.user, 'image') ||
-                      'https://res.cloudinary.com/do-an-cnpm/image/upload/v1618073475/person_j0pvho.png',
-                  }}
-                />
-              </View>
-              <View style={styles.content}>
-                <Text style={styles.textName}>
-                  {_.get(this.props.user, 'fullName') || `Le Trung Nam`}
-                </Text>
-                <Text style={styles.textemail}>
-                  {_.get(this.props.user, 'email') || `Trungnam23799@gmail.com`}
-                </Text>
-              </View>
-            </View>
+                fontSize: 25,
+                color: '#356fb7',
+                marginRight: 5,
+              }}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={this.handleChoosePhoto}
+            style={styles.containerImg}>
+            <Image
+              style={{
+                height: 150,
+                width: 100,
+                borderRadius: 15,
+              }}
+              source={{
+                uri:
+                  _.get(photo, 'uri') ||
+                  _.get(this.props.user, 'image') ||
+                  'https://res.cloudinary.com/do-an-cnpm/image/upload/v1618073475/person_j0pvho.png',
+              }}
+            />
+          </TouchableOpacity>
+          <View style={styles.content}>
+            <Text style={styles.textName}>
+              {_.get(this.props.user, 'fullName') || `Le Trung Nam`}
+            </Text>
+            <Text style={styles.textemail}>
+              {_.get(this.props.user, 'email') || `Trungnam23799@gmail.com`}
+            </Text>
           </View>
-        </ScrollView>
+        </View>
+        <View style={styles.info}></View>
       </View>
     );
   }
@@ -178,15 +179,9 @@ const mapStateToProps = (state) => {
 export default connect(mapStateToProps, mapDispatchToProps)(Profile);
 
 const styles = StyleSheet.create({
-  scroll: {
-    minHeight: windowHeight,
-  },
   container: {
     flex: 1,
-    backgroundColor: '#ffff',
-    margin: 5,
-    borderRadius: 10,
-    padding: 10,
+    backgroundColor: '#e3e5ef',
   },
   tinyLogo: {
     width: 100,
@@ -201,44 +196,69 @@ const styles = StyleSheet.create({
   },
   textName: {
     fontSize: 30,
-    color: 'red',
-    marginLeft: 20,
+    color: 'white',
     marginTop: 5,
+    fontFamily: 'Sailors Slant',
   },
   cv: {
     display: 'flex',
-    marginTop: 20,
     flexDirection: 'column',
+    backgroundColor: '#0E1442',
+    height: 170,
+    borderBottomLeftRadius: 40,
+    borderBottomRightRadius: 40,
   },
   imgContainer: {
     display: 'flex',
     flexDirection: 'column',
-    borderBottomRightRadius: 10,
-    borderTopLeftRadius: 10,
-    borderBottomLeftRadius: 10,
-    borderTopRightRadius: 10,
     padding: 5,
     justifyContent: 'center',
     alignItems: 'center',
-    borderColor: 'black',
-    borderWidth: 1,
   },
   textemail: {
     fontSize: 20,
-    marginLeft: 9,
+    color: 'white',
     marginTop: 5,
+    fontFamily: 'TimesNewRoman',
   },
   content: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 10,
-    backgroundColor: '#aecce2',
+    marginLeft: 150,
+    marginTop: 50,
     padding: 10,
-    borderRadius: 10,
   },
-  titleList: {
+
+  containerImg: {
+    top: 60,
+    height: 150,
+    width: 100,
+    position: 'absolute',
+    marginLeft: 40,
+    shadowOffset: {
+      width: 0,
+      height: 8,
+    },
+    shadowOpacity: 0.34,
+    shadowRadius: 6.27,
+    elevation: 2,
+    shadowColor: '#dadbe8',
+  },
+  info: {
+    height: (windowHeight * 1.1) / 2,
+    width: (windowWidth * 3.2) / 4,
     justifyContent: 'center',
     alignItems: 'center',
-    fontSize: 30,
+    shadowOffset: {
+      width: 0,
+      height: 8,
+    },
+    shadowOpacity: 0.34,
+    shadowRadius: 6.27,
+    elevation: 2,
+    shadowColor: '#dadbe8',
+    backgroundColor: '#fff',
+    borderRadius: 6,
+    marginLeft: (windowWidth * 0.4) / 4,
+    marginRight: (windowWidth * 0.4) / 4,
+    marginTop: 80,
   },
 });

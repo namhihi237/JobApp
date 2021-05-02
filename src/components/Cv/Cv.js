@@ -2,11 +2,9 @@ import React, {Component} from 'react';
 import {Loader} from '../../common';
 import {connect} from 'react-redux';
 
-import SelectMultiple from 'react-native-select-multiple';
 import {createIterCv} from '../../redux/actions';
-import {dataSkill} from '../../constant';
 import {Toast} from 'native-base';
-import {storeData, getData} from '../../utils';
+import {getData} from '../../utils';
 import _ from 'lodash';
 import * as ImagePicker from 'react-native-image-picker';
 import {
@@ -17,7 +15,6 @@ import {
   TouchableOpacity,
   TextInput,
   KeyboardAvoidingView,
-  Modal,
   TouchableWithoutFeedback,
   Keyboard,
   ScrollView,
@@ -26,18 +23,16 @@ import {
 } from 'react-native';
 import FormData from 'form-data';
 import axios from 'axios';
-const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 class Cv extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedSkill: [],
+      skill: '',
       softSkill: '',
       experience: '',
       description: '',
-      textSkill: '',
       modalVisible: false,
       photo: null,
     };
@@ -54,22 +49,13 @@ class Cv extends Component {
     });
   };
 
-  showToast = (msg) => {
+  showToast = (msg, type) => {
     Toast.show({
       text: `${msg}`,
       buttonText: 'Okey',
       duration: 3000,
+      type,
     });
-  };
-
-  setModalVisible = (status) => {
-    this.setState({
-      modalVisible: status,
-    });
-  };
-
-  showModalSkill = () => {
-    this.setState({modalVisible: true, skill: true});
   };
 
   onChangesoftSkill = (softSkill) => {
@@ -85,9 +71,8 @@ class Cv extends Component {
   };
 
   validateData = () => {
-    const {selectedSkill, softSkill, experience, description} = this.state;
-    if (!softSkill || !experience || !description) return false;
-    if (selectedSkill.length == 0) return false;
+    const {skill, softSkill, experience, description} = this.state;
+    if (!skill || !softSkill || !experience || !description) return false;
     return true;
   };
 
@@ -96,11 +81,10 @@ class Cv extends Component {
       this.showToast('Data is empty');
       return;
     }
-    const {selectedSkill, softSkill, experience, description} = this.state;
+    const {skill, softSkill, experience, description} = this.state;
+
     try {
-      const skill = selectedSkill.map((e) => e.value);
       const image = await this.handleUpload();
-      console.log(image);
       const data = {
         skill,
         softSkill,
@@ -109,33 +93,17 @@ class Cv extends Component {
         image,
         birthday: '23/07/1999',
       };
-
       await this.props.createIterCv(data);
-
       this.showToast(this.props.msg);
       if (this.props.status != 200 && this.props.state != 304) {
         return;
       }
-
       this.props.navigation.goBack();
     } catch (error) {}
   };
 
-  onSelectionsChangesKill = (selectedSkill) => {
-    const skills = selectedSkill.map((e) => e.value).join(', ');
-    this.setState({selectedSkill, textSkill: skills});
-  };
-
-  showSkill = () => {
-    return (
-      <View style={{height: 300, width: 200}}>
-        <SelectMultiple
-          items={dataSkill}
-          selectedItems={this.state.selectedSkill}
-          onSelectionsChange={this.onSelectionsChangesKill}
-        />
-      </View>
-    );
+  onChangesKill = (skill) => {
+    this.setState({skill});
   };
 
   createFormData = (photo) => {
@@ -149,7 +117,6 @@ class Cv extends Component {
           ? photo.uri
           : photo.uri.replace('file://', ''),
     });
-    console.log(data);
     return data;
   };
 
@@ -180,7 +147,7 @@ class Cv extends Component {
   };
 
   render() {
-    const {modalVisible, textSkill, photo} = this.state;
+    const {photo} = this.state;
     return (
       <ScrollView showsVerticalScrollIndicator={false}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -204,18 +171,13 @@ class Cv extends Component {
                 <Button title="Choose Photo" onPress={this.handleChoosePhoto} />
               </View>
 
-              <View style={{flexDirection: 'row'}}>
+              <View>
                 <TextInput
-                  value={textSkill}
-                  style={styles.textInput}
-                  editable={false}
-                  selectTextOnFocus={false}
+                  style={styles.desInput}
+                  multiline={true}
+                  numberOfLines={4}
+                  onChangeText={this.onChangesKill}
                   placeholder="Skill..."></TextInput>
-                <TouchableOpacity
-                  style={styles.buttonChoice}
-                  onPress={this.showModalSkill}>
-                  <Text>choice</Text>
-                </TouchableOpacity>
               </View>
               <TextInput
                 style={styles.desInput}
@@ -240,31 +202,6 @@ class Cv extends Component {
                 onPress={this.createCv}>
                 <Text style={styles.textStyle}>Create</Text>
               </TouchableOpacity>
-            </View>
-            <View style={styles.centeredView}>
-              <Modal
-                animationType="slide"
-                transparent={true}
-                visible={modalVisible}
-                onRequestClose={() => {
-                  // Alert.alert('Modal has been closed.');
-                }}>
-                <View style={styles.centeredView}>
-                  <View style={styles.modalView}>
-                    <Text style={styles.modalText}>Choice Skill</Text>
-                    {this.showSkill()}
-                    <View style={styles.containerButton}>
-                      <TouchableOpacity
-                        style={styles.openButton}
-                        onPress={() => {
-                          this.setModalVisible(!modalVisible);
-                        }}>
-                        <Text style={styles.textStyle}>OK</Text>
-                      </TouchableOpacity>
-                    </View>
-                  </View>
-                </View>
-              </Modal>
             </View>
           </KeyboardAvoidingView>
         </TouchableWithoutFeedback>
