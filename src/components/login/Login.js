@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
 import {Toast} from 'native-base';
 import {Loader} from '../../common';
+import LinearGradient from 'react-native-linear-gradient';
 import {
   StyleSheet,
   View,
   Text,
   TouchableOpacity,
-  ImageBackground,
   Dimensions,
   Keyboard,
   TouchableWithoutFeedback,
@@ -84,8 +84,8 @@ class Login extends Component {
   render() {
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-        <ImageBackground
-          source={require('../../assets/image/bg_login1.png')}
+        <LinearGradient
+          colors={['#cdaeee', '#3b5998']}
           style={{
             width: windowWidth,
             height: windowHeight + 20,
@@ -127,7 +127,7 @@ class Login extends Component {
           <TouchableOpacity onPress={this.moveToRegisterCompany}>
             <Text style={styles.loginText}>Signup for Company</Text>
           </TouchableOpacity>
-        </ImageBackground>
+        </LinearGradient>
       </TouchableWithoutFeedback>
     );
   }

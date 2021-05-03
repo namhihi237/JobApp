@@ -57,7 +57,7 @@ class Search extends Component {
     <View style={styles.item}>
       <View style={styles.logoContainer}>
         <Image
-          source={require('../../assets/image/fpt.jpg')}
+          source={{uri: _.get(item.company[0], 'image')}}
           style={styles.logo}></Image>
         <View style={{padding: 1, marginLeft: 10}}>
           <Text style={{...styles.text, fontSize: 20}} numberOfLines={1}>

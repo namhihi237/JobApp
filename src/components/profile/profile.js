@@ -63,14 +63,7 @@ class Profile extends Component {
     try {
       const token = await getData('token');
       const role = await getData('role');
-      const {
-        phone,
-        photo,
-        address,
-        birthday,
-        fullName,
-        companyName,
-      } = this.state;
+      const {phone, photo, address, name} = this.state;
       let imageUrl;
       if (photo == '') {
         imageUrl = '';
@@ -99,6 +92,10 @@ class Profile extends Component {
         }
       }
       let data = {};
+      if (name != '') {
+        if (role == 'iter') data = {...data, fullName: name};
+        else if (role == 'company') data = {...data, companyName: name};
+      }
       if (address != '') data = {...data, address};
       if (phone != '') data = {...data, phone};
       if (imageUrl) data = {...data, address, image: imageUrl};
@@ -139,75 +136,56 @@ class Profile extends Component {
     this.setState({phone});
   };
 
-  infoCompany = () => {
-    const {phone, address, birthday} = this.state;
-    if (this.state.role == 'iter')
-      return (
-        <View>
-          <Text style={styles.textLabelContent}>Email</Text>
-          <Text style={styles.textContent}>
-            {_.get(this.props.user, 'email') || ''}
-          </Text>
-          <Text style={styles.textLabelContent}>Date Of Birth</Text>
-          <Text style={styles.textContent}>{birthday}</Text>
-          <View style={styles.line}></View>
-          <Text style={styles.textLabelContent}>Phone</Text>
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.inputContent}
-              value={phone}
-              onChangeText={this.onChangePhone}></TextInput>
-            <TouchableOpacity>
-              <FontAwesome5 name={'edit'} style={styles.icon} />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.line}></View>
-          <Text style={styles.textLabelContent}>Address</Text>
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.inputContent}
-              value={address}
-              onChangeText={this.onChangeAddress}></TextInput>
-            <TouchableOpacity>
-              <FontAwesome5 name={'edit'} style={styles.icon} />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.line}></View>
-        </View>
-      );
-    else if (this.state.role == 'company')
-      return (
-        <View>
-          <Text style={styles.textLabelContent}>Email</Text>
-          <Text style={styles.textContent}>
-            {_.get(this.props.user, 'email') || ''}
-          </Text>
-          <View style={styles.line}></View>
-          <Text style={styles.textLabelContent}>Phone</Text>
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.inputContent}
-              value={phone}
-              onChangeText={this.onChangePhone}></TextInput>
-            <TouchableOpacity>
-              <FontAwesome5 name={'edit'} style={styles.icon} />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.line}></View>
-          <Text style={styles.textLabelContent}>Address</Text>
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.inputContent}
-              value={address}
-              onChangeText={this.onChangeAddress}></TextInput>
-            <TouchableOpacity>
-              <FontAwesome5 name={'edit'} style={styles.icon} />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.line}></View>
-        </View>
-      );
+  onChangeName = (name) => {
+    this.setState({name});
   };
+
+  infoCompany = () => {
+    const {phone, address, name} = this.state;
+    return (
+      <View>
+        <Text style={styles.textLabelContent}>Email</Text>
+        <Text style={styles.textContent}>
+          {_.get(this.props.user, 'email') || ''}
+        </Text>
+        <View style={styles.line}></View>
+        <Text style={styles.textLabelContent}>Name</Text>
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.inputContent}
+            value={name}
+            onChangeText={this.onChangeName}></TextInput>
+          <TouchableOpacity>
+            <FontAwesome5 name={'edit'} style={styles.icon} />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.line}></View>
+        <Text style={styles.textLabelContent}>Phone</Text>
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.inputContent}
+            value={phone}
+            onChangeText={this.onChangePhone}></TextInput>
+          <TouchableOpacity>
+            <FontAwesome5 name={'edit'} style={styles.icon} />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.line}></View>
+        <Text style={styles.textLabelContent}>Address</Text>
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.inputContent}
+            value={address}
+            onChangeText={this.onChangeAddress}></TextInput>
+          <TouchableOpacity>
+            <FontAwesome5 name={'edit'} style={styles.icon} />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.line}></View>
+      </View>
+    );
+  };
+
   componentDidMount() {
     const unsubscribe = this.props.navigation.addListener('focus', async () => {
       await this.props.getProfile();
@@ -225,12 +203,19 @@ class Profile extends Component {
     return unsubscribe;
   }
 
+  openBar = () => {
+    this.props.navigation.openDrawer();
+  };
+
   render() {
     const {photo, name} = this.state;
     return (
       <ScrollView style={{flex: 1}}>
         <View style={styles.container}>
           <View style={styles.cv}>
+            <TouchableOpacity onPress={this.openBar}>
+              <FontAwesome5 name={'bars'} style={styles.iconBars} />
+            </TouchableOpacity>
             <TouchableOpacity
               onPress={this.handleChoosePhoto}
               style={styles.containerImg}>
@@ -413,5 +398,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginRight: 14,
+  },
+  iconBars: {
+    fontSize: 30,
+    marginTop: 9,
+    color: '#356fb7',
+    marginLeft: 20,
   },
 });

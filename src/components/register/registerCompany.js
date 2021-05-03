@@ -6,14 +6,13 @@ import {
   Text,
   TouchableOpacity,
   Keyboard,
-  ImageBackground,
   TouchableWithoutFeedback,
 } from 'react-native';
 import {TextInput} from 'react-native-gesture-handler';
 import {registerCompany} from '../../redux/actions';
 import {connect} from 'react-redux';
 import {Loader} from '../../common';
-
+import LinearGradient from 'react-native-linear-gradient';
 class Register extends Component {
   constructor(props) {
     super(props);
@@ -79,8 +78,8 @@ class Register extends Component {
   render() {
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-        <ImageBackground
-          source={require('../../assets/image/bg_register.png')}
+        <LinearGradient
+          colors={['#cdaeee', '#94e4e9']}
           style={styles.container}>
           <Loader status={this.props.loading} msg={'Register'}></Loader>
           <View style={styles.inputView}>
@@ -127,7 +126,7 @@ class Register extends Component {
           <TouchableOpacity onPress={this.moveToLogin}>
             <Text style={styles.loginText}>SignIn</Text>
           </TouchableOpacity>
-        </ImageBackground>
+        </LinearGradient>
       </TouchableWithoutFeedback>
     );
   }

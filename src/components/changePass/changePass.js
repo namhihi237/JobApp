@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Toast} from 'native-base';
 import {Loader} from '../../common';
 import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
-
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {TextInput} from 'react-native-gesture-handler';
 import {connect} from 'react-redux';
 import {changePassword} from '../../redux/actions';
@@ -54,42 +54,55 @@ class changePass extends Component {
   changeTextNewPass = (text) => {
     this.setState({newPass: text});
   };
+
+  openBar = () => {
+    this.props.navigation.openDrawer();
+  };
   render() {
     return (
-      <View style={styles.container}>
-        <Loader status={this.props.loading} msg={'Changing '}></Loader>
-        <View style={styles.inputView}>
-          <TextInput
-            onChangeText={this.changeTextOldPass}
-            style={styles.inputText}
-            placeholder="Type password..."
-            placeholderTextColor="#003f5c"
-            secureTextEntry={true}
-          />
-        </View>
-        <View style={styles.inputView}>
-          <TextInput
-            onChangeText={this.changeTextNewPass}
-            style={styles.inputText}
-            placeholder="New Password..."
-            placeholderTextColor="#003f5c"
-            secureTextEntry={true}
-          />
-        </View>
-        <View style={styles.inputView}>
-          <TextInput
-            onChangeText={this.changeTextNewPass}
-            style={styles.inputText}
-            placeholder="Confirm Password..."
-            placeholderTextColor="#003f5c"
-            secureTextEntry={true}
-          />
-        </View>
-
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.loginBtn} onPress={this.moveToMain}>
-            <Text style={styles.loginText}>CHANGE</Text>
+      <View style={{flex: 1, backgroundColor: '#7378a0'}}>
+        <View style={{flex: 1}}>
+          <TouchableOpacity onPress={this.openBar}>
+            <FontAwesome5 name={'bars'} style={styles.iconBars} />
           </TouchableOpacity>
+        </View>
+        <View style={styles.container}>
+          <Loader status={this.props.loading} msg={'Changing '}></Loader>
+          <View style={styles.inputView}>
+            <TextInput
+              onChangeText={this.changeTextOldPass}
+              style={styles.inputText}
+              placeholder="Type password..."
+              placeholderTextColor="#003f5c"
+              secureTextEntry={true}
+            />
+          </View>
+          <View style={styles.inputView}>
+            <TextInput
+              onChangeText={this.changeTextNewPass}
+              style={styles.inputText}
+              placeholder="New Password..."
+              placeholderTextColor="#003f5c"
+              secureTextEntry={true}
+            />
+          </View>
+          <View style={styles.inputView}>
+            <TextInput
+              onChangeText={this.changeTextNewPass}
+              style={styles.inputText}
+              placeholder="Confirm Password..."
+              placeholderTextColor="#003f5c"
+              secureTextEntry={true}
+            />
+          </View>
+
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity style={styles.loginBtn} onPress={this.moveToMain}>
+              <Text style={{fontFamily: 'Sarpanch-Black', fontSize: 20}}>
+                CHANGE
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     );
@@ -112,8 +125,7 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#aecce2',
-    flex: 1,
+    flex: 18,
   },
   forgot: {
     color: 'white',
@@ -152,5 +164,11 @@ const styles = StyleSheet.create({
   buttonContainer: {
     display: 'flex',
     flexDirection: 'row',
+  },
+  iconBars: {
+    fontSize: 30,
+    marginTop: 9,
+    color: '#356fb7',
+    marginLeft: 20,
   },
 });

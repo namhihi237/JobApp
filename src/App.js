@@ -47,6 +47,15 @@ class SettingDrawer extends Component {
   render() {
     return (
       <Drawer.Navigator
+        screenOptions={({route}) => ({
+          tabBarIcon: ({color, size}) => {
+            if (route.name === 'My Profile') {
+              return <Icon name="home" size={28}></Icon>;
+            } else if (route.name === 'Change Password') {
+              return <Icon name="work" size={28}></Icon>;
+            }
+          },
+        })}
         initialRouteName="My Profile"
         drawerContent={(props) => {
           return (
