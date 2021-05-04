@@ -64,7 +64,7 @@ class Search extends Component {
             {item.title}
           </Text>
           <Text style={{...styles.text, fontSize: 15}} numberOfLines={1}>
-            {_.get(item.company[0], 'companyName')}
+            {_.get(item.company[0], 'name')}
           </Text>
           <View style={styles.fiedlsText}>
             <FontAwesome5 name={'money-bill'} style={styles.iconText} />

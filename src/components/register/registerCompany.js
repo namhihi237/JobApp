@@ -20,7 +20,7 @@ class Register extends Component {
       email: '',
       password: '',
       confirmPassword: '',
-      companyName: '',
+      name: '',
     };
   }
   showToast = (msg) => {
@@ -43,8 +43,8 @@ class Register extends Component {
     this.setState({confirmPassword: text});
   };
 
-  changeTextCompanyName = (text) => {
-    this.setState({companyName: text});
+  changeTextname = (text) => {
+    this.setState({name: text});
   };
 
   moveToLogin = () => {
@@ -52,17 +52,17 @@ class Register extends Component {
   };
 
   validateData = () => {
-    let {email, password, companyName} = this.state;
-    if (!email || !password || !companyName) return false;
+    let {email, password, name} = this.state;
+    if (!email || !password || !name) return false;
     return true;
   };
 
   registerAcc = async () => {
-    const {email, password, companyName} = this.state;
+    const {email, password, name} = this.state;
     const data = {
       email,
       password,
-      companyName,
+      name,
     };
     if (!this.validateData()) {
       this.showToast('Data is empty');
@@ -113,7 +113,7 @@ class Register extends Component {
               style={styles.inputText}
               placeholder="Company Name..."
               placeholderTextColor="#003f5c"
-              onChangeText={this.changeTextCompanyName}
+              onChangeText={this.changeTextname}
             />
           </View>
           <View style={styles.buttonContainer}>

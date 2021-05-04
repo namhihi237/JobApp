@@ -15,7 +15,7 @@ export class JobDetail extends Component {
       <View style={styles.itemDetail}>
         <ScrollView>
           <Text style={styles.text}>{item.title}</Text>
-          <Text style={styles.text}>{item.company[0].companyName}</Text>
+          <Text style={styles.text}>{item.company[0].name}</Text>
           <Text style={styles.text}>Address: {item.address}</Text>
           <Text style={styles.text}>Description: {item.description}</Text>
           <Text style={styles.text}>Salary: {item.salary}</Text>

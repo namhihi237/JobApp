@@ -21,7 +21,7 @@ class Register extends Component {
       email: '',
       password: '',
       confirmPassword: '',
-      fullName: '',
+      name: '',
     };
   }
   showToast = (msg) => {
@@ -43,8 +43,8 @@ class Register extends Component {
   changeTextConfirmPass = (text) => {
     this.setState({confirmPassword: text});
   };
-  changeTextFullName = (text) => {
-    this.setState({fullName: text});
+  changeTextname = (text) => {
+    this.setState({name: text});
   };
 
   hideDatePicker = () => {
@@ -52,8 +52,8 @@ class Register extends Component {
   };
 
   validateData = () => {
-    let {email, password, fullName} = this.state;
-    if (!email || !password || !fullName) return false;
+    let {email, password, name} = this.state;
+    if (!email || !password || !name) return false;
     return true;
   };
 
@@ -61,11 +61,11 @@ class Register extends Component {
     this.props.navigation.navigate('Login');
   };
   registerAcc = async () => {
-    const {email, password, fullName} = this.state;
+    const {email, password, name} = this.state;
     const data = {
       email,
       password,
-      fullName,
+      name,
     };
     if (!this.validateData()) {
       this.showToast('Data is empty');
@@ -116,7 +116,7 @@ class Register extends Component {
               style={styles.inputText}
               placeholder="Full Name..."
               placeholderTextColor="#003f5c"
-              onChangeText={this.changeTextFullName}
+              onChangeText={this.changeTextname}
             />
           </View>
 
