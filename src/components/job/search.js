@@ -3,13 +3,9 @@ import _ from 'lodash';
 import {connect} from 'react-redux';
 import {Toast} from 'native-base';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import {Loader} from '../../common';
-import axios from 'axios';
-import {apiUrl} from '../../api/api';
 import {JobDetail} from './jobDtail';
-import {getJob, applyJob} from '../../redux/actions';
+import {applyJob, searchJob} from '../../redux/actions';
 import {getData} from '../../utils';
-
 import {
   StyleSheet,
   View,
@@ -20,15 +16,13 @@ import {
   Modal,
   TextInput,
   TouchableHighlight,
-  ActivityIndicator,
   Image,
 } from 'react-native';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-const {GET_JOBS_URL} = apiUrl;
 
-class Job extends Component {
+class Search extends Component {
   _isMounted = false;
   constructor(props) {
     super(props);
@@ -38,12 +32,7 @@ class Job extends Component {
       item: null,
       role: '',
       posts: [],
-      loadingmore: false,
-      refreshing: false,
-      page: 1,
-      isLoading: false,
     };
-    this.handleLoadMore = this.handleLoadMore.bind(this);
   }
 
   showToast = (msg) => {
@@ -60,7 +49,8 @@ class Job extends Component {
 
   searchItem = async () => {
     if (this.state.search == '') return;
-    this.props.navigation.navigate('Search', {search: this.state.search});
+    await this.props.searchJob(this.state.search);
+    this.setState({posts: this.props.postsSearch});
   };
 
   renderItem = ({item}) => (
@@ -117,52 +107,13 @@ class Job extends Component {
 
   componentDidMount() {
     this._isMounted = true;
-    const unsubscribe = this.props.navigation.addListener('focus', async () => {
-      this.setState({search: ''});
-      await this.props.getJob();
+    return this.props.navigation.addListener('focus', async () => {
+      await this.setState({search: this.props.route.params.search});
+      await this.props.searchJob(this.state.search);
       const role = await getData('role');
-
-      this.setState({role, posts: this.props.posts, page: 1});
+      this.setState({role, posts: this.props.postsSearch});
     });
-
-    return unsubscribe;
   }
-
-  async handleLoadMore() {
-    try {
-      await this.setState({page: this.state.page + 1, isLoading: true});
-
-      if (this.state.page > this.props.numPages) {
-        return;
-      }
-      const result = await axios.get(
-        `${GET_JOBS_URL}?page=${this.state.page}&take=${10}`,
-      );
-      const addPost = result.data.data.posts;
-      const currentPage = result.data.data.currentPage;
-      let newPost = [...this.state.posts, ...addPost];
-
-      this.setState({
-        posts: newPost,
-        isLoading: false,
-        page: currentPage + 1,
-      });
-    } catch (error) {
-      return;
-    }
-  }
-
-  footerList = () => {
-    return (
-      <View style={{flex: 1}}>
-        {this.state.isLoading && (
-          <View style={styles.loading}>
-            <ActivityIndicator />
-          </View>
-        )}
-      </View>
-    );
-  };
 
   setModalVisible = (visible) => {
     this.setState({modalVisible: visible});
@@ -195,46 +146,59 @@ class Job extends Component {
     this._isMounted = false;
   }
 
+  backToHome = () => {
+    this.props.navigation.popToTop();
+  };
+
   render() {
     const {modalVisible, item} = this.state;
 
     if (this.props.status != 200 && this.props.status != 304) {
-      return (
-        <View>
-          <Loader status={this.props.loading}></Loader>
-        </View>
-      );
+      return <View>{/* <Loader status={this.props.loading}></Loader> */}</View>;
     }
     return (
       <View>
-        <Loader status={this.props.loading}></Loader>
+        {/* <Loader status={this.props.loading}></Loader> */}
         <View style={styles.container}>
-          <View style={styles.searchContaier}>
-            <View style={{...styles.searchInput}}>
-              <TextInput
-                style={{height: 40}}
-                onChangeText={this.updateSearch}
-                value={this.state.search}
-                placeholder="Keyword (skill, company, position,...)"
-                placeholderTextColor="#aa5f5f"></TextInput>
-              <TouchableOpacity
-                style={styles.searchButton}
-                onPress={this.searchItem}>
-                <FontAwesome5
-                  name={'search'}
-                  style={{fontSize: 22, marginBottom: 3}}
-                />
-              </TouchableOpacity>
+          <View style={styles.bgHeader}>
+            <TouchableOpacity
+              onPress={this.backToHome}
+              style={styles.buttonBack}>
+              <FontAwesome5
+                name={'arrow-left'}
+                style={{
+                  fontSize: 22,
+                  marginBottom: 3,
+                }}
+              />
+            </TouchableOpacity>
+            <View style={styles.searchContaier}>
+              <View style={{...styles.searchInput}}>
+                <TextInput
+                  style={{height: 40}}
+                  value={this.state.search}
+                  onChangeText={this.updateSearch}
+                  placeholder="Keyword (skill, company, position,...)"
+                  placeholderTextColor="#aa5f5f"></TextInput>
+                <TouchableOpacity
+                  style={styles.searchButton}
+                  onPress={this.searchItem}>
+                  <FontAwesome5
+                    name={'search'}
+                    style={{fontSize: 22, marginBottom: 3}}
+                  />
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
+
           <FlatList
             style={styles.flatlist}
             scrollEventThrottle={16}
             data={this.state.posts}
             keyExtractor={this.keyExtractor}
             renderItem={this.renderItem}
-            onEndReached={this.handleLoadMore}
-            ListFooterComponent={this.footerList}></FlatList>
+            onEndReached={this.handleLoadMore}></FlatList>
         </View>
         <View style={styles.centeredView}>
           <Modal
@@ -244,9 +208,7 @@ class Job extends Component {
             visible={modalVisible}>
             <View style={styles.centeredView}>
               <View style={styles.modalView}>
-                <Text style={{fontSize: 30, fontFamily: 'Sailors Slant'}}>
-                  Job Detail
-                </Text>
+                <Text style={{fontSize: 30}}>Job Detail</Text>
                 <JobDetail item={item}></JobDetail>
                 <View style={styles.containerButton}>
                   <TouchableHighlight
@@ -267,25 +229,21 @@ class Job extends Component {
   }
 }
 const mapDispatchToProps = {
-  getJob,
   applyJob,
+  searchJob,
 };
 
 const mapStateToProps = (state) => {
-  const {loading, status, msg} = state.getJob;
-
+  let postsSearch = _.get(state.searchJob, 'data.posts') || [];
   return {
-    loading,
-    posts: _.get(state.getJob, 'data.posts') || [],
-    status,
-    msg,
-    currentPage: _.get(state.getJob, 'data.scurrentPage') || null,
-    numPages: _.get(state.getJob, 'data.numPages') || null,
+    postsSearch,
     statusApply: state.applyJob.status,
     msgApply: state.applyJob.msg,
+    loading: _.get(state.searchJob, 'loading'),
+    status: state.searchJob.status,
   };
 };
-export default connect(mapStateToProps, mapDispatchToProps)(Job);
+export default connect(mapStateToProps, mapDispatchToProps)(Search);
 
 const styles = StyleSheet.create({
   container: {
@@ -300,11 +258,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: (windowWidth * 1.8) / 3,
-    marginTop: 1,
+    marginTop: 5,
   },
   searchInput: {
     height: 50,
-    width: windowWidth - 10,
+    width: windowWidth * 0.85,
     borderColor: '#7e8591',
     marginLeft: 3,
     marginRight: 3,
@@ -328,7 +286,8 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: windowWidth,
+    width: 200,
+    flex: 9,
     paddingLeft: 3,
     paddingRight: 3,
     paddingTop: 2,
@@ -344,8 +303,6 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     marginLeft: 15,
     marginRight: 15,
-
-    // backgroundColor: '#aecce2',
     backgroundColor: '#fff',
     shadowOpacity: 0.6,
     flex: 1,
@@ -353,9 +310,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     paddingLeft: 10,
     paddingTop: 5,
-
     borderRadius: 7,
-    // shawdow
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -371,8 +326,6 @@ const styles = StyleSheet.create({
   text: {
     marginBottom: 1,
     marginLeft: 5,
-    fontFamily: 'TimesNewRoman',
-    fontSize: 16,
   },
   logoContainer: {
     display: 'flex',
@@ -420,15 +373,31 @@ const styles = StyleSheet.create({
   containerButton: {
     flexDirection: 'row',
   },
-  loading: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
-    opacity: 0.5,
-    backgroundColor: 'black',
-    justifyContent: 'center',
+  bgHeader: {
+    backgroundColor: 'rgba(249, 242, 242, 0.8)',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    display: 'flex',
+    flexDirection: 'row',
+    shadowOffset: {
+      width: 0,
+      height: 8,
+    },
+    paddingBottom: 3,
+    shadowOpacity: 0.34,
+    shadowRadius: 6.27,
+
+    elevation: 10,
+  },
+  headerStyle: {
+    fontSize: 25,
+    textAlign: 'center',
+    margin: 10,
+    color: '#000',
+  },
+  buttonBack: {
+    flex: 1,
+    textAlign: 'center',
     alignItems: 'center',
   },
 });

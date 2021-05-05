@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Animated} from 'react-native';
 import {getData, storeData} from '../../utils';
-
+import LinearGradient from 'react-native-linear-gradient';
 import {
   StyleSheet,
   View,
@@ -69,9 +69,9 @@ export class Landing extends Component {
   render() {
     const {marginLeftAnimA, marginRightAnimB} = this.state;
     return (
-      <ImageBackground
-        style={styles.container}
-        source={require('../../assets/image/landing.jpg')}>
+      <LinearGradient
+        colors={['#050024', '#212979', '#48c4dd']}
+        style={styles.container}>
         <View style={styles.ovalContainer}>
           <Animated.View
             style={{
@@ -96,14 +96,13 @@ export class Landing extends Component {
             <Text style={styles.loginText}>Login with Account</Text>
           </TouchableOpacity>
         </View>
-      </ImageBackground>
+      </LinearGradient>
     );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#F2F2F2',
     flex: 1,
   },
   ovalContainer: {
@@ -169,5 +168,6 @@ const styles = StyleSheet.create({
   },
   loginText: {
     fontSize: 19,
+    fontFamily: 'Sarpanch-SemiBold',
   },
 });

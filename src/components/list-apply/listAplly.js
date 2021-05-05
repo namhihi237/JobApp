@@ -57,7 +57,7 @@ class ApplyList extends Component {
         for (let iter of applies) {
           let rowData = [];
           rowData.push(count);
-          rowData.push(iter.fullName);
+          rowData.push(iter.name);
           rowData.push(iter.email);
           rowData.push(iter.cvId);
           tableData.push(rowData);

@@ -74,6 +74,15 @@
 		<string>rubicon-icon-font.ttf</string>
 		<string>SimpleLineIcons.ttf</string>
 		<string>Zocial.ttf</string>
+		<string>Sarpanch-Black.ttf</string>
+		<string>Sarpanch-Bold.ttf</string>
+		<string>Sarpanch-ExtraBold.ttf</string>
+		<string>Sarpanch-Medium.ttf</string>
+		<string>Sarpanch-Regular.ttf</string>
+		<string>Sarpanch-SemiBold.ttf</string>
+		<string>Sailors Slant.otf</string>
+		<string>TimesNewRoman.ttf</string>
+		<string>Dopestyle.ttf</string>
 	</array>
 </dict>
 </plist>
