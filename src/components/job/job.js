@@ -1,431 +1,468 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import _ from 'lodash';
-import {connect} from 'react-redux';
-import {Toast} from 'native-base';
+import { connect } from 'react-redux';
+import { Toast } from 'native-base';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import {Loader} from '../../common';
+import { Loader } from '../../common';
 import axios from 'axios';
-import {apiUrl} from '../../api/api';
-import {JobDetail} from './jobDtail';
-import {getJob, applyJob, searchJob} from '../../redux/actions';
-import {getData} from '../../utils';
+import { apiUrl } from '../../api/api';
+import { JobDetail } from './jobDtail';
+import { getJob, applyJob, searchJob } from '../../redux/actions';
+import { getData } from '../../utils';
 
 import {
-  StyleSheet,
-  View,
-  Text,
-  FlatList,
-  Dimensions,
-  TouchableOpacity,
-  Modal,
-  TextInput,
-  TouchableHighlight,
-  ActivityIndicator,
-  Image,
+    StyleSheet,
+    View,
+    Text,
+    FlatList,
+    Dimensions,
+    TouchableOpacity,
+    Modal,
+    TextInput,
+    TouchableHighlight,
+    ActivityIndicator,
+    Image,
 } from 'react-native';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-const {GET_JOBS_URL} = apiUrl;
+const { GET_JOBS_URL } = apiUrl;
 
 class Job extends Component {
-  _isMounted = false;
-  constructor(props) {
-    super(props);
-    this.state = {
-      search: '',
-      modalVisible: false,
-      item: null,
-      role: '',
-      posts: [],
-      loadingmore: false,
-      refreshing: false,
-      page: 1,
-      isLoading: false,
+    _isMounted = false;
+    constructor(props) {
+        super(props);
+        this.state = {
+            search: '',
+            modalVisible: false,
+            item: null,
+            role: '',
+            posts: [],
+            loadingmore: false,
+            refreshing: false,
+            page: 1,
+            isLoading: false,
+        };
+        this.handleLoadMore = this.handleLoadMore.bind(this);
+    }
+
+    showToast = (msg) => {
+        Toast.show({
+            text: `${msg}`,
+            buttonText: 'Okey',
+            duration: 3000,
+        });
     };
-    this.handleLoadMore = this.handleLoadMore.bind(this);
-  }
 
-  showToast = (msg) => {
-    Toast.show({
-      text: `${msg}`,
-      buttonText: 'Okey',
-      duration: 3000,
-    });
-  };
+    updateSearch = (search) => {
+        this.setState({ search });
+    };
 
-  updateSearch = (search) => {
-    this.setState({search});
-  };
+    searchItem = async() => {
+        await this.props.searchJob(this.state.search);
+        this.setState({ posts: this.props.postsSearch });
+    };
 
-  searchItem = async () => {
-    await this.props.searchJob(this.state.search);
-    this.setState({posts: this.props.postsSearch});
-  };
-
-  renderItem = ({item}) => (
-    <View style={styles.item}>
-      <View style={styles.logoContainer}>
-        <Image
-          source={require('../../assets/image/fpt.jpg')}
-          style={styles.logo}></Image>
-        <View style={{padding: 1, marginLeft: 10}}>
-          <Text style={{...styles.text, fontSize: 20}} numberOfLines={1}>
-            {item.title}
-          </Text>
-          <Text style={{...styles.text, fontSize: 15}} numberOfLines={1}>
-            {item.companyName}
-          </Text>
-          <View style={styles.fiedlsText}>
-            <FontAwesome5 name={'money-bill'} style={styles.iconText} />
-            <Text style={styles.text} numberOfLines={1}>
-              {item.salary}
-            </Text>
-          </View>
-          <View style={styles.fiedlsText}>
-            <FontAwesome5 name={'code'} style={styles.iconText} />
-            <Text style={styles.text} numberOfLines={1}>
-              {item.skill.join(', ')}
-            </Text>
-          </View>
-          <View style={styles.fiedlsText}>
-            <FontAwesome5 name={'briefcase'} style={styles.iconText} />
-            {/* <Text style={{...styles.text, marginLeft: 11}} numberOfLines={1}>
-              {item.position.join(', ')}
-            </Text> */}
-          </View>
-          <View
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              width: (windowWidth * 1.8) / 3,
-              marginTop: 5,
-            }}>
-            <TouchableOpacity onPress={() => this.showDetail(item)} style={{}}>
-              <Text style={{color: 'green'}}>See more</Text>
-            </TouchableOpacity>
-            <View style={styles.fiedlsText}>
-              <FontAwesome5
-                name={'history'}
-                style={{...styles.iconText, color: 'red'}}
-              />
-              <Text style={{marginLeft: 10}}>{item.endTime}</Text>
-            </View>
-          </View>
-        </View>
-      </View>
-    </View>
-  );
-
-  keyExtractor = (item) => {
-    return item._id;
-  };
-
-  componentDidMount() {
-    this._isMounted = true;
-    const unsubscribe = this.props.navigation.addListener('focus', async () => {
-      await this.props.getJob();
-      const role = await getData('role');
-
-      this.setState({role, posts: this.props.posts, page: 1});
-    });
-
-    return unsubscribe;
-  }
-
-  async handleLoadMore() {
-    try {
-      await this.setState({page: this.state.page + 1, isLoading: true});
-
-      if (this.state.page > this.props.numPages) {
-        return;
-      }
-      const result = await axios.get(
-        `${GET_JOBS_URL}?page=${this.state.page}&take=${10}`,
-      );
-      const addPost = result.data.data.posts;
-      const currentPage = result.data.data.currentPage;
-      let newPost = [...this.state.posts, ...addPost];
-
-      this.setState({
-        posts: newPost,
-        isLoading: false,
-        page: currentPage + 1,
-      });
-    } catch (error) {
-      return;
-    }
-  }
-
-  footerList = () => {
-    return (
-      <View style={{flex: 1}}>
-        {this.state.isLoading && (
-          <View style={styles.loading}>
-            <ActivityIndicator />
-          </View>
-        )}
-      </View>
+    renderItem = ({ item }) => ( <
+        View style = { styles.item } >
+        <
+        View style = { styles.logoContainer } >
+        <
+        Image source = { require('../../assets/image/fpt.jpg') }
+        style = { styles.logo } > < /Image> <
+        View style = {
+            { padding: 1, marginLeft: 10 } } >
+        <
+        Text style = {
+            {...styles.text, fontSize: 20 } }
+        numberOfLines = { 1 } > { item.title } <
+        /Text> <
+        Text style = {
+            {...styles.text, fontSize: 15 } }
+        numberOfLines = { 1 } > { item.companyName } <
+        /Text> <
+        View style = { styles.fiedlsText } >
+        <
+        FontAwesome5 name = { 'money-bill' }
+        style = { styles.iconText }
+        /> <
+        Text style = { styles.text }
+        numberOfLines = { 1 } > { item.salary } <
+        /Text> <
+        /View> <
+        View style = { styles.fiedlsText } >
+        <
+        FontAwesome5 name = { 'code' }
+        style = { styles.iconText }
+        /> <
+        Text style = { styles.text }
+        numberOfLines = { 1 } > { item.skill.join(', ') } <
+        /Text> <
+        /View> <
+        View style = { styles.fiedlsText } >
+        <
+        FontAwesome5 name = { 'map-marker-alt' }
+        style = { styles.iconText }
+        /> <
+        Text style = { styles.text }
+        numberOfLines = { 1 } > { item.address } <
+        /Text> <
+        /View> <
+        View style = { styles.seeMore } >
+        <
+        TouchableOpacity onPress = {
+            () => this.showDetail(item) }
+        style = {
+            {} } >
+        <
+        Text style = {
+            { color: 'green' } } > See more < /Text> <
+        /TouchableOpacity> <
+        View style = { styles.fiedlsText } >
+        <
+        FontAwesome5 name = { 'history' }
+        style = {
+            {...styles.iconText, color: 'red' } }
+        /> <
+        Text style = {
+            { marginLeft: 10 } } > { item.endTime } < /Text> <
+        /View> <
+        /View> <
+        /View> <
+        /View> <
+        /View>
     );
-  };
 
-  setModalVisible = (visible) => {
-    this.setState({modalVisible: visible});
-  };
+    keyExtractor = (item) => {
+        return item._id;
+    };
 
-  showDetail = (item) => {
-    this.setModalVisible(true);
-    this.setState({item});
-  };
+    componentDidMount() {
+        this._isMounted = true;
+        const unsubscribe = this.props.navigation.addListener('focus', async() => {
+            await this.props.getJob();
+            const role = await getData('role');
 
-  iterApplyJob = async () => {
-    await this.props.applyJob(this.state.item._id);
-    this.showToast(this.props.msgApply);
-  };
+            this.setState({ role, posts: this.props.posts, page: 1 });
+        });
 
-  renderButtonApply = () => {
-    if (this.state.role == 'iter') {
-      return (
-        <TouchableHighlight
-          style={styles.openButton}
-          onPress={this.iterApplyJob}>
-          <Text style={styles.textStyle}>Apply</Text>
-        </TouchableHighlight>
-      );
+        return unsubscribe;
     }
-    return null;
-  };
 
-  componentWillUnmount() {
-    this._isMounted = false;
-  }
+    async handleLoadMore() {
+        try {
+            await this.setState({ page: this.state.page + 1, isLoading: true });
 
-  render() {
-    const {modalVisible, item} = this.state;
+            if (this.state.page > this.props.numPages) {
+                return;
+            }
+            const result = await axios.get(
+                `${GET_JOBS_URL}?page=${this.state.page}&take=${10}`,
+            );
+            const addPost = result.data.data.posts;
+            const currentPage = result.data.data.currentPage;
+            let newPost = [...this.state.posts, ...addPost];
 
-    if (this.props.status != 200 && this.props.status != 304) {
-      return (
-        <View>
-          <Loader status={this.props.loading}></Loader>
-        </View>
-      );
+            this.setState({
+                posts: newPost,
+                isLoading: false,
+                page: currentPage + 1,
+            });
+        } catch (error) {
+            return;
+        }
     }
-    return (
-      <View>
-        <Loader status={this.props.loading}></Loader>
-        <View style={styles.container}>
-          <View style={styles.searchContaier}>
-            <View style={{...styles.searchInput}}>
-              <TextInput
-                style={{height: 40}}
-                onChangeText={this.updateSearch}
-                placeholder="Keyword (skill, company, position,...)"
-                placeholderTextColor="#aa5f5f"></TextInput>
-              <TouchableOpacity
-                style={styles.searchButton}
-                onPress={this.searchItem}>
-                <FontAwesome5
-                  name={'search'}
-                  style={{fontSize: 22, marginBottom: 3}}
-                />
-              </TouchableOpacity>
-            </View>
-          </View>
-          <FlatList
-            style={styles.flatlist}
-            scrollEventThrottle={16}
-            data={this.state.posts}
-            keyExtractor={this.keyExtractor}
-            renderItem={this.renderItem}
-            onEndReached={this.handleLoadMore}
-            ListFooterComponent={this.footerList}></FlatList>
-        </View>
-        <View style={styles.centeredView}>
-          <Modal
-            style={styles.search}
-            animationType="slide"
-            transparent={true}
-            visible={modalVisible}>
-            <View style={styles.centeredView}>
-              <View style={styles.modalView}>
-                <Text style={{fontSize: 30}}>Job Detail</Text>
-                <JobDetail item={item}></JobDetail>
-                <View style={styles.containerButton}>
-                  <TouchableHighlight
-                    style={styles.openButton}
-                    onPress={() => {
-                      this.setModalVisible(!modalVisible);
-                    }}>
-                    <Text style={styles.textStyle}>Cancel</Text>
-                  </TouchableHighlight>
-                  {this.renderButtonApply()}
-                </View>
-              </View>
-            </View>
-          </Modal>
-        </View>
-      </View>
-    );
-  }
+
+    footerList = () => {
+        return ( <
+            View style = {
+                { flex: 1 } } > {
+                this.state.isLoading && ( <
+                    View style = { styles.loading } >
+                    <
+                    ActivityIndicator / >
+                    <
+                    /View>
+                )
+            } <
+            /View>
+        );
+    };
+
+    setModalVisible = (visible) => {
+        this.setState({ modalVisible: visible });
+    };
+
+    showDetail = (item) => {
+        this.setModalVisible(true);
+        this.setState({ item });
+    };
+
+    iterApplyJob = async() => {
+        await this.props.applyJob(this.state.item._id);
+        this.showToast(this.props.msgApply);
+    };
+
+    renderButtonApply = () => {
+        if (this.state.role == 'iter') {
+            return ( <
+                TouchableHighlight style = { styles.openButton }
+                onPress = { this.iterApplyJob } >
+                <
+                Text style = { styles.textStyle } > Apply < /Text> <
+                /TouchableHighlight>
+            );
+        }
+        return null;
+    };
+
+    componentWillUnmount() {
+        this._isMounted = false;
+    }
+
+    render() {
+        const { modalVisible, item } = this.state;
+
+        if (this.props.status != 200 && this.props.status != 304) {
+            return ( <
+                View >
+                <
+                Loader status = { this.props.loading } > < /Loader> <
+                /View>
+            );
+        }
+        return ( <
+            View >
+            <
+            Loader status = { this.props.loading } > < /Loader> <
+            View style = { styles.container } >
+            <
+            View style = { styles.searchContaier } >
+            <
+            View style = {
+                {...styles.searchInput } } >
+            <
+            TextInput style = {
+                { height: 40 } }
+            onChangeText = { this.updateSearch }
+            placeholder = "Keyword (skill, company, position,...)"
+            placeholderTextColor = "#aa5f5f" > < /TextInput> <
+            TouchableOpacity style = { styles.searchButton }
+            onPress = { this.searchItem } >
+            <
+            FontAwesome5 name = { 'search' }
+            style = {
+                { fontSize: 22, marginBottom: 3 } }
+            /> <
+            /TouchableOpacity> <
+            /View> <
+            /View> <
+            FlatList style = { styles.flatlist }
+            scrollEventThrottle = { 16 }
+            data = { this.state.posts }
+            keyExtractor = { this.keyExtractor }
+            renderItem = { this.renderItem }
+            onEndReached = { this.handleLoadMore }
+            ListFooterComponent = { this.footerList } > < /FlatList> <
+            /View> <
+            View style = { styles.centeredView } >
+            <
+            Modal style = { styles.search }
+            animationType = "slide"
+            transparent = { true }
+            visible = { modalVisible } >
+            <
+            View style = { styles.centeredView } >
+            <
+            View style = { styles.modalView } >
+            <
+            Text style = {
+                { fontSize: 30 } } > Job Detail < /Text> <
+            JobDetail item = { item } > < /JobDetail> <
+            View style = { styles.containerButton } >
+            <
+            TouchableHighlight style = { styles.openButton }
+            onPress = {
+                () => {
+                    this.setModalVisible(!modalVisible);
+                }
+            } >
+            <
+            Text style = { styles.textStyle } > Cancel < /Text> <
+            /TouchableHighlight> { this.renderButtonApply() } <
+            /View> <
+            /View> <
+            /View> <
+            /Modal> <
+            /View> <
+            /View>
+        );
+    }
 }
 const mapDispatchToProps = {
-  getJob,
-  applyJob,
-  searchJob,
+    getJob,
+    applyJob,
+    searchJob,
 };
 
 const mapStateToProps = (state) => {
-  const {loading, status, msg} = state.getJob;
+    const { loading, status, msg } = state.getJob;
 
-  let postsSearch = _.get(state.searchJob, 'data.posts') || [];
-  return {
-    loading,
-    posts: _.get(state.getJob, 'data.posts') || [],
-    status,
-    msg,
-    currentPage: _.get(state.getJob, 'data.scurrentPage') || null,
-    numPages: _.get(state.getJob, 'data.numPages') || null,
-    postsSearch,
-    statusApply: state.applyJob.status,
-    msgApply: state.applyJob.msg,
-  };
+    let postsSearch = _.get(state.searchJob, 'data.posts') || [];
+    return {
+        loading,
+        posts: _.get(state.getJob, 'data.posts') || [],
+        status,
+        msg,
+        currentPage: _.get(state.getJob, 'data.scurrentPage') || null,
+        numPages: _.get(state.getJob, 'data.numPages') || null,
+        postsSearch,
+        statusApply: state.applyJob.status,
+        msgApply: state.applyJob.msg,
+    };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Job);
 
 const styles = StyleSheet.create({
-  container: {
-    height: windowHeight - 26,
-  },
-  fiedlsText: {
-    display: 'flex',
-    flexDirection: 'row',
-  },
-  searchInput: {
-    height: 50,
-    width: windowWidth - 10,
-    borderColor: '#7e8591',
-    marginLeft: 3,
-    marginRight: 3,
-    borderWidth: 3,
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: 1,
-    paddingLeft: 15,
-    borderRadius: 50,
-    backgroundColor: '#c7cadd',
-    opacity: 0.7,
-  },
-  flatlist: {
-    marginTop: 3,
-    marginBottom: 3,
-    paddingTop: 10,
-    paddingBottom: 100,
-  },
-  searchContaier: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: windowWidth,
-    paddingLeft: 3,
-    paddingRight: 3,
-    paddingTop: 2,
-  },
-  searchButton: {
-    height: 40,
-    width: windowWidth * 0.18,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  item: {
-    height: (windowHeight - 10) / 5,
-    marginBottom: 15,
-    marginLeft: 15,
-    marginRight: 15,
-
-    // backgroundColor: '#aecce2',
-    backgroundColor: '#fff',
-    shadowOpacity: 0.6,
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-    paddingLeft: 10,
-    paddingTop: 5,
-
-    borderRadius: 7,
-    // shawdow
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 8,
+    container: {
+        height: windowHeight - 26,
     },
-
-    shadowOpacity: 0.34,
-    shadowRadius: 6.27,
-
-    elevation: 10,
-  },
-  iconText: {marginTop: 4, marginLeft: 5},
-  text: {
-    marginBottom: 1,
-    marginLeft: 5,
-  },
-  logoContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-  },
-  logo: {
-    marginTop: 25,
-    width: 80,
-    height: 80,
-  },
-  // modal
-  centeredView: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 22,
-  },
-  modalView: {
-    margin: 20,
-    backgroundColor: 'rgba(103, 104, 107 , 0.95)',
-    borderRadius: 20,
-    minHeight: (windowHeight * 1.25) / 3,
-    width: windowWidth / 1.15,
-    padding: 20,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
+    fiedlsText: {
+        display: 'flex',
+        flexDirection: 'row',
     },
-  },
-  openButton: {
-    backgroundColor: '#2196F3',
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
-    marginLeft: 10,
-    marginRight: 10,
-  },
-  textStyle: {
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  containerButton: {
-    flexDirection: 'row',
-  },
-  loading: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
-    opacity: 0.5,
-    backgroundColor: 'black',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
+    seeMore: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: (windowWidth * 1.8) / 3,
+        marginTop: 5,
+    },
+    searchInput: {
+        height: 50,
+        width: windowWidth - 10,
+        borderColor: '#7e8591',
+        marginLeft: 3,
+        marginRight: 3,
+        borderWidth: 3,
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        padding: 1,
+        paddingLeft: 15,
+        borderRadius: 50,
+        backgroundColor: '#c7cadd',
+        opacity: 0.7,
+    },
+    flatlist: {
+        marginTop: 3,
+        marginBottom: 3,
+        paddingTop: 10,
+        paddingBottom: 100,
+    },
+    searchContaier: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: windowWidth,
+        paddingLeft: 3,
+        paddingRight: 3,
+        paddingTop: 2,
+    },
+    searchButton: {
+        height: 40,
+        width: windowWidth * 0.18,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    item: {
+        height: (windowHeight - 10) / 5,
+        marginBottom: 15,
+        marginLeft: 15,
+        marginRight: 15,
+
+        // backgroundColor: '#aecce2',
+        backgroundColor: '#fff',
+        shadowOpacity: 0.6,
+        flex: 1,
+        display: 'flex',
+        flexDirection: 'column',
+        paddingLeft: 10,
+        paddingTop: 5,
+
+        borderRadius: 7,
+        // shawdow
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 8,
+        },
+
+        shadowOpacity: 0.34,
+        shadowRadius: 6.27,
+
+        elevation: 10,
+    },
+    iconText: { marginTop: 4, marginLeft: 5 },
+    text: {
+        marginBottom: 1,
+        marginLeft: 5,
+    },
+    logoContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+    },
+    logo: {
+        marginTop: 25,
+        width: 80,
+        height: 80,
+    },
+    // modal
+    centeredView: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 22,
+    },
+    modalView: {
+        margin: 20,
+        backgroundColor: 'rgba(103, 104, 107 , 0.95)',
+        borderRadius: 20,
+        minHeight: (windowHeight * 1.25) / 3,
+        width: windowWidth / 1.15,
+        padding: 20,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+    },
+    openButton: {
+        backgroundColor: '#2196F3',
+        borderRadius: 20,
+        padding: 10,
+        elevation: 2,
+        marginLeft: 10,
+        marginRight: 10,
+    },
+    textStyle: {
+        color: 'white',
+        fontWeight: 'bold',
+        textAlign: 'center',
+    },
+    containerButton: {
+        flexDirection: 'row',
+    },
+    loading: {
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        top: 0,
+        bottom: 0,
+        opacity: 0.5,
+        backgroundColor: 'black',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
 });

@@ -13,15 +13,5 @@ const dataSkill = [
   'ReactJs',
   'DotNet',
 ];
-const dataPosition = [
-  'Inter',
-  'Fresher',
-  'Junior',
-  'Senior',
-  'Project Manager',
-  'Team Leader',
-  'Tester',
-  'Developer',
-  'Software Engineer',
-];
-export {dataPosition, dataSkill};
+
+export { dataSkill};
