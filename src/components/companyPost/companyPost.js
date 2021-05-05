@@ -14,6 +14,7 @@ import {getCompanyPost, deletePost} from '../../redux/actions';
 import {Toast} from 'native-base';
 import {TabView, SceneMap} from 'react-native-tab-view';
 import _ from 'lodash';
+
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
@@ -53,7 +54,7 @@ class CompanyPost extends Component {
       <TouchableOpacity
         style={styles.buttonAdd}
         onPress={this.moveToCreatePost}>
-        <Text style={styles.textAdd}>+</Text>
+        <Text style={styles.textAdd}> + </Text>
       </TouchableOpacity>
     </View>
   );
@@ -98,7 +99,7 @@ class CompanyPost extends Component {
         onPress: () => console.log('Cancel Pressed'),
         style: 'cancel',
       },
-      {text: 'Edit', onPress: () => console.log('OK Pressed')},
+      {text: 'Edit', onPress: () => this.moveToEditForm(postId)},
       {text: 'Delete', onPress: async () => await this.deletePost(postId)},
     ]);
 
@@ -131,12 +132,10 @@ class CompanyPost extends Component {
       onShowUnderlay={separators.highlight}
       onHideUnderlay={separators.unhighlight}>
       <View style={styles.item}>
-        <Text style={styles.text}>Titile: {item.title}</Text>
-        <Text style={styles.text}>
-          Company Name: {_.get(item.company[0], 'companyName')}
-        </Text>
-        <Text style={styles.text}>Salary: {item.salary}</Text>
-        <Text style={styles.text}>Skill: {item.skill.join(', ')}</Text>
+        <Text style={styles.text}> Titile: {item.title} </Text>
+        <Text style={styles.text}> Company Name: {item.name} </Text>
+        <Text style={styles.text}> Salary: {item.salary} </Text>
+        <Text style={styles.text}> Skill: {item.skill} </Text>
       </View>
     </TouchableOpacity>
   );
@@ -147,12 +146,10 @@ class CompanyPost extends Component {
       onShowUnderlay={separators.highlight}
       onHideUnderlay={separators.unhighlight}>
       <View style={styles.item}>
-        <Text style={styles.text}>Titile: {item.title}</Text>
-        <Text style={styles.text}>
-          Company Name: {_.get(item.company[0], 'companyName')}
-        </Text>
-        <Text style={styles.text}>Salary: {item.salary}</Text>
-        <Text style={styles.text}>Skill: {item.skill.join(', ')}</Text>
+        <Text style={styles.text}> Titile: {item.title} </Text>
+        <Text style={styles.text}> Company Name: {item.name} </Text>
+        <Text style={styles.text}> Salary: {item.salary} </Text>
+        <Text style={styles.text}> Skill: {item.skill} </Text>
       </View>
     </TouchableOpacity>
   );
@@ -165,7 +162,7 @@ class CompanyPost extends Component {
     this._isMounted = true;
     const unsubscribe = this.props.navigation.addListener('focus', async () => {
       await this.props.getCompanyPost();
-      await this.setState({
+      this.setState({
         dataWait: this.props.posts.filter((e) => e.accept == false),
         dataAccept: this.props.posts.filter((e) => e.accept == true),
       });
@@ -181,15 +178,16 @@ class CompanyPost extends Component {
     this.props.navigation.navigate('ApplyList', {postId});
   };
 
+  moveToEditForm = (postId) => {
+    this.props.navigation.navigate('EditForm', {postId});
+  };
+
   componentWillUnmount() {
     this._isMounted = false;
   }
 
   render() {
     const {index, routes} = this.state;
-    if (this.props.status != 200 && this.props.status != 304) {
-      return <View></View>;
-    }
     return (
       <TabView
         navigationState={{index, routes}}

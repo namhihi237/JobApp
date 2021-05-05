@@ -29,9 +29,7 @@ class Profile extends Component {
       role: '',
       phone: '',
       address: '',
-      birthday: '',
-      fullName: '',
-      companyName: '',
+      name: '',
     };
   }
 
@@ -93,17 +91,13 @@ class Profile extends Component {
       }
       let data = {};
       if (name != '') {
-        if (role == 'iter') data = {...data, fullName: name};
-        else if (role == 'company') data = {...data, companyName: name};
+        data = {...data, name};
       }
       if (address != '') data = {...data, address};
       if (phone != '') data = {...data, phone};
       if (imageUrl) data = {...data, address, image: imageUrl};
-      let url = '';
-      if (role == 'company')
-        url = 'https://job-it-cnpmp.herokuapp.com/api/v1/companies/profile';
-      if (role == 'iter')
-        url = 'https://job-it-cnpmp.herokuapp.com/api/v1/iters/profile';
+      let url = 'https://job-it-cnpmp.herokuapp.com/api/v1/auth/profile';
+
       const res = await axios.post(url, data, {
         headers: {Authorization: `Bearer ${token}`},
       });
@@ -192,13 +186,8 @@ class Profile extends Component {
       let role = await getData('role');
       let phone = _.get(this.props.user, 'phone') || '';
       let address = _.get(this.props.user, 'address') || '';
-      let birthday = _.get(this.props.user, 'birthday') || '';
-      let name =
-        _.get(this.props.user, 'fullName') ||
-        _.get(this.props.user, 'companyName') ||
-        '';
-
-      this.setState({role, phone, address, birthday, name});
+      let name = _.get(this.props.user, 'name') || '';
+      this.setState({role, phone, address, name});
     });
     return unsubscribe;
   }

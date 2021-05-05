@@ -10,7 +10,9 @@ import {UpdatePassword} from './updatePassword';
 import {Cv, CvByCompany, getOneCv} from './Cv';
 import {ApplyList} from './list-apply';
 import {changePass} from './changePass';
+
 import {Profile} from './profile';
+import {EditPost} from './editPost';
 export {
   Landing,
   Login,
@@ -29,4 +31,5 @@ export {
   getOneCv,
   Profile,
   Search,
+  EditPost,
 };
