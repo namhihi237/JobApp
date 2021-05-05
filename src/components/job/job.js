@@ -90,9 +90,9 @@ class Job extends Component {
           </View>
           <View style={styles.fiedlsText}>
             <FontAwesome5 name={'briefcase'} style={styles.iconText} />
-            <Text style={{...styles.text, marginLeft: 11}} numberOfLines={1}>
+            {/* <Text style={{...styles.text, marginLeft: 11}} numberOfLines={1}>
               {item.position.join(', ')}
-            </Text>
+            </Text> */}
           </View>
           <View
             style={{

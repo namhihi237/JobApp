@@ -98,7 +98,7 @@ class CompanyPost extends Component {
         onPress: () => console.log('Cancel Pressed'),
         style: 'cancel',
       },
-      {text: 'Edit', onPress: () => console.log('OK Pressed')},
+      {text: 'Edit', onPress: () => this.moveToEditForm(postId)},
       {text: 'Delete', onPress: async () => await this.deletePost(postId)},
     ]);
 
@@ -134,7 +134,7 @@ class CompanyPost extends Component {
         <Text style={styles.text}>Company Name: {item.companyName}</Text>
         <Text style={styles.text}>Salary: {item.salary}</Text>
         <Text style={styles.text}>Skill: {item.skill.join(', ')}</Text>
-        <Text style={styles.text}>Position: {item.position.join(', ')}</Text>
+        {/* <Text style={styles.text}>Position: {item.position.join(', ')}</Text> */}
       </View>
     </TouchableOpacity>
   );
@@ -148,7 +148,7 @@ class CompanyPost extends Component {
         <Text style={styles.text}>Company Name: {item.companyName}</Text>
         <Text style={styles.text}>Salary: {item.salary}</Text>
         <Text style={styles.text}>Skill: {item.skill.join(', ')}</Text>
-        <Text style={styles.text}>Position: {item.position.join(', ')}</Text>
+        {/* <Text style={styles.text}>Position: {item.position.join(', ')}</Text> */}
       </View>
     </TouchableOpacity>
   );
@@ -175,6 +175,10 @@ class CompanyPost extends Component {
 
   moveToApplyList = (postId) => {
     this.props.navigation.navigate('ApplyList', {postId});
+  };
+
+  moveToEditForm = (postId) => {
+    this.props.navigation.navigate('EditForm', {postId});
   };
 
   componentWillUnmount() {

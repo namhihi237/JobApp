@@ -14,6 +14,7 @@ import {searchJob} from './searchJob';
 import {deletePost} from './deletePost';
 import {changePassword} from './changePassword';
 import {getProfile} from './getProfile';
+import {editWaitingPost} from './editWaitingPost';
 
 export {
   login,
@@ -31,5 +32,6 @@ export {
   searchJob,
   deletePost,
   changePassword,
-  getProfile
+  getProfile,
+  editWaitingPost
 };

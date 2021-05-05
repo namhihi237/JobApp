@@ -29,6 +29,7 @@ import {
   changePass,
   getOneCv,
   Profile,
+  EditPost
 } from './components';
 import {store} from './redux/store';
 import {Provider} from 'react-redux';
@@ -145,6 +146,11 @@ class CompanyPostnav extends Component {
           name="ApplyList"
           component={ApplyList}
           options={{headerTitleAlign: 'center', title: 'Applied List'}}
+        />
+         <Stack.Screen
+          name="EditForm"
+          component={EditPost}
+          options={{headerTitleAlign: 'center', title: 'Edit Post'}}
         />
         <Stack.Screen name="CV" component={CvByCompany} />
       </CompanyPostStack.Navigator>
