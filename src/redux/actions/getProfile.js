@@ -2,7 +2,7 @@ import {actionType} from '../acitonType';
 import axios from 'axios';
 import _ from 'lodash';
 import {apiUrl} from '../../api/api';
-import {storeData, getData} from '../../utils';
+import {getData} from '../../utils';
 const {GET_PROFILE, GET_PROFILE_SUCCESS, GET_PROFILE_FAIL} = actionType;
 const {GET_PROFILE_PATH} = apiUrl;
 

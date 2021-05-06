@@ -13,6 +13,7 @@ import {connect} from 'react-redux';
 import {getCompanyPost, deletePost} from '../../redux/actions';
 import {Toast} from 'native-base';
 import {TabView, SceneMap} from 'react-native-tab-view';
+import _ from 'lodash';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -53,7 +54,7 @@ class CompanyPost extends Component {
       <TouchableOpacity
         style={styles.buttonAdd}
         onPress={this.moveToCreatePost}>
-        <Text style={styles.textAdd}>+</Text>
+        <Text style={styles.textAdd}> + </Text>
       </TouchableOpacity>
     </View>
   );
@@ -98,7 +99,7 @@ class CompanyPost extends Component {
         onPress: () => console.log('Cancel Pressed'),
         style: 'cancel',
       },
-      {text: 'Edit', onPress: () => console.log('OK Pressed')},
+      {text: 'Edit', onPress: () => this.moveToEditForm(postId)},
       {text: 'Delete', onPress: async () => await this.deletePost(postId)},
     ]);
 
@@ -131,10 +132,10 @@ class CompanyPost extends Component {
       onShowUnderlay={separators.highlight}
       onHideUnderlay={separators.unhighlight}>
       <View style={styles.item}>
-        <Text style={styles.text}>Titile: {item.title}</Text>
-        <Text style={styles.text}>Company Name: {item.companyName}</Text>
-        <Text style={styles.text}>Salary: {item.salary}</Text>
-        <Text style={styles.text}>Skill: {item.skill.join(', ')}</Text>
+        <Text style={styles.text}> Titile: {item.title} </Text>
+        <Text style={styles.text}> Company Name: {item.name} </Text>
+        <Text style={styles.text}> Salary: {item.salary} </Text>
+        <Text style={styles.text}> Skill: {item.skill} </Text>
       </View>
     </TouchableOpacity>
   );
@@ -145,10 +146,10 @@ class CompanyPost extends Component {
       onShowUnderlay={separators.highlight}
       onHideUnderlay={separators.unhighlight}>
       <View style={styles.item}>
-        <Text style={styles.text}>Titile: {item.title}</Text>
-        <Text style={styles.text}>Company Name: {item.companyName}</Text>
-        <Text style={styles.text}>Salary: {item.salary}</Text>
-        <Text style={styles.text}>Skill: {item.skill.join(', ')}</Text>
+        <Text style={styles.text}> Titile: {item.title} </Text>
+        <Text style={styles.text}> Company Name: {item.name} </Text>
+        <Text style={styles.text}> Salary: {item.salary} </Text>
+        <Text style={styles.text}> Skill: {item.skill} </Text>
       </View>
     </TouchableOpacity>
   );
@@ -177,19 +178,16 @@ class CompanyPost extends Component {
     this.props.navigation.navigate('ApplyList', {postId});
   };
 
+  moveToEditForm = (postId) => {
+    this.props.navigation.navigate('EditForm', {postId});
+  };
+
   componentWillUnmount() {
     this._isMounted = false;
   }
 
   render() {
     const {index, routes} = this.state;
-    if (this.props.status != 200 && this.props.status != 304) {
-      return (
-        <View>
-          <Text>No data</Text>
-        </View>
-      );
-    }
     return (
       <TabView
         navigationState={{index, routes}}
@@ -207,7 +205,6 @@ const mapDispatchToProps = {
 
 const mapStateToProps = (state) => {
   const {loading, posts, status, msg} = state.getCompanyPost;
-
   return {
     loading,
     posts,
@@ -262,6 +259,14 @@ const styles = StyleSheet.create({
     height: 60,
     backgroundColor: '#ee6e73',
     borderRadius: 100,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 8,
+    },
+    shadowOpacity: 0.34,
+    shadowRadius: 6.27,
+    elevation: 10,
   },
   textAdd: {
     fontSize: 30,

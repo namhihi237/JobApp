@@ -15,5 +15,6 @@ export const apiUrl = {
   GET_A_CV: `${baseUrl}/api/v1/cv/user`,
   DELETE_POST_URL: `${baseUrl}/api/v1/posts`,
   CHANGE_PASSWORD_URL: `${baseUrl}/api/v1/auth/update-password`,
-  GET_PROFILE_PATH: `${baseUrl}/api/v1/iters/profile`
+  GET_PROFILE_PATH: `${baseUrl}/api/v1/auth/profile`,
+  UPDATE_WAITING_POST_PATH: `${baseUrl}/api/v1/posts/[postId]`,
 };

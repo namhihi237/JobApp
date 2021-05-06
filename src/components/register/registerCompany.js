@@ -6,14 +6,13 @@ import {
   Text,
   TouchableOpacity,
   Keyboard,
-  ImageBackground,
   TouchableWithoutFeedback,
 } from 'react-native';
 import {TextInput} from 'react-native-gesture-handler';
 import {registerCompany} from '../../redux/actions';
 import {connect} from 'react-redux';
 import {Loader} from '../../common';
-
+import LinearGradient from 'react-native-linear-gradient';
 class Register extends Component {
   constructor(props) {
     super(props);
@@ -21,7 +20,7 @@ class Register extends Component {
       email: '',
       password: '',
       confirmPassword: '',
-      companyName: '',
+      name: '',
     };
   }
   showToast = (msg) => {
@@ -44,8 +43,8 @@ class Register extends Component {
     this.setState({confirmPassword: text});
   };
 
-  changeTextCompanyName = (text) => {
-    this.setState({companyName: text});
+  changeTextname = (text) => {
+    this.setState({name: text});
   };
 
   moveToLogin = () => {
@@ -53,17 +52,17 @@ class Register extends Component {
   };
 
   validateData = () => {
-    let {email, password, companyName} = this.state;
-    if (!email || !password || !companyName) return false;
+    let {email, password, name} = this.state;
+    if (!email || !password || !name) return false;
     return true;
   };
 
   registerAcc = async () => {
-    const {email, password, companyName} = this.state;
+    const {email, password, name} = this.state;
     const data = {
       email,
       password,
-      companyName,
+      name,
     };
     if (!this.validateData()) {
       this.showToast('Data is empty');
@@ -79,8 +78,8 @@ class Register extends Component {
   render() {
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-        <ImageBackground
-          source={require('../../assets/image/bg_register.png')}
+        <LinearGradient
+          colors={['#cdaeee', '#94e4e9']}
           style={styles.container}>
           <Loader status={this.props.loading} msg={'Register'}></Loader>
           <View style={styles.inputView}>
@@ -114,7 +113,7 @@ class Register extends Component {
               style={styles.inputText}
               placeholder="Company Name..."
               placeholderTextColor="#003f5c"
-              onChangeText={this.changeTextCompanyName}
+              onChangeText={this.changeTextname}
             />
           </View>
           <View style={styles.buttonContainer}>
@@ -127,7 +126,7 @@ class Register extends Component {
           <TouchableOpacity onPress={this.moveToLogin}>
             <Text style={styles.loginText}>SignIn</Text>
           </TouchableOpacity>
-        </ImageBackground>
+        </LinearGradient>
       </TouchableWithoutFeedback>
     );
   }

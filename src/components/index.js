@@ -1,7 +1,7 @@
 import {Login} from './login';
 import {RegisterIter, RegisterCompany} from './register';
 import {Landing} from './loading';
-import {Job} from './job';
+import {Job, Search} from './job';
 import {CompanyPost} from './companyPost';
 import {CreatePost} from './createPost';
 import {Forgot} from './forgotPassword';
@@ -10,7 +10,9 @@ import {UpdatePassword} from './updatePassword';
 import {Cv, CvByCompany, getOneCv} from './Cv';
 import {ApplyList} from './list-apply';
 import {changePass} from './changePass';
-import {Profile} from './profile'
+
+import {Profile} from './profile';
+import {EditPost} from './editPost';
 export {
   Landing,
   Login,
@@ -27,5 +29,7 @@ export {
   CvByCompany,
   changePass,
   getOneCv,
-  Profile
+  Profile,
+  Search,
+  EditPost,
 };
