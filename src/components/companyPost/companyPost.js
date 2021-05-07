@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import {Loader} from '../../common';
 import {
   StyleSheet,
   View,
@@ -17,7 +16,10 @@ import _ from 'lodash';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 class CompanyPost extends Component {
   _isMounted = false;
 
@@ -85,7 +87,6 @@ class CompanyPost extends Component {
     Alert.alert('Option', `Pick your option `, [
       {
         text: 'Cancel',
-        onPress: () => console.log('Cancel Pressed'),
         style: 'cancel',
       },
       {text: 'Apply List', onPress: () => this.moveToApplyList(postId)},
@@ -96,7 +97,6 @@ class CompanyPost extends Component {
     Alert.alert('Option', `Pick your option `, [
       {
         text: 'Cancel',
-        onPress: () => console.log('Cancel Pressed'),
         style: 'cancel',
       },
       {text: 'Edit', onPress: () => this.moveToEditForm(postId)},
@@ -132,10 +132,12 @@ class CompanyPost extends Component {
       onShowUnderlay={separators.highlight}
       onHideUnderlay={separators.unhighlight}>
       <View style={styles.item}>
-        <Text style={styles.text}> Titile: {item.title} </Text>
-        <Text style={styles.text}> Company Name: {item.name} </Text>
+        <Text style={styles.text}> Title: {item.title} </Text>
+        <Text style={styles.text}>
+          Company Name: {_.get(item.company[0], 'name')}
+        </Text>
         <Text style={styles.text}> Salary: {item.salary} </Text>
-        <Text style={styles.text}> Skill: {item.skill} </Text>
+        <Text style={styles.text}> Skill: {item.skill.join(', ')} </Text>
       </View>
     </TouchableOpacity>
   );
@@ -146,10 +148,12 @@ class CompanyPost extends Component {
       onShowUnderlay={separators.highlight}
       onHideUnderlay={separators.unhighlight}>
       <View style={styles.item}>
-        <Text style={styles.text}> Titile: {item.title} </Text>
-        <Text style={styles.text}> Company Name: {item.name} </Text>
+        <Text style={styles.text}> Title: {item.title} </Text>
+        <Text style={styles.text}>
+          Company Name: {_.get(item.company[0], 'name')}
+        </Text>
         <Text style={styles.text}> Salary: {item.salary} </Text>
-        <Text style={styles.text}> Skill: {item.skill} </Text>
+        <Text style={styles.text}> Skill: {item.skill.join(', ')} </Text>
       </View>
     </TouchableOpacity>
   );
@@ -225,7 +229,7 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     marginLeft: 20,
     marginRight: 20,
-    backgroundColor: '#b8c2d1',
+    backgroundColor: '#f4efef',
     width: windowWidth - 40,
     height: 150,
     borderRadius: 10,
@@ -271,5 +275,9 @@ const styles = StyleSheet.create({
   textAdd: {
     fontSize: 30,
     fontWeight: '900',
+  },
+  text: {
+    fontFamily: 'TimesNewRoman',
+    fontSize: hp('2.2%'),
   },
 });

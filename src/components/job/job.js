@@ -9,6 +9,10 @@ import {apiUrl} from '../../api/api';
 import {JobDetail} from './jobDtail';
 import {getJob, applyJob} from '../../redux/actions';
 import {getData} from '../../utils';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 
 import {
   StyleSheet,
@@ -27,7 +31,6 @@ import {
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const {GET_JOBS_URL} = apiUrl;
-
 class Job extends Component {
   _isMounted = false;
   constructor(props) {
@@ -70,10 +73,14 @@ class Job extends Component {
           source={{uri: _.get(item.company[0], 'image')}}
           style={styles.logo}></Image>
         <View style={{padding: 1, marginLeft: 10}}>
-          <Text style={{...styles.text, fontSize: 20}} numberOfLines={1}>
+          <Text
+            style={{...styles.text, fontSize: hp('2.5%')}}
+            numberOfLines={1}>
             {item.title}
           </Text>
-          <Text style={{...styles.text, fontSize: 15}} numberOfLines={1}>
+          <Text
+            style={{...styles.text, fontSize: hp('2.1%')}}
+            numberOfLines={1}>
             {_.get(item.company[0], 'name')}
           </Text>
           <View style={styles.fiedlsText}>
@@ -372,7 +379,7 @@ const styles = StyleSheet.create({
     marginBottom: 1,
     marginLeft: 5,
     fontFamily: 'TimesNewRoman',
-    fontSize: 16,
+    fontSize: hp('2.1%'),
   },
   logoContainer: {
     display: 'flex',

@@ -20,7 +20,10 @@ import axios from 'axios';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 class Profile extends Component {
   constructor(props) {
     super(props);
@@ -60,7 +63,6 @@ class Profile extends Component {
   handleUpload = async () => {
     try {
       const token = await getData('token');
-      const role = await getData('role');
       const {phone, photo, address, name} = this.state;
       let imageUrl;
       if (photo == '') {
@@ -228,7 +230,7 @@ class Profile extends Component {
           </View>
           <View style={styles.info}>
             <View>
-              <Text style={{fontFamily: 'Sarpanch-Black', fontSize: 20}}>
+              <Text style={{fontFamily: 'Itim-Regular', fontSize: 25}}>
                 General
               </Text>
               {this.infoCompany()}
@@ -238,16 +240,15 @@ class Profile extends Component {
               style={{
                 flexDirection: 'row-reverse',
                 display: 'flex',
-                marginRight: 50,
-                marginBottom: 25,
+                marginRight: wp('12%'),
+                marginBottom: hp('3%g'),
               }}>
               <FontAwesome5
                 name={'save'}
                 style={{
                   fontSize: 25,
                   color: '#356fb7',
-                  marginRight: 5,
-                  marginRight: 40,
+                  marginRight: wp('9%'),
                 }}
               />
             </TouchableOpacity>
@@ -368,7 +369,7 @@ const styles = StyleSheet.create({
     fontFamily: 'TimesNewRoman',
     fontSize: 17,
     fontWeight: 'bold',
-    marginBottom: 8,
+    marginBottom: 3,
     marginTop: 5,
   },
   inputContent: {
