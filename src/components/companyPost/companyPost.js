@@ -132,12 +132,19 @@ class CompanyPost extends Component {
       onShowUnderlay={separators.highlight}
       onHideUnderlay={separators.unhighlight}>
       <View style={styles.item}>
-        <Text style={styles.text}> Title: {item.title} </Text>
-        <Text style={styles.text}>
+        <Text style={styles.text} numberOfLines={1} ellipsizeMode="tail">
+          Title: {item.title}
+        </Text>
+        <Text style={styles.text} numberOfLines={1} ellipsizeMode="tail">
           Company Name: {_.get(item.company[0], 'name')}
         </Text>
-        <Text style={styles.text}> Salary: {item.salary} </Text>
-        <Text style={styles.text}> Skill: {item.skill.join(', ')} </Text>
+        <Text style={styles.text} numberOfLines={1} ellipsizeMode="tail">
+          Salary: {item.salary}
+        </Text>
+        <Text style={styles.text} numberOfLines={1} ellipsizeMode="tail">
+          Skill: {item.skill.join(', ')}
+        </Text>
+        <Text style={styles.text}>End Time: {item.endTime} </Text>
       </View>
     </TouchableOpacity>
   );
@@ -148,12 +155,19 @@ class CompanyPost extends Component {
       onShowUnderlay={separators.highlight}
       onHideUnderlay={separators.unhighlight}>
       <View style={styles.item}>
-        <Text style={styles.text}> Title: {item.title} </Text>
-        <Text style={styles.text}>
+        <Text style={styles.text} numberOfLines={1} ellipsizeMode="tail">
+          Title: {item.title}
+        </Text>
+        <Text style={styles.text} numberOfLines={1} ellipsizeMode="tail">
           Company Name: {_.get(item.company[0], 'name')}
         </Text>
-        <Text style={styles.text}> Salary: {item.salary} </Text>
-        <Text style={styles.text}> Skill: {item.skill.join(', ')} </Text>
+        <Text style={styles.text} numberOfLines={1} ellipsizeMode="tail">
+          Salary: {item.salary}
+        </Text>
+        <Text style={styles.text} numberOfLines={1} ellipsizeMode="tail">
+          Skill: {item.skill.join(', ')}
+        </Text>
+        <Text style={styles.text}>End Time: {item.endTime} </Text>
       </View>
     </TouchableOpacity>
   );

@@ -222,7 +222,7 @@ class Job extends Component {
           <View style={styles.searchContaier}>
             <View style={{...styles.searchInput}}>
               <TextInput
-                style={{height: 40}}
+                style={{height: 40, width: wp('75%')}}
                 onChangeText={this.updateSearch}
                 value={this.state.search}
                 placeholder="Keyword (skill, company, position,...)"

@@ -224,6 +224,15 @@ class Profile extends Component {
                 }}
               />
             </TouchableOpacity>
+            <Text
+              style={{
+                color: '#fff',
+                fontFamily: 'Sailors Slant',
+                fontSize: 20,
+                marginLeft: wp('40%'),
+              }}>
+              Welcome to IT Jobs
+            </Text>
             <View style={styles.content}>
               <Text style={styles.textName}>{name || ``}</Text>
             </View>
@@ -314,7 +323,7 @@ const styles = StyleSheet.create({
 
   content: {
     marginLeft: 150,
-    marginTop: 50,
+    marginTop: 20,
     padding: 10,
   },
 

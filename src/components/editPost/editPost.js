@@ -289,10 +289,11 @@ class EditPost extends Component {
                   editable={false}
                   selectTextOnFocus={false}
                   placeholder="End time. . ."></TextInput>
-                <TouchableOpacity
-                  style={styles.buttonChoice}
-                  onPress={this.showDatepicker}>
-                  <Text>choice</Text>
+                <TouchableOpacity onPress={this.showDatepicker}>
+                  <FontAwesome5
+                    name={'calendar-alt'}
+                    style={{color: 'black', fontSize: 25}}
+                  />
                 </TouchableOpacity>
               </View>
               {this.state.showDate && (
