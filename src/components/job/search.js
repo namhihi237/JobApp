@@ -7,6 +7,11 @@ import {JobDetail} from './jobDtail';
 import {applyJob, searchJob} from '../../redux/actions';
 import {getData} from '../../utils';
 import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
+
+import {
   StyleSheet,
   View,
   Text,
@@ -48,8 +53,9 @@ class Search extends Component {
   };
 
   searchItem = async () => {
-    if (this.state.search == '') return;
-    await this.props.searchJob(this.state.search);
+    let {search} = this.state;
+    if (search == '') return;
+    await this.props.searchJob(search);
     this.setState({posts: this.props.postsSearch});
   };
 
@@ -59,33 +65,39 @@ class Search extends Component {
         <Image
           source={{uri: _.get(item.company[0], 'image')}}
           style={styles.logo}></Image>
-        <View style={{padding: 1, marginLeft: 10}}>
-          <Text style={{...styles.text, fontSize: 20}} numberOfLines={1}>
+        <View style={{padding: 1, marginLeft: 10, maxWidth: wp('60%')}}>
+          <Text
+            style={{...styles.text, fontSize: 20}}
+            numberOfLines={1}
+            ellipsizeMode="tail">
             {item.title}
           </Text>
-          <Text style={{...styles.text, fontSize: 15}} numberOfLines={1}>
+          <Text
+            style={{...styles.text, fontSize: 15}}
+            numberOfLines={1}
+            ellipsizeMode="tail">
             {_.get(item.company[0], 'name')}
           </Text>
           <View style={styles.fiedlsText}>
             <FontAwesome5 name={'money-bill'} style={styles.iconText} />
-            <Text style={styles.text} numberOfLines={1}>
+            <Text style={styles.text} numberOfLines={1} ellipsizeMode="tail">
               {item.salary}
             </Text>
           </View>
           <View style={styles.fiedlsText}>
             <FontAwesome5 name={'code'} style={styles.iconText} />
-            <Text style={styles.text} numberOfLines={1}>
+            <Text style={styles.text} numberOfLines={1} ellipsizeMode="tail">
               {item.skill.join(', ')}
             </Text>
           </View>
           <View style={styles.fiedlsText}>
             <FontAwesome5 name={'map-marker-alt'} style={styles.iconText} />
-            <Text style={styles.text} numberOfLines={1}>
+            <Text style={styles.text} numberOfLines={1} ellipsizeMode="tail">
               {item.address}
             </Text>
           </View>
           <View style={styles.seeMore}>
-            <TouchableOpacity onPress={() => this.showDetail(item)} style={{}}>
+            <TouchableOpacity onPress={() => this.showDetail(item)}>
               <Text style={{color: 'green'}}>See more</Text>
             </TouchableOpacity>
             <View style={styles.fiedlsText}>
@@ -111,6 +123,8 @@ class Search extends Component {
       await this.setState({search: this.props.route.params.search});
       await this.props.searchJob(this.state.search);
       const role = await getData('role');
+
+      console.log(this.state.search, this.props.postsSearch);
       this.setState({role, posts: this.props.postsSearch});
     });
   }
@@ -316,7 +330,7 @@ const styles = StyleSheet.create({
       width: 0,
       height: 8,
     },
-
+    paddingRight: 10,
     shadowOpacity: 0.34,
     shadowRadius: 6.27,
 

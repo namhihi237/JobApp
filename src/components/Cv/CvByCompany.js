@@ -81,7 +81,7 @@ export default class CvByCompany extends Component {
 
                 <View>
                   <Text style={styles.textName}>
-                    {_.get(cv, 'iterName') || `Le Trung Nam`}
+                    {_.get(cv, 'name') || `Le Trung Nam`}
                   </Text>
                   <Text style={styles.textemail}>
                     Email: {_.get(cv, 'email') || `Trungnam23799@gmail.com`}

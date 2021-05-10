@@ -100,7 +100,7 @@ class Profile extends Component {
       if (imageUrl) data = {...data, address, image: imageUrl};
       let url = 'https://job-it-cnpmp.herokuapp.com/api/v1/auth/profile';
 
-      const res = await axios.post(url, data, {
+      const res = await axios.patch(url, data, {
         headers: {Authorization: `Bearer ${token}`},
       });
       this.showToast(res.data.msg, 'success');

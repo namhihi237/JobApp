@@ -60,14 +60,15 @@ class getOneCv extends Component {
         return;
       }
       const token = await getData('token');
-      await axios.post(
-        `${apiUrl.BASE_URL}/api/v1/cv/receive-mail`,
+      this.setState({sendEmail: isOn});
+
+      await axios.patch(
+        `${apiUrl.BASE_URL}/api/v1/iters/receive-mail`,
         {receive: isOn},
         {
           headers: {Authorization: `Bearer ${token}`},
         },
       );
-      this.setState({sendEmail: isOn});
     } catch (error) {}
   };
 
@@ -118,7 +119,7 @@ class getOneCv extends Component {
 
                 <View>
                   <Text style={styles.textName}>
-                    {_.get(this.props.cv, 'iterName') || `Le Trung Nam`}
+                    {_.get(this.props.cv, 'name') || `Le Trung Nam`}
                   </Text>
                   <Text style={styles.textemail}>
                     Email:{' '}

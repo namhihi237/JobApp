@@ -28,11 +28,12 @@ class Login extends Component {
     };
   }
 
-  showToast = (msg) => {
+  showToast = (text, type, duration = 2000, buttonText = 'Okey') => {
     Toast.show({
-      text: `${msg}`,
-      buttonText: 'Okey',
-      duration: 3000,
+      text,
+      buttonText,
+      duration,
+      type,
     });
   };
 
@@ -52,7 +53,7 @@ class Login extends Component {
 
   moveToMain = async () => {
     if (!this.validateData()) {
-      this.showToast('Email or password is empty!');
+      this.showToast('Email or password is empty!', 'warning');
       return;
     }
     const data = {email: this.state.email, password: this.state.password};

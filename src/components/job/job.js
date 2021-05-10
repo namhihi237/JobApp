@@ -72,32 +72,35 @@ class Job extends Component {
         <Image
           source={{uri: _.get(item.company[0], 'image')}}
           style={styles.logo}></Image>
-        <View style={{padding: 1, marginLeft: 10}}>
+
+        <View style={{padding: 1, marginLeft: 10, maxWidth: wp('60%')}}>
           <Text
             style={{...styles.text, fontSize: hp('2.5%')}}
-            numberOfLines={1}>
+            numberOfLines={1}
+            ellipsizeMode="tail">
             {item.title}
           </Text>
           <Text
             style={{...styles.text, fontSize: hp('2.1%')}}
-            numberOfLines={1}>
+            numberOfLines={1}
+            ellipsizeMode="tail">
             {_.get(item.company[0], 'name')}
           </Text>
           <View style={styles.fiedlsText}>
             <FontAwesome5 name={'money-bill'} style={styles.iconText} />
-            <Text style={styles.text} numberOfLines={1}>
+            <Text style={styles.text} numberOfLines={1} ellipsizeMode="tail">
               {item.salary}
             </Text>
           </View>
           <View style={styles.fiedlsText}>
             <FontAwesome5 name={'code'} style={styles.iconText} />
-            <Text style={styles.text} numberOfLines={1}>
+            <Text style={styles.text} numberOfLines={1} ellipsizeMode="tail">
               {item.skill.join(', ')}
             </Text>
           </View>
           <View style={styles.fiedlsText}>
             <FontAwesome5 name={'map-marker-alt'} style={styles.iconText} />
-            <Text style={styles.text} numberOfLines={1}>
+            <Text style={styles.text} numberOfLines={1} ellipsizeMode="tail">
               {item.address}
             </Text>
           </View>
@@ -359,6 +362,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'column',
     paddingLeft: 10,
+    paddingRight: 10,
     paddingTop: 5,
 
     borderRadius: 7,
