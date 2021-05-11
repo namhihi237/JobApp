@@ -192,7 +192,7 @@ class Job extends Component {
     if (this.state.role == 'iter') {
       return (
         <TouchableHighlight
-          style={styles.openButton}
+          style={{...styles.openButton, backgroundColor: '#37ce3f'}}
           onPress={this.iterApplyJob}>
           <Text style={styles.textStyle}>Apply</Text>
         </TouchableHighlight>
@@ -260,7 +260,7 @@ class Job extends Component {
                 <JobDetail item={item}></JobDetail>
                 <View style={styles.containerButton}>
                   <TouchableHighlight
-                    style={styles.openButton}
+                    style={{...styles.openButton, backgroundColor: '#d14545'}}
                     onPress={() => {
                       this.setModalVisible(!modalVisible);
                     }}>
@@ -405,19 +405,19 @@ const styles = StyleSheet.create({
     margin: 20,
     backgroundColor: 'rgba(103, 104, 107 , 0.95)',
     borderRadius: 20,
-    minHeight: (windowHeight * 1.25) / 3,
+    maxHeight: windowHeight * 0.8,
+    minHeight: windowHeight * 0.6,
     width: windowWidth / 1.15,
     padding: 20,
     alignItems: 'center',
-    shadowColor: '#000',
+    shadowColor: 'red',
     shadowOffset: {
       width: 0,
       height: 2,
     },
   },
   openButton: {
-    backgroundColor: '#2196F3',
-    borderRadius: 20,
+    borderRadius: 6,
     padding: 10,
     elevation: 2,
     marginLeft: 10,
@@ -430,6 +430,7 @@ const styles = StyleSheet.create({
   },
   containerButton: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   loading: {
     position: 'absolute',

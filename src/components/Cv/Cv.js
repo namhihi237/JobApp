@@ -7,6 +7,14 @@ import {Toast} from 'native-base';
 import {getData} from '../../utils';
 import _ from 'lodash';
 import * as ImagePicker from 'react-native-image-picker';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 import {
   StyleSheet,
   View,
@@ -23,7 +31,6 @@ import {
 } from 'react-native';
 import FormData from 'form-data';
 import axios from 'axios';
-const windowHeight = Dimensions.get('window').height;
 
 class Cv extends Component {
   constructor(props) {
@@ -35,8 +42,15 @@ class Cv extends Component {
       description: '',
       modalVisible: false,
       photo: null,
+      showDate: false,
+      birthday: '',
+      date: new Date(),
     };
   }
+
+  showDatepicker = () => {
+    this.setState({showDate: true});
+  };
 
   handleChoosePhoto = () => {
     const options = {
@@ -70,6 +84,10 @@ class Cv extends Component {
     this.setState({description});
   };
 
+  onChangeBirthday = (birthday) => {
+    this.setState({birthday});
+  };
+
   validateData = () => {
     const {skill, softSkill, experience, description} = this.state;
     if (!skill || !softSkill || !experience || !description) return false;
@@ -81,7 +99,7 @@ class Cv extends Component {
       this.showToast('Data is empty');
       return;
     }
-    const {skill, softSkill, experience, description} = this.state;
+    const {skill, softSkill, experience, description, birthday} = this.state;
 
     try {
       const image = await this.handleUpload();
@@ -91,7 +109,7 @@ class Cv extends Component {
         experience,
         description,
         image,
-        birthday: '23/07/1999',
+        birthday,
       };
       await this.props.createIterCv(data);
       this.showToast(this.props.msg);
@@ -118,6 +136,18 @@ class Cv extends Component {
           : photo.uri.replace('file://', ''),
     });
     return data;
+  };
+
+  onChangeDate = (evemt, selectedDate) => {
+    const currentDate = selectedDate || this.state.date;
+
+    this.setState({
+      date: currentDate,
+      birthday: `${currentDate.getDate()}/${
+        currentDate.getMonth() + 1
+      }/${currentDate.getFullYear()}`,
+      showDate: false,
+    });
   };
 
   handleUpload = async () => {
@@ -147,7 +177,7 @@ class Cv extends Component {
   };
 
   render() {
-    const {photo} = this.state;
+    const {photo, date, birthday, showDate} = this.state;
     return (
       <ScrollView showsVerticalScrollIndicator={false}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -170,7 +200,33 @@ class Cv extends Component {
                 )}
                 <Button title="Choose Photo" onPress={this.handleChoosePhoto} />
               </View>
-
+              <View style={styles.choice}>
+                <TextInput
+                  value={birthday}
+                  style={styles.textInputChoice}
+                  editable={false}
+                  selectTextOnFocus={false}
+                  placeholder="Birthday. . ."></TextInput>
+                <TouchableOpacity onPress={this.showDatepicker}>
+                  <FontAwesome5
+                    name={'calendar-alt'}
+                    style={{
+                      color: 'black',
+                      fontSize: 25,
+                      marginTop: 10,
+                      marginRight: 5,
+                    }}
+                  />
+                </TouchableOpacity>
+              </View>
+              {showDate && (
+                <DateTimePicker
+                  testID="dateTimePicker"
+                  value={date}
+                  mode={'date'}
+                  onChange={this.onChangeDate}
+                />
+              )}
               <View>
                 <TextInput
                   style={styles.desInput}
@@ -235,10 +291,10 @@ const styles = StyleSheet.create({
     borderColor: 'black',
     borderWidth: 1,
     height: 40,
-    width: 250,
+    width: wp('80%'),
     marginBottom: 15,
     paddingLeft: 6,
-    marginLeft: 60,
+    marginLeft: wp('10%'),
     color: 'black',
     borderRadius: 5,
   },
@@ -246,11 +302,11 @@ const styles = StyleSheet.create({
     borderColor: 'black',
     borderWidth: 1,
     height: 100,
-    width: 250,
+    width: wp('80%'),
     marginBottom: 5,
     paddingLeft: 6,
     textAlignVertical: 'top',
-    marginLeft: 60,
+    marginLeft: wp('10%'),
     borderRadius: 5,
   },
   buttonChoice: {
@@ -303,5 +359,16 @@ const styles = StyleSheet.create({
   },
   modalText: {
     fontSize: 20,
+  },
+  choice: {
+    flexDirection: 'row',
+    borderWidth: 1,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    borderBottomColor: '#3f51b5',
+    marginBottom: 15,
+    width: wp('80%'),
+    marginLeft: wp('10%'),
   },
 });

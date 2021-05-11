@@ -13,7 +13,7 @@ export class JobDetail extends Component {
     const {item} = this.props;
     return (
       <View style={styles.itemDetail}>
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
           <Text style={styles.text}>{item.title}</Text>
           <Text style={styles.text}>{item.company[0].name}</Text>
           <Text style={styles.text}>Address: {item.address}</Text>
@@ -30,7 +30,6 @@ export class JobDetail extends Component {
 const styles = StyleSheet.create({
   itemDetail: {
     minHeight: (windowHeight - 10) / 4,
-    maxHeight: (windowHeight - 10) / 3,
     width: (windowWidth * 2.3) / 3,
     marginBottom: 10,
     marginLeft: 5,
@@ -43,6 +42,8 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     paddingTop: 5,
     borderRadius: 10,
+    marginTop: 10,
+    marginBottom: 10,
   },
   text: {
     fontSize: 16,
