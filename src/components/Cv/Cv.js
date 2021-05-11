@@ -182,24 +182,23 @@ class Cv extends Component {
       <ScrollView showsVerticalScrollIndicator={false}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
           <KeyboardAvoidingView style={{flex: 1}}>
-            <Loader status={this.props.loading} msg={'Creating '}></Loader>
+            <Loader status={this.props.loading} msg={'Creating'}></Loader>
             <View style={styles.container}>
-              <View
-                style={{
-                  flex: 1,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                {photo && (
-                  <React.Fragment>
-                    <Image
-                      source={{uri: photo.uri}}
-                      style={{width: 100, height: 100}}
-                    />
-                  </React.Fragment>
-                )}
-                <Button title="Choose Photo" onPress={this.handleChoosePhoto} />
-              </View>
+              <Image
+                source={{
+                  uri: photo
+                    ? photo.uri
+                    : 'https://res.cloudinary.com/do-an-cnpm/image/upload/v1618073475/person_j0pvho.png',
+                }}
+                style={styles.avatar}
+              />
+              <TouchableOpacity
+                onPress={this.handleChoosePhoto}
+                style={styles.buttonAvatar}>
+                <Text style={{fontFamily: 'Itim-Regular', fontSize: 15}}>
+                  Choose Avatar
+                </Text>
+              </TouchableOpacity>
               <View style={styles.choice}>
                 <TextInput
                   value={birthday}
@@ -210,12 +209,7 @@ class Cv extends Component {
                 <TouchableOpacity onPress={this.showDatepicker}>
                   <FontAwesome5
                     name={'calendar-alt'}
-                    style={{
-                      color: 'black',
-                      fontSize: 25,
-                      marginTop: 10,
-                      marginRight: 5,
-                    }}
+                    style={styles.iconCalendar}
                   />
                 </TouchableOpacity>
               </View>
@@ -242,8 +236,10 @@ class Cv extends Component {
                 numberOfLines={4}
                 placeholder="Soft Skill"></TextInput>
               <TextInput
-                style={styles.textInput}
+                style={styles.desInput}
                 onChangeText={this.onChangeExperience}
+                multiline={true}
+                numberOfLines={4}
                 placeholder="Experience"></TextInput>
               <TextInput
                 onChangeText={this.onChangeDescription}
@@ -285,7 +281,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flex: 1,
     display: 'flex',
-    height: (windowHeight * 8) / 10,
+    minHeight: (windowHeight * 9) / 10,
+    paddingBottom: 20,
+    paddingTop: 10,
   },
   textInput: {
     borderColor: 'black',
@@ -308,6 +306,7 @@ const styles = StyleSheet.create({
     textAlignVertical: 'top',
     marginLeft: wp('10%'),
     borderRadius: 5,
+    fontFamily: 'TimesNewRoman',
   },
   buttonChoice: {
     marginTop: 5,
@@ -318,6 +317,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginLeft: 5,
+    fontSize: 17,
   },
 
   centeredView: {
@@ -370,5 +370,31 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     width: wp('80%'),
     marginLeft: wp('10%'),
+  },
+  iconCalendar: {
+    color: 'black',
+    fontSize: 25,
+    marginTop: 10,
+    marginRight: 5,
+  },
+  buttonAvatar: {
+    height: 40,
+    width: wp('28%'),
+    marginLeft: wp('36%'),
+    backgroundColor: '#8ccca1',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 5,
+    borderColor: '#51725c',
+    borderWidth: 1,
+    marginBottom: 10,
+  },
+  avatar: {
+    width: wp('26%'),
+    height: 100,
+    borderWidth: 1,
+    marginBottom: 5,
+    borderColor: '#bfa8a8',
+    marginLeft: wp('37%'),
   },
 });

@@ -355,7 +355,6 @@ const styles = StyleSheet.create({
     marginLeft: 15,
     marginRight: 15,
 
-    // backgroundColor: '#aecce2',
     backgroundColor: '#fff',
     shadowOpacity: 0.6,
     flex: 1,
@@ -372,10 +371,8 @@ const styles = StyleSheet.create({
       width: 0,
       height: 8,
     },
-
     shadowOpacity: 0.34,
     shadowRadius: 6.27,
-
     elevation: 10,
   },
   iconText: {marginTop: 4, marginLeft: 5},

@@ -7,7 +7,14 @@ import {
   TouchableOpacity,
   Keyboard,
   TouchableWithoutFeedback,
+  ScrollView,
 } from 'react-native';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 import {TextInput} from 'react-native-gesture-handler';
 import {registerCompany} from '../../redux/actions';
 import {connect} from 'react-redux';
@@ -82,50 +89,63 @@ class Register extends Component {
           colors={['#cdaeee', '#94e4e9']}
           style={styles.container}>
           <Loader status={this.props.loading} msg={'Register'}></Loader>
-          <View style={styles.inputView}>
-            <TextInput
-              style={styles.inputText}
-              placeholder="Email..."
-              placeholderTextColor="#003f5c"
-              onChangeText={this.changeTextEmail}
-            />
-          </View>
-          <View style={styles.inputView}>
-            <TextInput
-              style={styles.inputText}
-              placeholder="Password..."
-              placeholderTextColor="#003f5c"
-              secureTextEntry={true}
-              onChangeText={this.changeTextPass}
-            />
-          </View>
-          <View style={styles.inputView}>
-            <TextInput
-              style={styles.inputText}
-              placeholder="Confirm password..."
-              placeholderTextColor="#003f5c"
-              secureTextEntry={true}
-              onChangeText={this.changeTextConfirmPass}
-            />
-          </View>
-          <View style={styles.inputView}>
-            <TextInput
-              style={styles.inputText}
-              placeholder="Company Name..."
-              placeholderTextColor="#003f5c"
-              onChangeText={this.changeTextname}
-            />
-          </View>
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              style={styles.loginBtn}
-              onPress={this.registerAcc}>
-              <Text style={styles.loginText}>SIGNUP ACCOUNT COMPANY</Text>
-            </TouchableOpacity>
-          </View>
-          <TouchableOpacity onPress={this.moveToLogin}>
-            <Text style={styles.loginText}>SignIn</Text>
-          </TouchableOpacity>
+          <ScrollView showsVerticalScrollIndicator={false}>
+            <View style={styles.container}>
+              <View style={styles.inputView}>
+                <FontAwesome5 name={'envelope'} style={styles.icon} />
+                <TextInput
+                  style={styles.inputText}
+                  placeholder="Email..."
+                  placeholderTextColor="#003f5c"
+                  onChangeText={this.changeTextEmail}
+                />
+              </View>
+              <View style={styles.inputView}>
+                <FontAwesome5 name={'key'} style={styles.icon} />
+                <TextInput
+                  style={styles.inputText}
+                  placeholder="Password..."
+                  placeholderTextColor="#003f5c"
+                  secureTextEntry={true}
+                  onChangeText={this.changeTextPass}
+                />
+              </View>
+              <View style={styles.inputView}>
+                <FontAwesome5 name={'key'} style={styles.icon} />
+                <TextInput
+                  style={styles.inputText}
+                  placeholder="Confirm password..."
+                  placeholderTextColor="#003f5c"
+                  secureTextEntry={true}
+                  onChangeText={this.changeTextConfirmPass}
+                />
+              </View>
+              <View style={styles.inputView}>
+                <TextInput
+                  style={styles.inputText}
+                  placeholder="Company Name..."
+                  placeholderTextColor="#003f5c"
+                  onChangeText={this.changeTextname}
+                />
+              </View>
+              <View style={styles.buttonContainer}>
+                <TouchableOpacity
+                  style={styles.loginBtn}
+                  onPress={this.registerAcc}>
+                  <Text style={styles.loginText}>SIGNUP COMPANY</Text>
+                </TouchableOpacity>
+              </View>
+              <TouchableOpacity onPress={this.moveToLogin}>
+                <Text
+                  style={{
+                    ...styles.loginText,
+                    textDecorationLine: 'underline',
+                  }}>
+                  SignIn
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
         </LinearGradient>
       </TouchableWithoutFeedback>
     );
@@ -149,8 +169,8 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#a5e8a4',
     flex: 1,
+    height: hp('102.5%'),
   },
   forgot: {
     color: 'white',
@@ -167,17 +187,24 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   inputView: {
-    width: '80%',
-    backgroundColor: 'rgba(70, 88, 129, 0.8)',
+    width: wp('80%'),
+    backgroundColor: 'rgba(70, 88, 129 , 0.7)',
+    borderWidth: 1,
+    borderColor: '#3a455b',
     borderRadius: 25,
     height: 50,
     marginBottom: 20,
-    justifyContent: 'center',
-    padding: 20,
+    paddingLeft: 20,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   inputText: {
-    height: 60,
     color: 'white',
+    width: wp('62%'),
+    fontFamily: 'TimesNewRoman',
+    fontSize: 17,
+    marginLeft: 5,
   },
 
   buttonLogin: {
@@ -191,4 +218,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   type: {height: 40, width: 200},
+  loginText: {
+    fontFamily: 'Itim-Regular',
+    fontSize: 20,
+  },
 });
