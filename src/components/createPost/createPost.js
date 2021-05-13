@@ -261,7 +261,7 @@ class CreatePost extends Component {
                 visible={modalVisible}>
                 <View style={styles.centeredView}>
                   <View style={styles.modalView}>
-                    <Text style={styles.modalText}>Choice Skill</Text>
+                    <Text style={styles.modalText}>Choose Skill</Text>
                     {this.showSkill()}
                     <View style={styles.containerButton}>
                       <TouchableOpacity

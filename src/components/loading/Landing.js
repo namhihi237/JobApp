@@ -9,12 +9,16 @@ import {
   TouchableOpacity,
   Dimensions,
   ImageBackground,
+  Image,
 } from 'react-native';
 import {Easing} from 'react-native-reanimated';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 export class Landing extends Component {
   constructor(props) {
     super(props);
@@ -83,6 +87,16 @@ export class Landing extends Component {
               ...styles.oval2,
               translateX: marginLeftAnimA,
             }}></Animated.View>
+        </View>
+        <View
+          style={{
+            width: wp('100%'),
+            marginTop: hp('22%'),
+            alignItems: 'center',
+          }}>
+          <Image
+            source={require('../../assets/image/landing.png')}
+            style={{height: 150, width: 150}}></Image>
         </View>
         <View style={styles.buttonEmailContainer}>
           <TouchableOpacity style={styles.loginEmailBtn} onPress={this.clear}>

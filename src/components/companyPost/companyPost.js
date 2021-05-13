@@ -28,10 +28,12 @@ class CompanyPost extends Component {
     this.state = {
       dataAccept: [],
       dataWait: [],
+      dataComplete: [],
       index: 0,
       routes: [
         {key: 'Waiting', title: 'Waiting'},
         {key: 'Accepted', title: 'Accepted'},
+        {key: 'Complete', title: 'Complete'},
       ],
     };
   }
@@ -61,9 +63,19 @@ class CompanyPost extends Component {
     </View>
   );
 
+  CompleteRoute = () => (
+    <FlatList
+      horizontal={false}
+      data={this.state.dataComplete}
+      renderItem={this.renderItemAccept}
+      keyExtractor={this.keyExtractor}
+    />
+  );
+
   renderScene = SceneMap({
     Accepted: this.AcceptRoute,
     Waiting: this.WaitingRoute,
+    Complete: this.CompleteRoute,
   });
 
   showToast = (text, type, duration = 2000, buttonText = 'Okey') => {
@@ -117,8 +129,11 @@ class CompanyPost extends Component {
             this.showToast(this.props.delMsg, 'success', 2000);
             await this.props.getCompanyPost();
             this.setState({
-              dataWait: this.props.posts.filter((e) => e.accept == false),
-              dataAccept: this.props.posts.filter((e) => e.accept == true),
+              dataWait: this.props.posts.filter((e) => e.status == 'WAITING'),
+              dataAccept: this.props.posts.filter(
+                (e) => e.status == 'ACCEPTED',
+              ),
+              dataComplete: this.props.posts.filter((e) => e.status == 'DONE'),
             });
           } else this.showToast(this.props.delMsg, 'warning', 2000);
         },
@@ -181,8 +196,9 @@ class CompanyPost extends Component {
     const unsubscribe = this.props.navigation.addListener('focus', async () => {
       await this.props.getCompanyPost();
       this.setState({
-        dataWait: this.props.posts.filter((e) => e.accept == false),
-        dataAccept: this.props.posts.filter((e) => e.accept == true),
+        dataWait: this.props.posts.filter((e) => e.status == 'WAITING'),
+        dataAccept: this.props.posts.filter((e) => e.status == 'ACCEPTED'),
+        dataComplete: this.props.posts.filter((e) => e.status == 'DONE'),
       });
     });
     return unsubscribe;

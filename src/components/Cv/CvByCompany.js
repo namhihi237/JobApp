@@ -43,7 +43,6 @@ export default class CvByCompany extends Component {
 
   componentDidMount() {
     const cvId = this.props.route.params.cvId;
-
     const unsubscribe = this.props.navigation.addListener('focus', async () => {
       try {
         const token = await getData('token');
@@ -128,7 +127,7 @@ export default class CvByCompany extends Component {
                   <Text style={styles.textLabel}>Technical skills</Text>
                   <Text
                     style={{fontFamily: 'TimesNewRoman', fontSize: wp('5')}}>
-                    {_.get(cv, 'skill') || ``}
+                    {_.get(cv, 'skill').join('\n') || ``}
                   </Text>
                 </View>
                 <View style={styles.viewText}>

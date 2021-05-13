@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Loader} from '../../common';
 import {connect} from 'react-redux';
-
+import SelectMultiple from 'react-native-select-multiple';
 import {createIterCv} from '../../redux/actions';
 import {Toast} from 'native-base';
 import {getData} from '../../utils';
@@ -26,17 +26,21 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   ScrollView,
-  Button,
+  Modal,
   Image,
 } from 'react-native';
 import FormData from 'form-data';
 import axios from 'axios';
 
+import {dataSkill} from '../../constant';
+
 class Cv extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      skill: '',
+      skill: false,
+      selectedSkill: [],
+      textSkill: '',
       softSkill: '',
       experience: '',
       description: '',
@@ -45,8 +49,19 @@ class Cv extends Component {
       showDate: false,
       birthday: '',
       date: new Date(),
+      modalVisible: false,
     };
   }
+
+  setModalVisible = (status) => {
+    this.setState({
+      modalVisible: status,
+    });
+  };
+
+  showModalSkill = () => {
+    this.setState({modalVisible: true, skill: true});
+  };
 
   showDatepicker = () => {
     this.setState({showDate: true});
@@ -89,8 +104,8 @@ class Cv extends Component {
   };
 
   validateData = () => {
-    const {skill, softSkill, experience, description} = this.state;
-    if (!skill || !softSkill || !experience || !description) return false;
+    const {textSkill, softSkill, experience, description} = this.state;
+    if (!textSkill || !softSkill || !experience || !description) return false;
     return true;
   };
 
@@ -99,12 +114,18 @@ class Cv extends Component {
       this.showToast('Data is empty');
       return;
     }
-    const {skill, softSkill, experience, description, birthday} = this.state;
+    const {
+      softSkill,
+      experience,
+      description,
+      birthday,
+      selectedSkill,
+    } = this.state;
 
     try {
       const image = await this.handleUpload();
       const data = {
-        skill,
+        skill: selectedSkill.map((e) => e.value),
         softSkill,
         experience,
         description,
@@ -120,8 +141,8 @@ class Cv extends Component {
     } catch (error) {}
   };
 
-  onChangesKill = (skill) => {
-    this.setState({skill});
+  onChangesKill = (textSkill) => {
+    this.setState({textSkill});
   };
 
   createFormData = (photo) => {
@@ -150,6 +171,28 @@ class Cv extends Component {
     });
   };
 
+  onSelectionsChangesKill = (selectedSkill) => {
+    const skills = selectedSkill.map((e) => e.value).join(', ');
+    this.setState({selectedSkill, textSkill: skills});
+  };
+
+  showSkill = () => {
+    return (
+      <View
+        style={{
+          height: hp('50%'),
+          width: wp('60%'),
+          padding: 20,
+          borderRadius: 10,
+        }}>
+        <SelectMultiple
+          items={dataSkill}
+          selectedItems={this.state.selectedSkill}
+          onSelectionsChange={this.onSelectionsChangesKill}
+        />
+      </View>
+    );
+  };
   handleUpload = async () => {
     try {
       const token = await getData('token');
@@ -177,7 +220,14 @@ class Cv extends Component {
   };
 
   render() {
-    const {photo, date, birthday, showDate} = this.state;
+    const {
+      photo,
+      date,
+      birthday,
+      showDate,
+      textSkill,
+      modalVisible,
+    } = this.state;
     return (
       <ScrollView showsVerticalScrollIndicator={false}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -221,13 +271,16 @@ class Cv extends Component {
                   onChange={this.onChangeDate}
                 />
               )}
-              <View>
+              <View style={styles.choice}>
                 <TextInput
-                  style={styles.desInput}
-                  multiline={true}
-                  numberOfLines={4}
+                  style={styles.textInputChoice}
+                  value={textSkill}
+                  editable={false}
                   onChangeText={this.onChangesKill}
                   placeholder="Skill..."></TextInput>
+                <TouchableOpacity onPress={this.showModalSkill}>
+                  <FontAwesome5 name={'cogs'} style={styles.iconCalendar} />
+                </TouchableOpacity>
               </View>
               <TextInput
                 style={styles.desInput}
@@ -250,10 +303,35 @@ class Cv extends Component {
                 autoCorrect={false}
               />
               <TouchableOpacity
-                style={styles.openButton}
+                style={styles.buttonCreate}
                 onPress={this.createCv}>
                 <Text style={styles.textStyle}>Create</Text>
               </TouchableOpacity>
+            </View>
+            <View style={styles.centeredView}>
+              <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}>
+                <View style={styles.centeredView}>
+                  <View style={styles.modalView}>
+                    <Text style={styles.modalText}>Choose Skill</Text>
+                    {this.showSkill()}
+                    <View style={styles.containerButton}>
+                      <TouchableOpacity
+                        style={{
+                          ...styles.openButton,
+                          backgroundColor: '#3d84b8',
+                        }}
+                        onPress={() => {
+                          this.setModalVisible(!modalVisible);
+                        }}>
+                        <Text style={styles.textStyle}>Add</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                </View>
+              </Modal>
             </View>
           </KeyboardAvoidingView>
         </TouchableWithoutFeedback>
@@ -277,6 +355,59 @@ const mapStateToProps = (state) => {
 export default connect(mapStateToProps, mapDispatchToProps)(Cv);
 
 const styles = StyleSheet.create({
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+    paddingBottom: 10,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: '#d5dee2',
+    borderRadius: 20,
+    height: hp('70%'),
+    width: wp('80%'),
+    padding: 10,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 8,
+    },
+    shadowOpacity: 0.34,
+    shadowRadius: 6.27,
+    elevation: 10,
+    paddingBottom: 8,
+  },
+  openButton: {
+    borderRadius: 10,
+    padding: 10,
+    elevation: 2,
+    width: 100,
+    marginLeft: 35,
+    marginRight: 35,
+    marginTop: 15,
+    backgroundColor: '#3d84b8',
+    marginBottom: 15,
+  },
+  buttonCreate: {
+    borderRadius: 10,
+    padding: 10,
+    elevation: 2,
+    width: wp('30%'),
+    marginLeft: wp('35%'),
+    marginRight: 35,
+    marginTop: 15,
+    backgroundColor: '#adb0ce',
+    borderWidth: 1,
+    borderColor: '#6b6f9b',
+  },
+  modalText: {
+    fontSize: 23,
+    marginBottom: 10,
+    fontFamily: 'Itim-Regular',
+  },
   container: {
     justifyContent: 'center',
     flex: 1,
@@ -308,57 +439,14 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     fontFamily: 'TimesNewRoman',
   },
-  buttonChoice: {
-    marginTop: 5,
-    height: 30,
-    width: 50,
-    backgroundColor: 'green',
-    borderRadius: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginLeft: 5,
-    fontSize: 17,
-  },
-
-  centeredView: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 22,
-  },
-  modalView: {
-    margin: 20,
-    backgroundColor: 'white',
-    borderRadius: 20,
-    height: 500,
-    width: 300,
-    padding: 20,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-  },
-  openButton: {
-    marginTop: 15,
-    backgroundColor: '#2196F3',
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
-    marginLeft: 35,
-    marginRight: 35,
-  },
   textStyle: {
     color: 'white',
     fontWeight: 'bold',
     textAlign: 'center',
+    fontFamily: 'Itim-Regular',
   },
   containerButton: {
     flexDirection: 'row',
-  },
-  modalText: {
-    fontSize: 20,
   },
   choice: {
     flexDirection: 'row',

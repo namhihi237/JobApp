@@ -157,7 +157,7 @@ class getOneCv extends Component {
                   <Text style={styles.textLabel}>Technical skills</Text>
                   <Text
                     style={{fontFamily: 'TimesNewRoman', fontSize: wp('5')}}>
-                    {_.get(this.props.cv, 'skill') || ``}
+                    {_.get(this.props.cv, 'skill').join('\n') || ``}
                   </Text>
                 </View>
                 <View style={styles.viewText}>
@@ -263,7 +263,7 @@ const styles = StyleSheet.create({
     bottom: 10,
     right: 10,
     height: 60,
-    backgroundColor: '#ee6e73',
+    backgroundColor: '#907fa4',
     borderRadius: 100,
     shadowColor: 'rgba(0, 0, 0, 0.1)',
     shadowOpacity: 0.8,
