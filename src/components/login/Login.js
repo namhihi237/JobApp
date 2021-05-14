@@ -16,23 +16,29 @@ import {TextInput} from 'react-native-gesture-handler';
 import {connect} from 'react-redux';
 import {login} from '../../redux/actions';
 import {getData} from '../../utils';
-
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
       email: '',
       password: '',
+      eye: false,
     };
   }
 
-  showToast = (msg) => {
+  showToast = (text, type, duration = 2000, buttonText = 'Okey') => {
     Toast.show({
-      text: `${msg}`,
-      buttonText: 'Okey',
-      duration: 3000,
+      text,
+      buttonText,
+      duration,
+      type,
     });
   };
 
@@ -52,7 +58,7 @@ class Login extends Component {
 
   moveToMain = async () => {
     if (!this.validateData()) {
-      this.showToast('Email or password is empty!');
+      this.showToast('Email or password is empty!', 'warning');
       return;
     }
     const data = {email: this.state.email, password: this.state.password};
@@ -78,9 +84,15 @@ class Login extends Component {
   changeTextPass = (text) => {
     this.setState({password: text});
   };
+
   moveToForgotPassword = () => {
     this.props.navigation.navigate('ForgotPassword');
   };
+
+  togglePassword = () => {
+    this.setState({eye: !this.state.eye});
+  };
+
   render() {
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -91,42 +103,74 @@ class Login extends Component {
             height: windowHeight + 20,
             ...styles.container,
           }}>
-          <Loader status={this.props.loading} msg={'Signing in '}></Loader>
-          <View style={styles.inputView}>
-            <TextInput
-              onChangeText={this.changeTextEmail}
-              style={styles.inputText}
-              placeholder="Email. . ."
-              placeholderTextColor="#003f5c"
-            />
-          </View>
-          <View style={styles.inputView}>
-            <TextInput
-              onChangeText={this.changeTextPass}
-              style={styles.inputText}
-              placeholder="Password..."
-              placeholderTextColor="#003f5c"
-              secureTextEntry={true}
-            />
-          </View>
+          <Loader status={this.props.loading} msg={'Login'}></Loader>
+          <View
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: '#8094bc',
+              padding: 10,
+              borderRadius: 20,
+              paddingBottom: 30,
+              paddingTop: 30,
+              shadowColor: '#000',
+              shadowOffset: {
+                width: 0,
+                height: 8,
+              },
+              shadowOpacity: 0.34,
+              shadowRadius: 6.27,
+              elevation: 10,
+            }}>
+            <View style={styles.inputView}>
+              <FontAwesome5 name={'envelope'} style={styles.icon} />
+              <TextInput
+                onChangeText={this.changeTextEmail}
+                style={styles.inputText}
+                placeholder="Email. . ."
+                placeholderTextColor="#003f5c"
+              />
+            </View>
+            <View style={styles.inputView}>
+              <FontAwesome5 name={'key'} style={styles.icon} />
+              <TextInput
+                onChangeText={this.changeTextPass}
+                style={styles.inputText}
+                placeholder="Password..."
+                placeholderTextColor="#003f5c"
+                secureTextEntry={!this.state.eye}
+              />
+              <TouchableOpacity onPress={this.togglePassword}>
+                {this.state.eye ? (
+                  <FontAwesome5 name={'eye-slash'} style={styles.icon} />
+                ) : (
+                  <FontAwesome5 name={'eye'} style={styles.icon} />
+                )}
+              </TouchableOpacity>
+            </View>
 
-          <TouchableOpacity onPress={this.moveToForgotPassword}>
-            <Text style={styles.forgot}>Forgot Password?</Text>
-          </TouchableOpacity>
+            <TouchableOpacity onPress={this.moveToForgotPassword}>
+              <Text style={styles.forgot}>Forgot Password?</Text>
+            </TouchableOpacity>
 
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.loginBtn} onPress={this.moveToMain}>
-              <Text style={styles.loginText}>LOGIN</Text>
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity
+                style={styles.loginBtn}
+                onPress={this.moveToMain}>
+                <Text style={{fontFamily: 'Itim-Regular', fontSize: 29}}>
+                  Login
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <TouchableOpacity
+              onPress={this.moveToRegisterIter}
+              style={{marginBottom: 10}}>
+              <Text style={styles.loginText}>Signup for Iter</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={this.moveToRegisterCompany}>
+              <Text style={styles.loginText}>Signup for Company</Text>
             </TouchableOpacity>
           </View>
-          <TouchableOpacity
-            onPress={this.moveToRegisterIter}
-            style={{marginBottom: 10}}>
-            <Text style={styles.loginText}>Signup for Iter</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={this.moveToRegisterCompany}>
-            <Text style={styles.loginText}>Signup for Company</Text>
-          </TouchableOpacity>
         </LinearGradient>
       </TouchableWithoutFeedback>
     );
@@ -155,7 +199,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
   loginBtn: {
-    width: '80%',
+    width: '70%',
     backgroundColor: 'rgba(251, 91, 90, 0.8)',
     borderRadius: 25,
     height: 50,
@@ -165,19 +209,24 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   inputView: {
-    width: '80%',
+    width: wp('80%'),
     backgroundColor: 'rgba(70, 88, 129 , 0.7)',
     borderWidth: 1,
     borderColor: '#3a455b',
     borderRadius: 25,
     height: 50,
     marginBottom: 20,
-    justifyContent: 'center',
-    padding: 20,
+    paddingLeft: 20,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   inputText: {
-    height: 60,
     color: 'white',
+    width: wp('62%'),
+    fontFamily: 'TimesNewRoman',
+    fontSize: 17,
+    marginLeft: 5,
   },
 
   buttonLogin: {
@@ -189,5 +238,13 @@ const styles = StyleSheet.create({
   buttonContainer: {
     display: 'flex',
     flexDirection: 'row',
+  },
+  icon: {
+    fontSize: 16,
+  },
+  loginText: {
+    fontFamily: 'TimesNewRoman',
+    fontSize: 17,
+    textDecorationLine: 'underline',
   },
 });

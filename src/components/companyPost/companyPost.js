@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import {Loader} from '../../common';
 import {
   StyleSheet,
   View,
@@ -17,7 +16,10 @@ import _ from 'lodash';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 class CompanyPost extends Component {
   _isMounted = false;
 
@@ -26,10 +28,12 @@ class CompanyPost extends Component {
     this.state = {
       dataAccept: [],
       dataWait: [],
+      dataComplete: [],
       index: 0,
       routes: [
         {key: 'Waiting', title: 'Waiting'},
         {key: 'Accepted', title: 'Accepted'},
+        {key: 'Complete', title: 'Complete'},
       ],
     };
   }
@@ -59,9 +63,19 @@ class CompanyPost extends Component {
     </View>
   );
 
+  CompleteRoute = () => (
+    <FlatList
+      horizontal={false}
+      data={this.state.dataComplete}
+      renderItem={this.renderItemAccept}
+      keyExtractor={this.keyExtractor}
+    />
+  );
+
   renderScene = SceneMap({
     Accepted: this.AcceptRoute,
     Waiting: this.WaitingRoute,
+    Complete: this.CompleteRoute,
   });
 
   showToast = (text, type, duration = 2000, buttonText = 'Okey') => {
@@ -85,7 +99,6 @@ class CompanyPost extends Component {
     Alert.alert('Option', `Pick your option `, [
       {
         text: 'Cancel',
-        onPress: () => console.log('Cancel Pressed'),
         style: 'cancel',
       },
       {text: 'Apply List', onPress: () => this.moveToApplyList(postId)},
@@ -96,7 +109,6 @@ class CompanyPost extends Component {
     Alert.alert('Option', `Pick your option `, [
       {
         text: 'Cancel',
-        onPress: () => console.log('Cancel Pressed'),
         style: 'cancel',
       },
       {text: 'Edit', onPress: () => this.moveToEditForm(postId)},
@@ -117,8 +129,11 @@ class CompanyPost extends Component {
             this.showToast(this.props.delMsg, 'success', 2000);
             await this.props.getCompanyPost();
             this.setState({
-              dataWait: this.props.posts.filter((e) => e.accept == false),
-              dataAccept: this.props.posts.filter((e) => e.accept == true),
+              dataWait: this.props.posts.filter((e) => e.status == 'WAITING'),
+              dataAccept: this.props.posts.filter(
+                (e) => e.status == 'ACCEPTED',
+              ),
+              dataComplete: this.props.posts.filter((e) => e.status == 'DONE'),
             });
           } else this.showToast(this.props.delMsg, 'warning', 2000);
         },
@@ -132,10 +147,19 @@ class CompanyPost extends Component {
       onShowUnderlay={separators.highlight}
       onHideUnderlay={separators.unhighlight}>
       <View style={styles.item}>
-        <Text style={styles.text}> Titile: {item.title} </Text>
-        <Text style={styles.text}> Company Name: {item.name} </Text>
-        <Text style={styles.text}> Salary: {item.salary} </Text>
-        <Text style={styles.text}> Skill: {item.skill} </Text>
+        <Text style={styles.text} numberOfLines={1} ellipsizeMode="tail">
+          Title: {item.title}
+        </Text>
+        <Text style={styles.text} numberOfLines={1} ellipsizeMode="tail">
+          Company Name: {_.get(item.company[0], 'name')}
+        </Text>
+        <Text style={styles.text} numberOfLines={1} ellipsizeMode="tail">
+          Salary: {item.salary}
+        </Text>
+        <Text style={styles.text} numberOfLines={1} ellipsizeMode="tail">
+          Skill: {item.skill.join(', ')}
+        </Text>
+        <Text style={styles.text}>End Time: {item.endTime} </Text>
       </View>
     </TouchableOpacity>
   );
@@ -146,10 +170,19 @@ class CompanyPost extends Component {
       onShowUnderlay={separators.highlight}
       onHideUnderlay={separators.unhighlight}>
       <View style={styles.item}>
-        <Text style={styles.text}> Titile: {item.title} </Text>
-        <Text style={styles.text}> Company Name: {item.name} </Text>
-        <Text style={styles.text}> Salary: {item.salary} </Text>
-        <Text style={styles.text}> Skill: {item.skill} </Text>
+        <Text style={styles.text} numberOfLines={1} ellipsizeMode="tail">
+          Title: {item.title}
+        </Text>
+        <Text style={styles.text} numberOfLines={1} ellipsizeMode="tail">
+          Company Name: {_.get(item.company[0], 'name')}
+        </Text>
+        <Text style={styles.text} numberOfLines={1} ellipsizeMode="tail">
+          Salary: {item.salary}
+        </Text>
+        <Text style={styles.text} numberOfLines={1} ellipsizeMode="tail">
+          Skill: {item.skill.join(', ')}
+        </Text>
+        <Text style={styles.text}>End Time: {item.endTime} </Text>
       </View>
     </TouchableOpacity>
   );
@@ -163,8 +196,9 @@ class CompanyPost extends Component {
     const unsubscribe = this.props.navigation.addListener('focus', async () => {
       await this.props.getCompanyPost();
       this.setState({
-        dataWait: this.props.posts.filter((e) => e.accept == false),
-        dataAccept: this.props.posts.filter((e) => e.accept == true),
+        dataWait: this.props.posts.filter((e) => e.status == 'WAITING'),
+        dataAccept: this.props.posts.filter((e) => e.status == 'ACCEPTED'),
+        dataComplete: this.props.posts.filter((e) => e.status == 'DONE'),
       });
     });
     return unsubscribe;
@@ -225,7 +259,7 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     marginLeft: 20,
     marginRight: 20,
-    backgroundColor: '#b8c2d1',
+    backgroundColor: '#f4efef',
     width: windowWidth - 40,
     height: 150,
     borderRadius: 10,
@@ -271,5 +305,9 @@ const styles = StyleSheet.create({
   textAdd: {
     fontSize: 30,
     fontWeight: '900',
+  },
+  text: {
+    fontFamily: 'TimesNewRoman',
+    fontSize: hp('2.2%'),
   },
 });

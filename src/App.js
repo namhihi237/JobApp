@@ -31,6 +31,7 @@ import {
   Profile,
   Search,
   EditPost,
+  UpdateCv,
 } from './components';
 import {store} from './redux/store';
 import {Provider} from 'react-redux';
@@ -95,6 +96,11 @@ class IterNav extends Component {
           name="CreateCv"
           component={Cv}
           options={{headerTitleAlign: 'center', title: 'Create Cv'}}
+        />
+        <Stack.Screen
+          name="UpdateCV"
+          component={UpdateCv}
+          options={{headerTitleAlign: 'center', title: 'Update CV'}}
         />
       </IterStack.Navigator>
     );

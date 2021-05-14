@@ -6,12 +6,12 @@ const dataSkill = [
   'Javascript',
   'PHP',
   'Python',
-  'Nodejs',
+  'NodeJS',
   'Spring',
   'Flask',
-  'VueJs',
-  'ReactJs',
+  'VueJS',
+  'ReactJS',
   'DotNet',
 ];
 
-export { dataSkill};
+export {dataSkill};

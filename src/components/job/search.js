@@ -7,6 +7,11 @@ import {JobDetail} from './jobDtail';
 import {applyJob, searchJob} from '../../redux/actions';
 import {getData} from '../../utils';
 import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
+
+import {
   StyleSheet,
   View,
   Text,
@@ -48,8 +53,9 @@ class Search extends Component {
   };
 
   searchItem = async () => {
-    if (this.state.search == '') return;
-    await this.props.searchJob(this.state.search);
+    let {search} = this.state;
+    if (search == '') return;
+    await this.props.searchJob(search);
     this.setState({posts: this.props.postsSearch});
   };
 
@@ -59,33 +65,39 @@ class Search extends Component {
         <Image
           source={{uri: _.get(item.company[0], 'image')}}
           style={styles.logo}></Image>
-        <View style={{padding: 1, marginLeft: 10}}>
-          <Text style={{...styles.text, fontSize: 20}} numberOfLines={1}>
+        <View style={{padding: 1, marginLeft: 10, maxWidth: wp('60%')}}>
+          <Text
+            style={{...styles.text, fontSize: 20}}
+            numberOfLines={1}
+            ellipsizeMode="tail">
             {item.title}
           </Text>
-          <Text style={{...styles.text, fontSize: 15}} numberOfLines={1}>
+          <Text
+            style={{...styles.text, fontSize: 15}}
+            numberOfLines={1}
+            ellipsizeMode="tail">
             {_.get(item.company[0], 'name')}
           </Text>
           <View style={styles.fiedlsText}>
             <FontAwesome5 name={'money-bill'} style={styles.iconText} />
-            <Text style={styles.text} numberOfLines={1}>
+            <Text style={styles.text} numberOfLines={1} ellipsizeMode="tail">
               {item.salary}
             </Text>
           </View>
           <View style={styles.fiedlsText}>
             <FontAwesome5 name={'code'} style={styles.iconText} />
-            <Text style={styles.text} numberOfLines={1}>
+            <Text style={styles.text} numberOfLines={1} ellipsizeMode="tail">
               {item.skill.join(', ')}
             </Text>
           </View>
           <View style={styles.fiedlsText}>
             <FontAwesome5 name={'map-marker-alt'} style={styles.iconText} />
-            <Text style={styles.text} numberOfLines={1}>
+            <Text style={styles.text} numberOfLines={1} ellipsizeMode="tail">
               {item.address}
             </Text>
           </View>
           <View style={styles.seeMore}>
-            <TouchableOpacity onPress={() => this.showDetail(item)} style={{}}>
+            <TouchableOpacity onPress={() => this.showDetail(item)}>
               <Text style={{color: 'green'}}>See more</Text>
             </TouchableOpacity>
             <View style={styles.fiedlsText}>
@@ -111,6 +123,8 @@ class Search extends Component {
       await this.setState({search: this.props.route.params.search});
       await this.props.searchJob(this.state.search);
       const role = await getData('role');
+
+      console.log(this.state.search, this.props.postsSearch);
       this.setState({role, posts: this.props.postsSearch});
     });
   }
@@ -133,7 +147,7 @@ class Search extends Component {
     if (this.state.role == 'iter') {
       return (
         <TouchableHighlight
-          style={styles.openButton}
+          style={{...styles.openButton, backgroundColor: '#37ce3f'}}
           onPress={this.iterApplyJob}>
           <Text style={styles.textStyle}>Apply</Text>
         </TouchableHighlight>
@@ -175,7 +189,7 @@ class Search extends Component {
             <View style={styles.searchContaier}>
               <View style={{...styles.searchInput}}>
                 <TextInput
-                  style={{height: 40}}
+                  style={{height: 40, width: wp('65%')}}
                   value={this.state.search}
                   onChangeText={this.updateSearch}
                   placeholder="Keyword (skill, company, position,...)"
@@ -212,7 +226,7 @@ class Search extends Component {
                 <JobDetail item={item}></JobDetail>
                 <View style={styles.containerButton}>
                   <TouchableHighlight
-                    style={styles.openButton}
+                    style={{...styles.openButton, backgroundColor: '#d14545'}}
                     onPress={() => {
                       this.setModalVisible(!modalVisible);
                     }}>
@@ -258,7 +272,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: (windowWidth * 1.8) / 3,
-    marginTop: 5,
+    marginTop: 1,
   },
   searchInput: {
     height: 50,
@@ -299,7 +313,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   item: {
-    height: (windowHeight - 10) / 5,
+    height: (hp('100%') - 5) / 5,
     marginBottom: 15,
     marginLeft: 15,
     marginRight: 15,
@@ -316,7 +330,7 @@ const styles = StyleSheet.create({
       width: 0,
       height: 8,
     },
-
+    paddingRight: 10,
     shadowOpacity: 0.34,
     shadowRadius: 6.27,
 
@@ -326,6 +340,8 @@ const styles = StyleSheet.create({
   text: {
     marginBottom: 1,
     marginLeft: 5,
+    fontFamily: 'TimesNewRoman',
+    fontSize: hp('2.1%'),
   },
   logoContainer: {
     display: 'flex',
@@ -347,19 +363,19 @@ const styles = StyleSheet.create({
     margin: 20,
     backgroundColor: 'rgba(103, 104, 107 , 0.95)',
     borderRadius: 20,
-    minHeight: (windowHeight * 1.25) / 3,
+    maxHeight: windowHeight * 0.8,
+    minHeight: windowHeight * 0.6,
     width: windowWidth / 1.15,
     padding: 20,
     alignItems: 'center',
-    shadowColor: '#000',
+    shadowColor: 'red',
     shadowOffset: {
       width: 0,
       height: 2,
     },
   },
   openButton: {
-    backgroundColor: '#2196F3',
-    borderRadius: 20,
+    borderRadius: 6,
     padding: 10,
     elevation: 2,
     marginLeft: 10,
@@ -372,6 +388,7 @@ const styles = StyleSheet.create({
   },
   containerButton: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   bgHeader: {
     backgroundColor: 'rgba(249, 242, 242, 0.8)',

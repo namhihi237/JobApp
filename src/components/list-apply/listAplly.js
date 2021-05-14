@@ -1,10 +1,8 @@
 import React, {Component} from 'react';
-import {Loader} from '../../common';
 import {
   StyleSheet,
   View,
   Text,
-  Dimensions,
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
@@ -15,16 +13,13 @@ import {getData} from '../../utils';
 import {Table, TableWrapper, Row, Cell} from 'react-native-table-component';
 import axios from 'axios';
 
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
-
 class ApplyList extends Component {
   _isMounted = false;
   constructor(props) {
     super(props);
     this.state = {
-      tableHead: ['STT', 'Full Name', 'Email', 'CV'],
-      widthArr: [50, 150, 220, 80],
+      tableHead: ['STT', 'Full Name', 'Email', 'Time', 'CV'],
+      widthArr: [50, 150, 220, 100, 80],
       tableData: [],
     };
   }
@@ -54,11 +49,16 @@ class ApplyList extends Component {
         const applies = result.data.applies;
         let count = 1;
         let tableData = [];
+        let rowData;
         for (let iter of applies) {
-          let rowData = [];
+          rowData = [];
           rowData.push(count);
           rowData.push(iter.name);
           rowData.push(iter.email);
+          let time = new Date(iter.timeApply);
+          rowData.push(
+            `${time.getDate()}/${time.getMonth()}/${time.getFullYear()}`,
+          );
           rowData.push(iter.cvId);
           tableData.push(rowData);
           count++;
@@ -83,10 +83,8 @@ class ApplyList extends Component {
   }
   render() {
     const element = (data, index) => (
-      <TouchableOpacity onPress={() => this._moveToCv(data)}>
-        <View style={styles.btn}>
-          <Text style={styles.btnText}>show Cv</Text>
-        </View>
+      <TouchableOpacity onPress={() => this._moveToCv(data)} style={styles.btn}>
+        <Text style={styles.btnText}>Show Cv</Text>
       </TouchableOpacity>
     );
     // if (this.props.status != 200 && this.props.status != 304) {
@@ -108,7 +106,7 @@ class ApplyList extends Component {
                       <Cell
                         key={cellIndex}
                         data={
-                          cellIndex === 3 ? element(cellData, index) : cellData
+                          cellIndex === 4 ? element(cellData, index) : cellData
                         }
                         style={{width: this.state.widthArr[cellIndex]}}
                         textStyle={styles.text}
@@ -158,6 +156,8 @@ const styles = StyleSheet.create({
     borderRadius: 2,
     marginLeft: 5,
     padding: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   btnText: {
     textAlign: 'center',
