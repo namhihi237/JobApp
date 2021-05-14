@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {Root} from 'native-base';
 import {
   createDrawerNavigator,
@@ -32,6 +32,7 @@ import {
   Search,
   EditPost,
   UpdateCv,
+  Companies,
 } from './components';
 import {store} from './redux/store';
 import {Provider} from 'react-redux';
@@ -118,6 +119,8 @@ class tabBarForIter extends Component {
               return <Icon name="contact-page" size={28}></Icon>;
             } else if (route.name === 'Setting') {
               return <Icon name="settings" size={28}></Icon>;
+            } else if (route.name === 'Companies') {
+              return <FontAwesome5 name={'building'} style={{fontSize: 22}} />;
             }
           },
         })}
@@ -126,6 +129,7 @@ class tabBarForIter extends Component {
           inactiveTintColor: 'gray',
         }}>
         <Tab.Screen name="Home" component={HomeJob} />
+        <Tab.Screen name="Companies" component={Companies} />
         <Tab.Screen name="My CV" component={IterNav} />
         <Tab.Screen name="Setting" component={SettingDrawer} />
       </Tab.Navigator>
@@ -203,6 +207,8 @@ class tabBarForCompany extends Component {
               return <Icon name="work" size={28}></Icon>;
             } else if (route.name === 'Setting') {
               return <Icon name="settings" size={28}></Icon>;
+            } else if (route.name === 'Companies') {
+              return <FontAwesome5 name={'building'} style={{fontSize: 22}} />;
             }
           },
         })}
@@ -211,6 +217,7 @@ class tabBarForCompany extends Component {
           inactiveTintColor: 'gray',
         }}>
         <Tab.Screen name="Home" component={HomeJob} />
+        <Tab.Screen name="Companies" component={Companies} />
         <Tab.Screen name="My Post" component={CompanyPostnav} />
         <Tab.Screen
           name="Setting"

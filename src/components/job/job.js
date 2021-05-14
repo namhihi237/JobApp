@@ -45,6 +45,7 @@ class Job extends Component {
       refreshing: false,
       page: 1,
       isLoading: false,
+      userId: '',
     };
     this.handleLoadMore = this.handleLoadMore.bind(this);
   }
@@ -66,13 +67,34 @@ class Job extends Component {
     this.props.navigation.navigate('Search', {search: this.state.search});
   };
 
+  renderApply = (listApply) => {
+    for (let applier in listApply) {
+      if (applier.iterId === this.state.userId)
+        return (
+          <View style={{display: 'flex', flexDirection: 'row'}}>
+            <FontAwesome5
+              name={'check-circle'}
+              style={{fontSize: 15, marginTop: 2, color: 'green'}}
+            />
+            <Text
+              style={{
+                fontFamily: 'TimesNewRoman',
+                marginLeft: 2,
+                color: '#996f6f',
+              }}>
+              Applied
+            </Text>
+          </View>
+        );
+    }
+  };
+
   renderItem = ({item}) => (
     <View style={styles.item}>
       <View style={styles.logoContainer}>
         <Image
           source={{uri: _.get(item.company[0], 'image')}}
           style={styles.logo}></Image>
-
         <View style={{padding: 1, marginLeft: 10, maxWidth: wp('60%')}}>
           <Text
             style={{...styles.text, fontSize: hp('2.5%')}}
@@ -108,11 +130,8 @@ class Job extends Component {
             <TouchableOpacity onPress={() => this.showDetail(item)} style={{}}>
               <Text style={{color: 'green'}}>See more</Text>
             </TouchableOpacity>
+            {this.renderApply(item.apply)}
             <View style={styles.fiedlsText}>
-              <FontAwesome5
-                name={'history'}
-                style={{...styles.iconText, color: 'red'}}
-              />
               <Text style={{marginLeft: 10}}>{item.endTime}</Text>
             </View>
           </View>
@@ -131,8 +150,8 @@ class Job extends Component {
       this.setState({search: ''});
       await this.props.getJob();
       const role = await getData('role');
-
-      this.setState({role, posts: this.props.posts, page: 1});
+      const userId = await getData('userId');
+      this.setState({role, posts: this.props.posts, page: 1, userId});
     });
 
     return unsubscribe;
@@ -222,7 +241,12 @@ class Job extends Component {
           <View style={styles.searchContaier}>
             <View style={{...styles.searchInput}}>
               <TextInput
-                style={{height: 40, width: wp('75%')}}
+                style={{
+                  height: 40,
+                  width: wp('75%'),
+                  fontFamily: 'TimesNewRoman',
+                  fontSize: 16,
+                }}
                 onChangeText={this.updateSearch}
                 value={this.state.search}
                 placeholder="Keyword (skill, company, position,...)"
@@ -318,7 +342,7 @@ const styles = StyleSheet.create({
     borderColor: '#7e8591',
     marginLeft: 3,
     marginRight: 3,
-    borderWidth: 3,
+    borderWidth: 1,
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -331,8 +355,8 @@ const styles = StyleSheet.create({
   flatlist: {
     marginTop: 3,
     marginBottom: 3,
-    paddingTop: 10,
     paddingBottom: 100,
+    paddingTop: 10,
   },
   searchContaier: {
     display: 'flex',
@@ -342,6 +366,7 @@ const styles = StyleSheet.create({
     paddingLeft: 3,
     paddingRight: 3,
     paddingTop: 2,
+    backgroundColor: 'rgba(249, 247, 247, 0.1)',
   },
   searchButton: {
     height: 40,

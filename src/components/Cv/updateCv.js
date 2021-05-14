@@ -129,7 +129,6 @@ class UpdateCv extends Component {
 
     try {
       let newImage = image;
-      console.log(photo);
       if (photo) {
         newImage = await this.handleUpload();
       }
@@ -152,7 +151,6 @@ class UpdateCv extends Component {
         birthday,
         name,
       };
-      console.log(data);
       await this.props.updateCv(data);
       const {status, msg} = this.props;
       if (status == 200 || status == 304) {
@@ -161,9 +159,7 @@ class UpdateCv extends Component {
         return;
       }
       this.showToast(msg, 'warning');
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   onChangesKill = (textSkill) => {

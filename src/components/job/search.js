@@ -189,7 +189,12 @@ class Search extends Component {
             <View style={styles.searchContaier}>
               <View style={{...styles.searchInput}}>
                 <TextInput
-                  style={{height: 40, width: wp('65%')}}
+                  style={{
+                    height: 40,
+                    width: wp('65%'),
+                    fontFamily: 'TimesNewRoman',
+                    fontSize: 16,
+                  }}
                   value={this.state.search}
                   onChangeText={this.updateSearch}
                   placeholder="Keyword (skill, company, position,...)"
@@ -280,7 +285,7 @@ const styles = StyleSheet.create({
     borderColor: '#7e8591',
     marginLeft: 3,
     marginRight: 3,
-    borderWidth: 3,
+    borderWidth: 1,
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',

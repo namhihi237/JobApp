@@ -17,10 +17,13 @@ export class JobDetail extends Component {
           <Text style={styles.text}>{item.title}</Text>
           <Text style={styles.text}>{item.company[0].name}</Text>
           <Text style={styles.text}>Address: {item.address}</Text>
-          <Text style={styles.text}>Description: {item.description}</Text>
-          <Text style={styles.text}>Salary: {item.salary}</Text>
           <Text style={styles.text}>Skill: {item.skill.join(', ')}</Text>
+          <Text style={styles.text}>Salary: {item.salary}</Text>
           <Text style={styles.text}>End time: {item.endTime}</Text>
+          <Text style={styles.text}>
+            Description:{'\n'}
+            {item.description}
+          </Text>
         </ScrollView>
       </View>
     );
