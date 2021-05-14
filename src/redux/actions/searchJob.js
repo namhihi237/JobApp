@@ -9,7 +9,9 @@ export const searchJob = (query) => async (dispatch) => {
   dispatch({type: SEARCH_JOB});
 
   try {
-    const result = await axios.get(`${GET_JOBS_URL}?query=${query}`);
+    const result = await axios.get(
+      `${GET_JOBS_URL}?query=${query}&page=1&take=100`,
+    );
     dispatch({type: SEARCH_JOB_SUCCESS, payload: result.data});
   } catch (error) {
     const msg = _.get(error.response, 'data.msg') || "Cant't connect network";

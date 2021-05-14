@@ -20,7 +20,10 @@ import axios from 'axios';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 class Profile extends Component {
   constructor(props) {
     super(props);
@@ -60,7 +63,6 @@ class Profile extends Component {
   handleUpload = async () => {
     try {
       const token = await getData('token');
-      const role = await getData('role');
       const {phone, photo, address, name} = this.state;
       let imageUrl;
       if (photo == '') {
@@ -98,7 +100,7 @@ class Profile extends Component {
       if (imageUrl) data = {...data, address, image: imageUrl};
       let url = 'https://job-it-cnpmp.herokuapp.com/api/v1/auth/profile';
 
-      const res = await axios.post(url, data, {
+      const res = await axios.patch(url, data, {
         headers: {Authorization: `Bearer ${token}`},
       });
       this.showToast(res.data.msg, 'success');
@@ -222,13 +224,22 @@ class Profile extends Component {
                 }}
               />
             </TouchableOpacity>
+            <Text
+              style={{
+                color: '#fff',
+                fontFamily: 'Sailors Slant',
+                fontSize: 20,
+                marginLeft: wp('40%'),
+              }}>
+              Welcome to IT Jobs
+            </Text>
             <View style={styles.content}>
               <Text style={styles.textName}>{name || ``}</Text>
             </View>
           </View>
           <View style={styles.info}>
             <View>
-              <Text style={{fontFamily: 'Sarpanch-Black', fontSize: 20}}>
+              <Text style={{fontFamily: 'Itim-Regular', fontSize: 25}}>
                 General
               </Text>
               {this.infoCompany()}
@@ -238,16 +249,15 @@ class Profile extends Component {
               style={{
                 flexDirection: 'row-reverse',
                 display: 'flex',
-                marginRight: 50,
-                marginBottom: 25,
+                marginRight: wp('12%'),
+                marginBottom: hp('3%g'),
               }}>
               <FontAwesome5
                 name={'save'}
                 style={{
                   fontSize: 25,
                   color: '#356fb7',
-                  marginRight: 5,
-                  marginRight: 40,
+                  marginRight: wp('9%'),
                 }}
               />
             </TouchableOpacity>
@@ -313,7 +323,7 @@ const styles = StyleSheet.create({
 
   content: {
     marginLeft: 150,
-    marginTop: 50,
+    marginTop: 20,
     padding: 10,
   },
 
@@ -368,7 +378,7 @@ const styles = StyleSheet.create({
     fontFamily: 'TimesNewRoman',
     fontSize: 17,
     fontWeight: 'bold',
-    marginBottom: 8,
+    marginBottom: 3,
     marginTop: 5,
   },
   inputContent: {

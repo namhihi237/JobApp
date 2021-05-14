@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import ToggleSwitch from 'toggle-switch-react-native';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {Avatar} from 'react-native-elements';
 import _ from 'lodash';
 import {
@@ -17,9 +18,11 @@ import {apiUrl} from '../../api/api';
 import {getData} from '../../utils';
 import axios from 'axios';
 
-const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 class getOneCv extends Component {
   constructor(props) {
     super(props);
@@ -53,6 +56,10 @@ class getOneCv extends Component {
     this.props.navigation.navigate('CreateCv');
   };
 
+  moveToUpdateCv = () => {
+    this.props.navigation.navigate('UpdateCV');
+  };
+
   onOffSendMail = async (isOn) => {
     try {
       if (!this.props.cv) {
@@ -60,24 +67,25 @@ class getOneCv extends Component {
         return;
       }
       const token = await getData('token');
-      await axios.post(
-        `${apiUrl.BASE_URL}/api/v1/cv/receive-mail`,
+      this.setState({sendEmail: isOn});
+
+      await axios.patch(
+        `${apiUrl.BASE_URL}/api/v1/iters/receive-mail`,
         {receive: isOn},
         {
           headers: {Authorization: `Bearer ${token}`},
         },
       );
-      this.setState({sendEmail: isOn});
     } catch (error) {}
   };
 
   render() {
-    if (this.props.status != 200 && this.props.status != 304) {
+    if (!this.props.cv) {
       return (
         <View style={styles.container}>
           <ScrollView style={styles.scroll}>
             <View>
-              <Text style={styles.titleList}>My CV</Text>
+              <Text style={styles.titleList}>You have not created a CV</Text>
             </View>
           </ScrollView>
           <TouchableOpacity
@@ -90,76 +98,100 @@ class getOneCv extends Component {
     }
     return (
       <View style={styles.container}>
-        <ScrollView style={styles.scroll}>
+        <ScrollView showsVerticalScrollIndicator={false} style={styles.scroll}>
           <View>
-            <Text style={styles.titleList}>My CV</Text>
             <ToggleSwitch
               isOn={this.state.sendEmail}
               onColor="green"
               offColor="red"
-              label="Send email job"
+              label="Receive email job"
               labelStyle={{color: 'black', fontWeight: '900'}}
               size="small"
               onToggle={(isOn) => this.onOffSendMail(isOn)}
             />
             <View style={styles.cv}>
-              <View style={styles.imgContainer}>
-                <Avatar
-                  containerStyle={{marginLeft: 10, marginTop: 15}}
-                  activeOpacity={0.7}
-                  rounded
-                  size="large"
-                  source={{
-                    uri:
-                      _.get(this.props.cv, 'image') ||
-                      'https://res.cloudinary.com/do-an-cnpm/image/upload/v1618073475/person_j0pvho.png',
-                  }}
-                />
-
-                <View>
-                  <Text style={styles.textName}>
-                    {_.get(this.props.cv, 'iterName') || `Le Trung Nam`}
-                  </Text>
-                  <Text style={styles.textemail}>
-                    Email:{' '}
-                    {_.get(this.props.cv, 'email') || `Trungnam23799@gmail.com`}
-                  </Text>
-                  <Text style={styles.textemail}>
-                    Brithday: {_.get(this.props.cv, 'birthday') || `23/07/1999`}
+              <View style={styles.content}>
+                <View style={styles.imgContainer}>
+                  <Avatar
+                    containerStyle={{marginLeft: 10, marginTop: 15}}
+                    activeOpacity={0.7}
+                    rounded
+                    size="large"
+                    source={{
+                      uri:
+                        _.get(this.props.cv, 'image') ||
+                        'https://res.cloudinary.com/do-an-cnpm/image/upload/v1618073475/person_j0pvho.png',
+                    }}
+                  />
+                  <View>
+                    <Text style={styles.textName}>
+                      {_.get(this.props.cv, 'name') || ``}
+                    </Text>
+                    <View
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        marginLeft: 20,
+                      }}>
+                      <FontAwesome5
+                        name={'envelope'}
+                        style={{fontSize: 15, marginTop: 11}}
+                      />
+                      <Text style={styles.textemail}>
+                        {_.get(this.props.cv, 'email') || ``}
+                      </Text>
+                    </View>
+                    <View
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        marginLeft: 20,
+                      }}>
+                      <FontAwesome5
+                        name={'birthday-cake'}
+                        style={{fontSize: 15, marginTop: 11}}
+                      />
+                      <Text style={styles.textemail}>
+                        {_.get(this.props.cv, 'birthday') || ``}
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+                <View style={styles.viewText}>
+                  <Text style={styles.textLabel}>Technical skills</Text>
+                  <Text
+                    style={{fontFamily: 'TimesNewRoman', fontSize: wp('5')}}>
+                    {_.get(this.props.cv, 'skill').join('\n') || ``}
                   </Text>
                 </View>
-              </View>
-              <View style={styles.content}>
-                <Text style={styles.textLabel}>
-                  Skill:{`\n`}
-                  {_.get(this.props.cv, 'skill') ||
-                    `
-                  - C++, Java
-                  - Git, GitHub
-                  `}
-                </Text>
-                <Text style={styles.textLabel}>
-                  Soft skill:{`\n`}
-                  {_.get(this.props.cv, 'softSkill') || 'Toeic 900+'}
-                </Text>
-
-                <Text style={styles.textLabel}>
-                  Experience:{`\n`}
-                  {_.get(this.props.cv, 'experience') ||
-                    `
-                  - 2020 - 2021 : Madison
-                  - 2021 -2022 : FPT`}
-                </Text>
-                <Text style={styles.textLabel}>
-                  Description:{`\n`} {_.get(this.props.cv, 'description')}
-                </Text>
+                <View style={styles.viewText}>
+                  <Text style={styles.textLabel}>Soft skill</Text>
+                  <Text
+                    style={{fontFamily: 'TimesNewRoman', fontSize: wp('5')}}>
+                    {_.get(this.props.cv, 'softSkill') || ''}
+                  </Text>
+                </View>
+                <View style={styles.viewText}>
+                  <Text style={styles.textLabel}>Experience</Text>
+                  <Text
+                    style={{fontFamily: 'TimesNewRoman', fontSize: wp('5')}}>
+                    {_.get(this.props.cv, 'experience') || ``}
+                  </Text>
+                </View>
+                <View style={styles.viewText}>
+                  <Text style={styles.textLabel}>Description</Text>
+                  <Text
+                    style={{fontFamily: 'TimesNewRoman', fontSize: wp('5')}}>
+                    {_.get(this.props.cv, 'description')}
+                  </Text>
+                </View>
               </View>
             </View>
           </View>
         </ScrollView>
         <TouchableOpacity
           style={styles.buttonAdd}
-          onPress={this.moveToCreateCv}>
+          onPress={this.moveToUpdateCv}>
           <Text style={styles.textAdd}>+</Text>
         </TouchableOpacity>
       </View>
@@ -183,15 +215,14 @@ export default connect(mapStateToProps, mapDispatchToProps)(getOneCv);
 
 const styles = StyleSheet.create({
   scroll: {
-    minHeight: windowHeight,
+    minHeight: windowHeight * 0.86,
+    backgroundColor: '#f9f2f2',
   },
 
   container: {
     flex: 1,
-    backgroundColor: '#c7c8d6',
     margin: 5,
     borderRadius: 10,
-    padding: 10,
   },
   tinyLogo: {
     width: 100,
@@ -236,7 +267,7 @@ const styles = StyleSheet.create({
     bottom: 10,
     right: 10,
     height: 60,
-    backgroundColor: '#ee6e73',
+    backgroundColor: '#907fa4',
     borderRadius: 100,
     shadowColor: 'rgba(0, 0, 0, 0.1)',
     shadowOpacity: 0.8,
@@ -250,15 +281,12 @@ const styles = StyleSheet.create({
   },
   textLabel: {
     fontSize: 20,
-    marginBottom: 10,
+    marginBottom: 5,
     fontFamily: 'Sailors Slant',
   },
-  textContent: {
-    fontSize: 30,
-    color: 'green',
-  },
+
   textName: {
-    fontSize: 30,
+    fontSize: wp('6%'),
     marginLeft: 20,
     marginTop: 5,
     fontFamily: 'Sarpanch-ExtraBold',
@@ -269,7 +297,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   imgContainer: {
-    backgroundColor: 'rgba(113, 115, 127,0.9)',
+    backgroundColor: 'rgba(249, 247, 247 , 0.8)',
     shadowOffset: {
       width: 0,
       height: 8,
@@ -282,16 +310,29 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 80,
     borderTopLeftRadius: 10,
     borderBottomLeftRadius: 10,
-    padding: 5,
+    marginBottom: 15,
+    paddingBottom: 5,
   },
   content: {
     marginTop: 5,
-    padding: 5,
+    padding: 8,
   },
   textemail: {
-    fontSize: 16,
-    marginLeft: 9,
+    fontSize: wp('4.8%'),
+    marginLeft: 10,
     marginTop: 5,
     fontFamily: 'TimesNewRoman',
+  },
+  viewText: {
+    backgroundColor: '#f7f4f4',
+    padding: 6,
+    paddingLeft: 10,
+    paddingRight: 10,
+    shadowColor: 'black',
+    shadowOpacity: 0.26,
+    shadowOffset: {width: 0, height: 2},
+    shadowRadius: 10,
+    elevation: 3,
+    marginBottom: 10,
   },
 });

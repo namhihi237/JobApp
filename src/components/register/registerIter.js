@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
+  ScrollView,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {TextInput} from 'react-native-gesture-handler';
@@ -14,6 +15,12 @@ import {registerIter} from '../../redux/actions';
 import {connect} from 'react-redux';
 import {Loader} from '../../common';
 
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 class Register extends Component {
   constructor(props) {
     super(props);
@@ -81,55 +88,66 @@ class Register extends Component {
   render() {
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-        <LinearGradient
-          colors={['#cdaeee', '#94e4e9']}
-          style={styles.container}>
+        <LinearGradient colors={['#cdaeee', '#94e4e9']}>
           <Loader status={this.props.loading} msg={'Registering'}></Loader>
-          <View style={styles.inputView}>
-            <TextInput
-              style={styles.inputText}
-              placeholder="Email..."
-              placeholderTextColor="#003f5c"
-              onChangeText={this.changeTextEmail}
-            />
-          </View>
-          <View style={styles.inputView}>
-            <TextInput
-              style={styles.inputText}
-              placeholder="Password..."
-              placeholderTextColor="#003f5c"
-              secureTextEntry={true}
-              onChangeText={this.changeTextPass}
-            />
-          </View>
-          <View style={styles.inputView}>
-            <TextInput
-              style={styles.inputText}
-              placeholder="Confirm password"
-              placeholderTextColor="#003f5c"
-              secureTextEntry={true}
-              onChangeText={this.changeTextConfirmPass}
-            />
-          </View>
-          <View style={styles.inputView}>
-            <TextInput
-              style={styles.inputText}
-              placeholder="Full Name..."
-              placeholderTextColor="#003f5c"
-              onChangeText={this.changeTextname}
-            />
-          </View>
+          <ScrollView showsVerticalScrollIndicator={false}>
+            <View style={styles.container}>
+              <View style={styles.inputView}>
+                <FontAwesome5 name={'envelope'} style={styles.icon} />
+                <TextInput
+                  style={styles.inputText}
+                  placeholder="Email..."
+                  placeholderTextColor="#003f5c"
+                  onChangeText={this.changeTextEmail}
+                />
+              </View>
+              <View style={styles.inputView}>
+                <FontAwesome5 name={'key'} style={styles.icon} />
+                <TextInput
+                  style={styles.inputText}
+                  placeholder="Password..."
+                  placeholderTextColor="#003f5c"
+                  secureTextEntry={true}
+                  onChangeText={this.changeTextPass}
+                />
+              </View>
+              <View style={styles.inputView}>
+                <FontAwesome5 name={'key'} style={styles.icon} />
+                <TextInput
+                  style={styles.inputText}
+                  placeholder="Confirm password"
+                  placeholderTextColor="#003f5c"
+                  secureTextEntry={true}
+                  onChangeText={this.changeTextConfirmPass}
+                />
+              </View>
+              <View style={styles.inputView}>
+                <TextInput
+                  style={{...styles.inputText, marginLeft: 20}}
+                  placeholder="Full Name..."
+                  placeholderTextColor="#003f5c"
+                  onChangeText={this.changeTextname}
+                />
+              </View>
 
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              style={styles.loginBtn}
-              onPress={this.registerAcc}>
-              <Text style={styles.loginText}>SIGNUP ACCOUNT ITER</Text>
-            </TouchableOpacity>
-          </View>
-          <TouchableOpacity onPress={this.moveToLogin}>
-            <Text style={styles.loginText}>SignIn</Text>
-          </TouchableOpacity>
+              <View style={styles.buttonContainer}>
+                <TouchableOpacity
+                  style={styles.loginBtn}
+                  onPress={this.registerAcc}>
+                  <Text style={styles.loginText}>SIGNUP ITER</Text>
+                </TouchableOpacity>
+              </View>
+              <TouchableOpacity onPress={this.moveToLogin}>
+                <Text
+                  style={{
+                    ...styles.loginText,
+                    textDecorationLine: 'underline',
+                  }}>
+                  SignIn
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
         </LinearGradient>
       </TouchableWithoutFeedback>
     );
@@ -154,6 +172,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     flex: 1,
+    height: hp('102.5%'),
   },
   forgot: {
     color: 'white',
@@ -170,22 +189,39 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   inputView: {
-    width: '80%',
-    backgroundColor: 'rgba(70, 88, 129, 0.8)',
+    width: wp('80%'),
+    backgroundColor: 'rgba(70, 88, 129 , 0.7)',
+    borderWidth: 1,
+    borderColor: '#3a455b',
     borderRadius: 25,
     height: 50,
     marginBottom: 20,
-    justifyContent: 'center',
-    padding: 20,
-  },
-  inputText: {
-    height: 60,
-    color: 'white',
+    paddingLeft: 20,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 
   buttonContainer: {
     display: 'flex',
     flexDirection: 'row',
   },
-  type: {height: 40, width: 200},
+  type: {
+    height: 40,
+    width: 200,
+  },
+  inputText: {
+    color: 'white',
+    width: wp('62%'),
+    fontFamily: 'TimesNewRoman',
+    fontSize: 17,
+    marginLeft: 5,
+  },
+  icon: {
+    fontSize: 16,
+  },
+  loginText: {
+    fontFamily: 'Itim-Regular',
+    fontSize: 20,
+  },
 });

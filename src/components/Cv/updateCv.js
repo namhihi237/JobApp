@@ -1,15 +1,14 @@
 import React, {Component} from 'react';
 import {Loader} from '../../common';
 import {connect} from 'react-redux';
-import SelectMultiple from 'react-native-select-multiple';
-import {createIterCv} from '../../redux/actions';
-import {Toast} from 'native-base';
 import {getData} from '../../utils';
+import SelectMultiple from 'react-native-select-multiple';
+import {updateCv} from '../../redux/actions';
+import {Toast} from 'native-base';
 import _ from 'lodash';
 import * as ImagePicker from 'react-native-image-picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 import {
   widthPercentageToDP as wp,
@@ -34,7 +33,7 @@ import axios from 'axios';
 
 import {dataSkill} from '../../constant';
 
-class Cv extends Component {
+class UpdateCv extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -50,6 +49,9 @@ class Cv extends Component {
       birthday: '',
       date: new Date(),
       modalVisible: false,
+      image: '',
+      name: '',
+      email: '',
     };
   }
 
@@ -109,7 +111,7 @@ class Cv extends Component {
     return true;
   };
 
-  createCv = async () => {
+  updateCv = async () => {
     if (!this.validateData()) {
       this.showToast('Data is empty');
       return;
@@ -120,25 +122,48 @@ class Cv extends Component {
       description,
       birthday,
       selectedSkill,
+      photo,
+      image,
+      name,
     } = this.state;
 
     try {
-      const image = await this.handleUpload();
+      let newImage = image;
+      console.log(photo);
+      if (photo) {
+        newImage = await this.handleUpload();
+      }
+      let skill = [];
+      if (
+        selectedSkill.length > 0 &&
+        selectedSkill[0].hasOwnProperty('label')
+      ) {
+        skill = selectedSkill.map((e) => e.value);
+      }
+      if (skill.length == 0) {
+        skill = selectedSkill;
+      }
       const data = {
-        skill: selectedSkill.map((e) => e.value),
+        skill,
         softSkill,
         experience,
         description,
-        image,
+        image: newImage,
         birthday,
+        name,
       };
-      await this.props.createIterCv(data);
-      this.showToast(this.props.msg);
-      if (this.props.status != 200 && this.props.state != 304) {
+      console.log(data);
+      await this.props.updateCv(data);
+      const {status, msg} = this.props;
+      if (status == 200 || status == 304) {
+        this.showToast(msg, 'success');
+        this.props.navigation.goBack();
         return;
       }
-      this.props.navigation.goBack();
-    } catch (error) {}
+      this.showToast(msg, 'warning');
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   onChangesKill = (textSkill) => {
@@ -176,6 +201,37 @@ class Cv extends Component {
     this.setState({selectedSkill, textSkill: skills});
   };
 
+  componentDidMount() {
+    const unsubscribe = this.props.navigation.addListener('focus', async () => {
+      const {
+        softSkill,
+        skill,
+        image,
+        email,
+        name,
+        birthday,
+        description,
+        experience,
+      } = this.props.cv;
+      let dateArr = birthday.split('/');
+      dateArr.map((e) => parseInt(e));
+      let date = new Date(Date.UTC(dateArr[2], dateArr[1] - 1, dateArr[0]));
+      this.setState({
+        softSkill,
+        description,
+        experience,
+        textSkill: skill.join(', '),
+        birthday,
+        date,
+        image,
+        name,
+        selectedSkill: skill,
+        email,
+      });
+    });
+
+    return unsubscribe;
+  }
   showSkill = () => {
     return (
       <View
@@ -227,17 +283,25 @@ class Cv extends Component {
       showDate,
       textSkill,
       modalVisible,
+      softSkill,
+      experience,
+      description,
+      image,
+      name,
+      email,
     } = this.state;
     return (
       <ScrollView showsVerticalScrollIndicator={false}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
           <KeyboardAvoidingView style={{flex: 1}}>
-            <Loader status={this.props.loading} msg={'Creating'}></Loader>
+            <Loader status={this.props.loading} msg={'Updating'}></Loader>
             <View style={styles.container}>
               <Image
                 source={{
                   uri: photo
                     ? photo.uri
+                    : image != ''
+                    ? image
                     : 'https://res.cloudinary.com/do-an-cnpm/image/upload/v1618073475/person_j0pvho.png',
                 }}
                 style={styles.avatar}
@@ -251,8 +315,20 @@ class Cv extends Component {
               </TouchableOpacity>
               <View style={styles.choice}>
                 <TextInput
-                  value={birthday}
                   style={styles.textInputChoice}
+                  value={name}
+                  placeholder="Name..."></TextInput>
+              </View>
+              <View style={styles.choice}>
+                <TextInput
+                  style={styles.textInputChoice}
+                  value={email}
+                  placeholder="Email..."></TextInput>
+              </View>
+              <View style={styles.choice}>
+                <TextInput
+                  value={birthday}
+                  style={styles.textName}
                   editable={false}
                   selectTextOnFocus={false}
                   placeholder="Birthday. . ."></TextInput>
@@ -287,25 +363,28 @@ class Cv extends Component {
                 onChangeText={this.onChangesoftSkill}
                 multiline={true}
                 numberOfLines={4}
+                value={softSkill}
                 placeholder="Soft Skill"></TextInput>
               <TextInput
                 style={styles.desInput}
                 onChangeText={this.onChangeExperience}
                 multiline={true}
                 numberOfLines={4}
+                value={experience}
                 placeholder="Experience"></TextInput>
               <TextInput
                 onChangeText={this.onChangeDescription}
                 multiline={true}
                 numberOfLines={4}
+                value={description}
                 style={styles.desInput}
                 placeholder="Description"
                 autoCorrect={false}
               />
               <TouchableOpacity
                 style={styles.buttonCreate}
-                onPress={this.createCv}>
-                <Text style={styles.textStyle}>Create</Text>
+                onPress={this.updateCv}>
+                <Text style={styles.textStyle}>Update</Text>
               </TouchableOpacity>
             </View>
             <View style={styles.centeredView}>
@@ -341,18 +420,20 @@ class Cv extends Component {
 }
 
 const mapDispatchToProps = {
-  createIterCv,
+  updateCv,
 };
 
 const mapStateToProps = (state) => {
-  const {loading, status, msg} = state.createIterCv;
+  const {loading, status, msg} = state.updateCv;
+  const {cv} = state.getCv;
   return {
     loading,
     status,
     msg,
+    cv,
   };
 };
-export default connect(mapStateToProps, mapDispatchToProps)(Cv);
+export default connect(mapStateToProps, mapDispatchToProps)(UpdateCv);
 
 const styles = StyleSheet.create({
   centeredView: {
@@ -485,4 +566,5 @@ const styles = StyleSheet.create({
     borderColor: '#bfa8a8',
     marginLeft: wp('37%'),
   },
+  textName: {},
 });

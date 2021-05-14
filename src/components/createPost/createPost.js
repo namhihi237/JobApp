@@ -23,7 +23,10 @@ import {createPost} from '../../redux/actions';
 import {dataSkill} from '../../constant';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 class CreatePost extends Component {
   constructor(props) {
     super(props);
@@ -58,6 +61,14 @@ class CreatePost extends Component {
   setModalVisible = (status) => {
     this.setState({
       modalVisible: status,
+    });
+  };
+
+  cancelSkill = (status) => {
+    this.setState({
+      modalVisible: status,
+      selectedSkill: [],
+      textSkill: '',
     });
   };
 
@@ -214,10 +225,11 @@ class CreatePost extends Component {
                   editable={false}
                   selectTextOnFocus={false}
                   placeholder="End time. . ."></TextInput>
-                <TouchableOpacity
-                  style={styles.buttonChoice}
-                  onPress={this.showDatepicker}>
-                  <Text>choice</Text>
+                <TouchableOpacity onPress={this.showDatepicker}>
+                  <FontAwesome5
+                    name={'calendar-alt'}
+                    style={{color: 'black', fontSize: 25}}
+                  />
                 </TouchableOpacity>
               </View>
               {this.state.showDate && (
@@ -249,15 +261,28 @@ class CreatePost extends Component {
                 visible={modalVisible}>
                 <View style={styles.centeredView}>
                   <View style={styles.modalView}>
-                    <Text style={styles.modalText}>Choice Skill</Text>
+                    <Text style={styles.modalText}>Choose Skill</Text>
                     {this.showSkill()}
                     <View style={styles.containerButton}>
                       <TouchableOpacity
-                        style={styles.openButton}
+                        style={{
+                          ...styles.openButton,
+                          backgroundColor: '#363B59',
+                        }}
+                        onPress={() => {
+                          this.cancelSkill(!modalVisible);
+                        }}>
+                        <Text style={styles.textStyle}>Cancel</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        style={{
+                          ...styles.openButton,
+                          backgroundColor: '#3d84b8',
+                        }}
                         onPress={() => {
                           this.setModalVisible(!modalVisible);
                         }}>
-                        <Text style={styles.textStyle}>OK</Text>
+                        <Text style={styles.textStyle}>Add</Text>
                       </TouchableOpacity>
                     </View>
                   </View>
@@ -288,11 +313,12 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
     alignItems: 'center',
+    padding: 20,
   },
   textInput: {
     borderColor: '#3f51b5',
     height: 40,
-    borderBottomWidth: 2,
+    borderBottomWidth: 1,
     width: windowWidth * 0.8,
     marginBottom: 15,
     paddingLeft: 6,
@@ -323,6 +349,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
     borderColor: '#737796',
     borderWidth: 1,
+    borderRadius: 4,
   },
 
   centeredView: {
@@ -335,9 +362,9 @@ const styles = StyleSheet.create({
     margin: 20,
     backgroundColor: '#d5dee2',
     borderRadius: 20,
-    height: 450,
-    width: 300,
-    padding: 20,
+    height: hp('65%'),
+    width: wp('80%'),
+    padding: 10,
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: {
@@ -349,11 +376,10 @@ const styles = StyleSheet.create({
     elevation: 10,
   },
   openButton: {
-    backgroundColor: '#2196F3',
     borderRadius: 10,
     padding: 10,
     elevation: 2,
-    width: 60,
+    width: 100,
     marginLeft: 35,
     marginRight: 35,
     marginTop: 15,
@@ -362,17 +388,22 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
     textAlign: 'center',
+    fontFamily: 'Itim-Regular',
   },
   containerButton: {
+    marginTop: 15,
     flexDirection: 'row',
+    display: 'flex',
+    justifyContent: 'space-around',
   },
   modalText: {
-    fontSize: 20,
+    fontSize: 23,
     marginBottom: 10,
+    fontFamily: 'Itim-Regular',
   },
   choice: {
     flexDirection: 'row',
-    borderBottomWidth: 2,
+    borderBottomWidth: 1,
     width: windowWidth * 0.8,
     display: 'flex',
     flexDirection: 'row',
@@ -381,7 +412,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   buttonCreate: {
-    backgroundColor: '#a4bfad',
+    backgroundColor: '#607f22',
     width: 100,
     padding: 10,
     borderRadius: 6,
@@ -391,12 +422,12 @@ const styles = StyleSheet.create({
   },
   icon: {
     marginTop: 12,
-    color: '#36e23f',
+    color: '#96cc2c',
   },
   containerInput: {
     display: 'flex',
     flexDirection: 'row',
-    borderBottomWidth: 2,
+    borderBottomWidth: 1,
     width: windowWidth * 0.8,
     display: 'flex',
     flexDirection: 'row',

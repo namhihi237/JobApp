@@ -18,6 +18,7 @@ import {
   changePassword,
   getProfile,
   editWaitingPost,
+  updateCv,
 } from '../reducer/';
 
 const AppReduces = combineReducers({
@@ -38,6 +39,7 @@ const AppReduces = combineReducers({
   changePassword,
   getProfile,
   editWaitingPost,
+  updateCv,
 });
 const rootReducer = (state, action) => {
   return AppReduces(state, action);

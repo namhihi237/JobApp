@@ -14,6 +14,7 @@ class changePass extends Component {
       oldPass: '',
       newPass: '',
     };
+    this.showToast.bind(this);
   }
 
   showToast = (msg) => {
