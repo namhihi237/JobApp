@@ -147,7 +147,7 @@ class Search extends Component {
     if (this.state.role == 'iter') {
       return (
         <TouchableHighlight
-          style={styles.openButton}
+          style={{...styles.openButton, backgroundColor: '#37ce3f'}}
           onPress={this.iterApplyJob}>
           <Text style={styles.textStyle}>Apply</Text>
         </TouchableHighlight>
@@ -226,7 +226,7 @@ class Search extends Component {
                 <JobDetail item={item}></JobDetail>
                 <View style={styles.containerButton}>
                   <TouchableHighlight
-                    style={styles.openButton}
+                    style={{...styles.openButton, backgroundColor: '#d14545'}}
                     onPress={() => {
                       this.setModalVisible(!modalVisible);
                     }}>
@@ -272,7 +272,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: (windowWidth * 1.8) / 3,
-    marginTop: 5,
+    marginTop: 1,
   },
   searchInput: {
     height: 50,
@@ -313,7 +313,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   item: {
-    height: (windowHeight - 10) / 5,
+    height: (hp('100%') - 5) / 5,
     marginBottom: 15,
     marginLeft: 15,
     marginRight: 15,
@@ -340,6 +340,8 @@ const styles = StyleSheet.create({
   text: {
     marginBottom: 1,
     marginLeft: 5,
+    fontFamily: 'TimesNewRoman',
+    fontSize: hp('2.1%'),
   },
   logoContainer: {
     display: 'flex',
@@ -361,19 +363,19 @@ const styles = StyleSheet.create({
     margin: 20,
     backgroundColor: 'rgba(103, 104, 107 , 0.95)',
     borderRadius: 20,
-    minHeight: (windowHeight * 1.25) / 3,
+    maxHeight: windowHeight * 0.8,
+    minHeight: windowHeight * 0.6,
     width: windowWidth / 1.15,
     padding: 20,
     alignItems: 'center',
-    shadowColor: '#000',
+    shadowColor: 'red',
     shadowOffset: {
       width: 0,
       height: 2,
     },
   },
   openButton: {
-    backgroundColor: '#2196F3',
-    borderRadius: 20,
+    borderRadius: 6,
     padding: 10,
     elevation: 2,
     marginLeft: 10,
@@ -386,6 +388,7 @@ const styles = StyleSheet.create({
   },
   containerButton: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   bgHeader: {
     backgroundColor: 'rgba(249, 242, 242, 0.8)',

@@ -7,7 +7,7 @@ import {CreatePost} from './createPost';
 import {Forgot} from './forgotPassword';
 import {Confirm} from './confirmCode';
 import {UpdatePassword} from './updatePassword';
-import {Cv, CvByCompany, getOneCv} from './Cv';
+import {Cv, CvByCompany, getOneCv, UpdateCv} from './Cv';
 import {ApplyList} from './list-apply';
 import {changePass} from './changePass';
 
@@ -29,6 +29,7 @@ export {
   CvByCompany,
   changePass,
   getOneCv,
+  UpdateCv,
   Profile,
   Search,
   EditPost,

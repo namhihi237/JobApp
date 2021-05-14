@@ -350,7 +350,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   item: {
-    height: (windowHeight - 10) / 5,
+    height: (hp('100%') - 5) / 5,
     marginBottom: 15,
     marginLeft: 15,
     marginRight: 15,
@@ -365,7 +365,6 @@ const styles = StyleSheet.create({
     paddingTop: 5,
 
     borderRadius: 7,
-    // shawdow
     shadowColor: '#000',
     shadowOffset: {
       width: 0,

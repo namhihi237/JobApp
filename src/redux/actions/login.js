@@ -16,6 +16,7 @@ export const login = (data) => async (dispatch) => {
     // storeData('userId', result.data.user._id);
     storeData('token', token);
     storeData('role', result.data.role + '');
+    storeData('userId', result.data.userId + '');
 
     dispatch({type: LOGIN_SUCCESS, payload: result.data});
   } catch (error) {

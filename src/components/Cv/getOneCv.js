@@ -56,6 +56,10 @@ class getOneCv extends Component {
     this.props.navigation.navigate('CreateCv');
   };
 
+  moveToUpdateCv = () => {
+    this.props.navigation.navigate('UpdateCV');
+  };
+
   onOffSendMail = async (isOn) => {
     try {
       if (!this.props.cv) {
@@ -187,7 +191,7 @@ class getOneCv extends Component {
         </ScrollView>
         <TouchableOpacity
           style={styles.buttonAdd}
-          onPress={this.moveToCreateCv}>
+          onPress={this.moveToUpdateCv}>
           <Text style={styles.textAdd}>+</Text>
         </TouchableOpacity>
       </View>
