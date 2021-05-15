@@ -16,6 +16,8 @@ import {changePassword} from './changePassword';
 import {getProfile} from './getProfile';
 import {editWaitingPost} from './editWaitingPost';
 import {updateCv} from './updateCv';
+import {getCompanies} from './companies';
+import {getJobCompany} from './jobCompany';
 
 export {
   login,
@@ -36,4 +38,6 @@ export {
   getProfile,
   editWaitingPost,
   updateCv,
+  getCompanies,
+  getJobCompany,
 };

@@ -124,7 +124,6 @@ class Search extends Component {
       await this.props.searchJob(this.state.search);
       const role = await getData('role');
 
-      console.log(this.state.search, this.props.postsSearch);
       this.setState({role, posts: this.props.postsSearch});
     });
   }
@@ -189,7 +188,12 @@ class Search extends Component {
             <View style={styles.searchContaier}>
               <View style={{...styles.searchInput}}>
                 <TextInput
-                  style={{height: 40, width: wp('65%')}}
+                  style={{
+                    height: 50,
+                    width: wp('65%'),
+                    fontFamily: 'TimesNewRoman',
+                    fontSize: 16,
+                  }}
                   value={this.state.search}
                   onChangeText={this.updateSearch}
                   placeholder="Keyword (skill, company, position,...)"
@@ -199,7 +203,7 @@ class Search extends Component {
                   onPress={this.searchItem}>
                   <FontAwesome5
                     name={'search'}
-                    style={{fontSize: 22, marginBottom: 3}}
+                    style={{fontSize: 22, marginTop: 2}}
                   />
                 </TouchableOpacity>
               </View>
@@ -280,7 +284,7 @@ const styles = StyleSheet.create({
     borderColor: '#7e8591',
     marginLeft: 3,
     marginRight: 3,
-    borderWidth: 3,
+    borderWidth: 1,
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
