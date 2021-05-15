@@ -4,16 +4,19 @@ import {connect} from 'react-redux';
 import {getData} from '../../utils';
 import SelectMultiple from 'react-native-select-multiple';
 import {updateCv} from '../../redux/actions';
-import {Toast} from 'native-base';
+import {Right, Toast} from 'native-base';
 import _ from 'lodash';
 import * as ImagePicker from 'react-native-image-picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 const windowHeight = Dimensions.get('window').height;
+const windowWidth = Dimensions.get('window').width;
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import {Header, Left, Body, Button, Icon, Title} from 'native-base';
+
 import {
   StyleSheet,
   View,
@@ -111,7 +114,7 @@ class UpdateCv extends Component {
     return true;
   };
 
-  updateCv = async () => {
+  updateNewCv = async () => {
     if (!this.validateData()) {
       this.showToast('Data is empty');
       return;
@@ -129,7 +132,6 @@ class UpdateCv extends Component {
 
     try {
       let newImage = image;
-      console.log(photo);
       if (photo) {
         newImage = await this.handleUpload();
       }
@@ -152,7 +154,6 @@ class UpdateCv extends Component {
         birthday,
         name,
       };
-      console.log(data);
       await this.props.updateCv(data);
       const {status, msg} = this.props;
       if (status == 200 || status == 304) {
@@ -161,9 +162,7 @@ class UpdateCv extends Component {
         return;
       }
       this.showToast(msg, 'warning');
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   onChangesKill = (textSkill) => {
@@ -295,6 +294,23 @@ class UpdateCv extends Component {
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
           <KeyboardAvoidingView style={{flex: 1}}>
             <Loader status={this.props.loading} msg={'Updating'}></Loader>
+            <Header>
+              <Left>
+                <Button
+                  transparent
+                  onPress={() => this.props.navigation.goBack()}>
+                  <Icon name="arrow-back" />
+                </Button>
+              </Left>
+              <Body>
+                <Title>Update CV</Title>
+              </Body>
+              <Right>
+                <Button transparent>
+                  <Icon name="menu" />
+                </Button>
+              </Right>
+            </Header>
             <View style={styles.container}>
               <Image
                 source={{
@@ -383,7 +399,7 @@ class UpdateCv extends Component {
               />
               <TouchableOpacity
                 style={styles.buttonCreate}
-                onPress={this.updateCv}>
+                onPress={this.updateNewCv}>
                 <Text style={styles.textStyle}>Update</Text>
               </TouchableOpacity>
             </View>
@@ -567,4 +583,10 @@ const styles = StyleSheet.create({
     marginLeft: wp('37%'),
   },
   textName: {},
+  textInputChoice: {
+    height: 40,
+    width: windowWidth * 0.6,
+    color: 'black',
+    marginLeft: 10,
+  },
 });

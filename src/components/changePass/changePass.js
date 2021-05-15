@@ -45,7 +45,6 @@ class changePass extends Component {
       this.props.navigation.navigate('');
     }
     this.showToast(this.props.msg);
-    // console.log(this.props);
   };
 
   changeTextOldPass = (text) => {

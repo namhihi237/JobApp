@@ -221,7 +221,6 @@ class EditPost extends Component {
           postId: _id,
         });
       } catch (error) {
-        console.log(error);
         return;
       }
     });
