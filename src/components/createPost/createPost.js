@@ -140,9 +140,7 @@ class CreatePost extends Component {
         return;
       }
       this.props.navigation.goBack();
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   onSelectionsChangesKill = (selectedSkill) => {

@@ -64,9 +64,7 @@ class ApplyList extends Component {
           count++;
         }
         this.setState({tableData});
-      } catch (error) {
-        console.log(error);
-      }
+      } catch (error) {}
     });
     return unsubscribe;
   }

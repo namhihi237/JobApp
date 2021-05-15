@@ -1,2 +1,3 @@
 import Companies from './companies';
-export {Companies};
+import JobCompanies from './jobCompany';
+export {Companies, JobCompanies};

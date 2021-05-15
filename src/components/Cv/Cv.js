@@ -485,4 +485,10 @@ const styles = StyleSheet.create({
     borderColor: '#bfa8a8',
     marginLeft: wp('37%'),
   },
+  textInputChoice: {
+    height: 40,
+    width: windowWidth * 0.6,
+    color: 'black',
+    marginLeft: 10,
+  },
 });

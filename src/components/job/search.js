@@ -124,7 +124,6 @@ class Search extends Component {
       await this.props.searchJob(this.state.search);
       const role = await getData('role');
 
-      console.log(this.state.search, this.props.postsSearch);
       this.setState({role, posts: this.props.postsSearch});
     });
   }
@@ -190,7 +189,7 @@ class Search extends Component {
               <View style={{...styles.searchInput}}>
                 <TextInput
                   style={{
-                    height: 40,
+                    height: 50,
                     width: wp('65%'),
                     fontFamily: 'TimesNewRoman',
                     fontSize: 16,
@@ -204,7 +203,7 @@ class Search extends Component {
                   onPress={this.searchItem}>
                   <FontAwesome5
                     name={'search'}
-                    style={{fontSize: 22, marginBottom: 3}}
+                    style={{fontSize: 22, marginTop: 2}}
                   />
                 </TouchableOpacity>
               </View>

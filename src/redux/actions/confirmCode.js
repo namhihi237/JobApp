@@ -9,7 +9,6 @@ export const confirmCode = (data) => async (dispatch) => {
   dispatch({type: CONFIRM_CODE});
   try {
     const result = await axios.post(CONFIRM_CODE_URL, data);
-    console.log(result);
     dispatch({type: CONFIRM_CODE_SUCCESS, payload: result.data});
   } catch (error) {
     const msg = _.get(error.response, 'data.msg') || 'Cant connect network';

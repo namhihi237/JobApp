@@ -33,6 +33,7 @@ import {
   EditPost,
   UpdateCv,
   Companies,
+  JobCompanies,
 } from './components';
 import {store} from './redux/store';
 import {Provider} from 'react-redux';
@@ -44,7 +45,7 @@ const Tab = createBottomTabNavigator();
 const CompanyPostStack = createStackNavigator();
 const IterStack = createStackNavigator();
 const HomeStack = createStackNavigator();
-
+const ListCompaniesStack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 class SettingDrawer extends Component {
   render() {
@@ -101,7 +102,9 @@ class IterNav extends Component {
         <Stack.Screen
           name="UpdateCV"
           component={UpdateCv}
-          options={{headerTitleAlign: 'center', title: 'Update CV'}}
+          options={{
+            headerShown: false,
+          }}
         />
       </IterStack.Navigator>
     );
@@ -129,7 +132,7 @@ class tabBarForIter extends Component {
           inactiveTintColor: 'gray',
         }}>
         <Tab.Screen name="Home" component={HomeJob} />
-        <Tab.Screen name="Companies" component={Companies} />
+        <Tab.Screen name="Companies" component={ListCompaniesnav} />
         <Tab.Screen name="My CV" component={IterNav} />
         <Tab.Screen name="Setting" component={SettingDrawer} />
       </Tab.Navigator>
@@ -169,6 +172,20 @@ class CompanyPostnav extends Component {
   }
 }
 
+class ListCompaniesnav extends Component {
+  render() {
+    return (
+      <ListCompaniesStack.Navigator
+        initialRouteName="Companies"
+        screenOptions={{
+          headerShown: false,
+        }}>
+        <Stack.Screen name="Companies" component={Companies} />
+        <Stack.Screen name="ListJobs" component={JobCompanies} />
+      </ListCompaniesStack.Navigator>
+    );
+  }
+}
 class HomeJob extends Component {
   render() {
     return (
@@ -217,7 +234,7 @@ class tabBarForCompany extends Component {
           inactiveTintColor: 'gray',
         }}>
         <Tab.Screen name="Home" component={HomeJob} />
-        <Tab.Screen name="Companies" component={Companies} />
+        <Tab.Screen name="Companies" component={ListCompaniesnav} />
         <Tab.Screen name="My Post" component={CompanyPostnav} />
         <Tab.Screen
           name="Setting"

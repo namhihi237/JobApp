@@ -12,7 +12,7 @@ import {ApplyList} from './list-apply';
 import {changePass} from './changePass';
 import {Profile} from './profile';
 import {EditPost} from './editPost';
-import {Companies} from './companies';
+import {Companies, JobCompanies} from './companies';
 export {
   Landing,
   Login,
@@ -34,4 +34,5 @@ export {
   Search,
   EditPost,
   Companies,
+  JobCompanies,
 };
