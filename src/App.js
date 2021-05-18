@@ -34,6 +34,7 @@ import {
   UpdateCv,
   Companies,
   JobCompanies,
+  Feedback
 } from './components';
 import {store} from './redux/store';
 import {Provider} from 'react-redux';
@@ -78,6 +79,8 @@ class SettingDrawer extends Component {
         }}>
         <Drawer.Screen name="My Profile" component={Profile} />
         <Drawer.Screen name="Change Password" component={changePass} />
+        <Drawer.Screen name="Feedback" component={Feedback} />
+
       </Drawer.Navigator>
     );
   }

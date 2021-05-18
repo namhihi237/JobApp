@@ -18,7 +18,7 @@ import {editWaitingPost} from './editWaitingPost';
 import {updateCv} from './updateCv';
 import {getCompanies} from './companies';
 import {getJobCompany} from './jobCompany';
-
+import {sendFeedback} from './feedback';
 export {
   login,
   registerIter,
@@ -40,4 +40,5 @@ export {
   updateCv,
   getCompanies,
   getJobCompany,
+  sendFeedback,
 };

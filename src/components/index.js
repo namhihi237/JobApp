@@ -13,6 +13,7 @@ import {changePass} from './changePass';
 import {Profile} from './profile';
 import {EditPost} from './editPost';
 import {Companies, JobCompanies} from './companies';
+import {Feedback} from './Feedback';
 export {
   Landing,
   Login,
@@ -35,4 +36,5 @@ export {
   EditPost,
   Companies,
   JobCompanies,
+  Feedback,
 };
