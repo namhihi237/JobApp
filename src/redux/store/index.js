@@ -21,6 +21,7 @@ import {
   updateCv,
   getCompanies,
   getJobCompany,
+  sendFeedback,
 } from '../reducer/';
 
 const AppReduces = combineReducers({
@@ -44,6 +45,7 @@ const AppReduces = combineReducers({
   updateCv,
   getCompanies,
   getJobCompany,
+  sendFeedback,
 });
 const rootReducer = (state, action) => {
   return AppReduces(state, action);
