@@ -34,7 +34,7 @@ import {
   UpdateCv,
   Companies,
   JobCompanies,
-  Feedback
+  Feedback,
 } from './components';
 import {store} from './redux/store';
 import {Provider} from 'react-redux';
@@ -80,7 +80,6 @@ class SettingDrawer extends Component {
         <Drawer.Screen name="My Profile" component={Profile} />
         <Drawer.Screen name="Change Password" component={changePass} />
         <Drawer.Screen name="Feedback" component={Feedback} />
-
       </Drawer.Navigator>
     );
   }
@@ -146,19 +145,13 @@ class tabBarForIter extends Component {
 class CompanyPostnav extends Component {
   render() {
     return (
-      <CompanyPostStack.Navigator initialRouteName="Loading">
-        <Stack.Screen
-          name="MyPost"
-          component={CompanyPost}
-          options={{
-            headerShown: false,
-          }}
-        />
-        <Stack.Screen
-          name="CreatePost"
-          component={CreatePost}
-          options={{headerTitleAlign: 'center', title: 'Create Post'}}
-        />
+      <CompanyPostStack.Navigator
+        initialRouteName="Loading"
+        screenOptions={{
+          headerShown: false,
+        }}>
+        <Stack.Screen name="MyPost" component={CompanyPost} />
+        <Stack.Screen name="CreatePost" component={CreatePost} />
         <Stack.Screen
           name="ApplyList"
           component={ApplyList}

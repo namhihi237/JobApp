@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
   loginBtn: {
-    width: '80%',
+    width: wp('55%'),
     backgroundColor: '#fb5b5a',
     borderRadius: 25,
     height: 50,
@@ -187,6 +187,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginTop: 40,
     marginBottom: 10,
+    shadowColor: 'rgba(0, 0, 0, 0.1)',
+    shadowOpacity: 0.8,
+    elevation: 6,
+    shadowRadius: 15,
+    shadowOffset: {width: 1, height: 13},
   },
   inputView: {
     width: wp('80%'),

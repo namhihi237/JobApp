@@ -1,11 +1,18 @@
 import React, {Component} from 'react';
 import {Toast} from 'native-base';
-import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  Keyboard,
+  ScrollView,
+} from 'react-native';
 import {TextInput} from 'react-native-gesture-handler';
 import {connect} from 'react-redux';
 import {sendFeedback} from '../../redux/actions';
-
+import {Header, Left, Body, Button, Icon, Title} from 'native-base';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -60,23 +67,38 @@ class Feedback extends Component {
   };
   render() {
     return (
-      <View style={{flex: 1, backgroundColor: '#eadede'}}>
-        <TouchableOpacity onPress={this.openBar}>
-          <FontAwesome5 name={'bars'} style={styles.iconBars} />
-        </TouchableOpacity>
-        <TextInput
-          onChangeText={this.changeContent}
-          value={this.state.content}
-          multiline={true}
-          numberOfLines={4}
-          style={styles.desInput}
-          placeholder="Description"
-          autoCorrect={false}
-        />
-        <TouchableOpacity style={styles.loginBtn} onPress={this.sendFeedback}>
-          <Text style={{fontFamily: 'Sarpanch-Black', fontSize: 20}}>Send</Text>
-        </TouchableOpacity>
-      </View>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <View style={{flex: 1, backgroundColor: '#c5c7db'}}>
+          <Header>
+            <Left>
+              <Button transparent onPress={this.openBar}>
+                <Icon name="menu" />
+              </Button>
+            </Left>
+            <Body>
+              <Title style={{fontFamily: 'Itim-Regular'}}>Send Feedback</Title>
+            </Body>
+          </Header>
+          <ScrollView showsVerticalScrollIndicator={false}>
+            <TextInput
+              onChangeText={this.changeContent}
+              value={this.state.content}
+              multiline={true}
+              numberOfLines={4}
+              style={styles.desInput}
+              placeholder="Description"
+              autoCorrect={false}
+            />
+            <TouchableOpacity
+              style={styles.loginBtn}
+              onPress={this.sendFeedback}>
+              <Text style={{fontFamily: 'Itim-Regular', fontSize: 23}}>
+                Send
+              </Text>
+            </TouchableOpacity>
+          </ScrollView>
+        </View>
+      </TouchableWithoutFeedback>
     );
   }
 }
@@ -99,7 +121,7 @@ const styles = StyleSheet.create({
   },
   loginBtn: {
     width: '80%',
-    backgroundColor: '#9b6363',
+    backgroundColor: '#a18ef9',
     borderRadius: 25,
     height: 50,
     alignItems: 'center',
@@ -108,6 +130,11 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     marginLeft: wp('20%'),
     width: wp('60%'),
+    shadowColor: 'rgba(0, 0, 0, 0.1)',
+    shadowOpacity: 0.8,
+    elevation: 6,
+    shadowRadius: 15,
+    shadowOffset: {width: 1, height: 13},
   },
 
   iconBars: {
@@ -121,13 +148,14 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     height: 200,
     width: wp('80%'),
-    marginBottom: 5,
-    paddingLeft: 6,
     textAlignVertical: 'top',
     marginLeft: wp('10%'),
     borderRadius: 5,
     fontFamily: 'TimesNewRoman',
-    backgroundColor: '#fff',
-    marginTop: hp('10%'),
+    backgroundColor: '#d6d3e5',
+    marginTop: hp('20%'),
+    borderColor: '#7b72aa',
+    borderWidth: 1,
+    padding: 20,
   },
 });

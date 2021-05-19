@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import {getData} from '../../utils';
 import SelectMultiple from 'react-native-select-multiple';
 import {updateCv} from '../../redux/actions';
-import {Right, Toast} from 'native-base';
+import {Toast} from 'native-base';
 import _ from 'lodash';
 import * as ImagePicker from 'react-native-image-picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -15,7 +15,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import {Header, Left, Body, Button, Icon, Title} from 'native-base';
+import {Header, Left, Body, Button, Icon, Title, Right} from 'native-base';
 
 import {
   StyleSheet,

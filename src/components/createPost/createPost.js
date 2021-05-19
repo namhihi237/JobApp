@@ -3,6 +3,7 @@ import SelectMultiple from 'react-native-select-multiple';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {Loader} from '../../common';
+import {Header, Left, Body, Button, Icon, Title, Right} from 'native-base';
 import {
   StyleSheet,
   View,
@@ -176,6 +177,21 @@ class CreatePost extends Component {
     const {modalVisible, textSkill, date} = this.state;
     return (
       <ScrollView showsVerticalScrollIndicator={false}>
+        <Header>
+          <Left>
+            <Button transparent onPress={() => this.props.navigation.goBack()}>
+              <Icon name="arrow-back" />
+            </Button>
+          </Left>
+          <Body>
+            <Title>Create Post</Title>
+          </Body>
+          <Right>
+            <Button transparent>
+              <Icon name="menu" />
+            </Button>
+          </Right>
+        </Header>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
           <KeyboardAvoidingView style={{flex: 1, paddingTop: 15}}>
             <Loader status={this.props.loading} msg={'Creating '}></Loader>
