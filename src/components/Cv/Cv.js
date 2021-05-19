@@ -15,6 +15,8 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import {Header, Left, Body, Button, Icon, Title, Right} from 'native-base';
+
 import {
   StyleSheet,
   View,
@@ -233,6 +235,23 @@ class Cv extends Component {
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
           <KeyboardAvoidingView style={{flex: 1}}>
             <Loader status={this.props.loading} msg={'Creating'}></Loader>
+            <Header>
+              <Left>
+                <Button
+                  transparent
+                  onPress={() => this.props.navigation.goBack()}>
+                  <Icon name="arrow-back" />
+                </Button>
+              </Left>
+              <Body>
+                <Title style={{fontFamily: 'Itim-Regular'}}>Create CV</Title>
+              </Body>
+              <Right>
+                <Button transparent>
+                  <Icon name="menu" />
+                </Button>
+              </Right>
+            </Header>
             <View style={styles.container}>
               <Image
                 source={{
