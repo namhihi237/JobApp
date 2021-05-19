@@ -1,11 +1,23 @@
 import React, {Component} from 'react';
 import {Toast} from 'native-base';
 import {Loader} from '../../common';
-import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  ScrollView,
+  Keyboard,
+} from 'react-native';
 import {TextInput} from 'react-native-gesture-handler';
 import {connect} from 'react-redux';
 import {changePassword} from '../../redux/actions';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
+import {Header, Left, Body, Button, Icon, Title} from 'native-base';
 
 class changePass extends Component {
   constructor(props) {
@@ -60,51 +72,64 @@ class changePass extends Component {
   };
   render() {
     return (
-      <View style={{flex: 1, backgroundColor: '#7378a0'}}>
-        <View style={{flex: 1}}>
-          <TouchableOpacity onPress={this.openBar}>
-            <FontAwesome5 name={'bars'} style={styles.iconBars} />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.container}>
-          <Loader status={this.props.loading} msg={'Changing '}></Loader>
-          <View style={styles.inputView}>
-            <TextInput
-              onChangeText={this.changeTextOldPass}
-              style={styles.inputText}
-              placeholder="Type password..."
-              placeholderTextColor="#003f5c"
-              secureTextEntry={true}
-            />
-          </View>
-          <View style={styles.inputView}>
-            <TextInput
-              onChangeText={this.changeTextNewPass}
-              style={styles.inputText}
-              placeholder="New Password..."
-              placeholderTextColor="#003f5c"
-              secureTextEntry={true}
-            />
-          </View>
-          <View style={styles.inputView}>
-            <TextInput
-              onChangeText={this.changeTextNewPass}
-              style={styles.inputText}
-              placeholder="Confirm Password..."
-              placeholderTextColor="#003f5c"
-              secureTextEntry={true}
-            />
-          </View>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <View style={{flex: 1, backgroundColor: '#c5c7db'}}>
+          <Header>
+            <Left>
+              <Button transparent onPress={this.openBar}>
+                <Icon name="menu" />
+              </Button>
+            </Left>
+            <Body>
+              <Title style={{fontFamily: 'Itim-Regular'}}>
+                Update Password
+              </Title>
+            </Body>
+          </Header>
+          <ScrollView showsVerticalScrollIndicator={false}>
+            <View style={styles.container}>
+              <Loader status={this.props.loading} msg={'Changing '}></Loader>
+              <View style={styles.inputView}>
+                <TextInput
+                  onChangeText={this.changeTextOldPass}
+                  style={styles.inputText}
+                  placeholder="Type password..."
+                  placeholderTextColor="#003f5c"
+                  secureTextEntry={true}
+                />
+              </View>
+              <View style={styles.inputView}>
+                <TextInput
+                  onChangeText={this.changeTextNewPass}
+                  style={styles.inputText}
+                  placeholder="New Password..."
+                  placeholderTextColor="#003f5c"
+                  secureTextEntry={true}
+                />
+              </View>
+              <View style={styles.inputView}>
+                <TextInput
+                  onChangeText={this.changeTextNewPass}
+                  style={styles.inputText}
+                  placeholder="Confirm Password..."
+                  placeholderTextColor="#003f5c"
+                  secureTextEntry={true}
+                />
+              </View>
 
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.loginBtn} onPress={this.moveToMain}>
-              <Text style={{fontFamily: 'Sarpanch-Black', fontSize: 20}}>
-                CHANGE
-              </Text>
-            </TouchableOpacity>
-          </View>
+              <View style={styles.buttonContainer}>
+                <TouchableOpacity
+                  style={styles.loginBtn}
+                  onPress={this.moveToMain}>
+                  <Text style={{fontFamily: 'Itim-Regular', fontSize: 23}}>
+                    Update
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </ScrollView>
         </View>
-      </View>
+      </TouchableWithoutFeedback>
     );
   }
 }
@@ -125,50 +150,40 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
     alignItems: 'center',
-    flex: 18,
-  },
-  forgot: {
-    color: 'white',
-    fontSize: 13,
+    marginTop: hp('20%'),
   },
   loginBtn: {
-    width: '80%',
-    backgroundColor: '#3c9e69',
+    width: wp('50%'),
+    backgroundColor: '#a18ef9',
     borderRadius: 25,
     height: 50,
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 40,
     marginBottom: 10,
+    shadowColor: 'rgba(0, 0, 0, 0.1)',
+    shadowOpacity: 0.8,
+    elevation: 6,
+    shadowRadius: 15,
+    shadowOffset: {width: 1, height: 13},
   },
   inputView: {
-    width: '80%',
-    backgroundColor: '#ffff',
+    width: wp('80%'),
+    backgroundColor: '#d6d3e5',
     borderRadius: 25,
     height: 50,
     marginBottom: 20,
     justifyContent: 'center',
+    borderColor: '#7b72aa',
+    borderWidth: 1,
     padding: 20,
   },
   inputText: {
     height: 60,
     color: 'black',
   },
-
-  buttonLogin: {
-    height: 50,
-    width: 100,
-    backgroundColor: '#456745',
-    margin: 10,
-  },
   buttonContainer: {
     display: 'flex',
     flexDirection: 'row',
-  },
-  iconBars: {
-    fontSize: 30,
-    marginTop: 9,
-    color: '#356fb7',
-    marginLeft: 20,
   },
 });
