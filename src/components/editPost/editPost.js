@@ -251,7 +251,7 @@ class EditPost extends Component {
               </Button>
             </Left>
             <Body>
-              <Title style={{fontFamily: 'Itim-Regular'}}>Update CV</Title>
+              <Title style={{fontFamily: 'Itim-Regular'}}>Update Post</Title>
             </Body>
             <Right>
               <Button transparent>
