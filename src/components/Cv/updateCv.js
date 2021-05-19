@@ -303,7 +303,7 @@ class UpdateCv extends Component {
                 </Button>
               </Left>
               <Body>
-                <Title>Update CV</Title>
+                <Title style={{fontFamily: 'Itim-Regular'}}>Update CV</Title>
               </Body>
               <Right>
                 <Button transparent>

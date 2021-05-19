@@ -12,6 +12,7 @@ import {Toast} from 'native-base';
 import {getData} from '../../utils';
 import {Table, TableWrapper, Row, Cell} from 'react-native-table-component';
 import axios from 'axios';
+import {Header, Left, Body, Button, Icon, Title, Right} from 'native-base';
 
 class ApplyList extends Component {
   _isMounted = false;
@@ -88,6 +89,21 @@ class ApplyList extends Component {
     // if (this.props.status != 200 && this.props.status != 304) {
     return (
       <View style={styles.container}>
+        <Header>
+          <Left>
+            <Button transparent onPress={() => this.props.navigation.goBack()}>
+              <Icon name="arrow-back" />
+            </Button>
+          </Left>
+          <Body>
+            <Title style={{fontFamily: 'Itim-Regular'}}>Candidate List</Title>
+          </Body>
+          <Right>
+            <Button transparent>
+              <Icon name="menu" />
+            </Button>
+          </Right>
+        </Header>
         <ScrollView horizontal={true}>
           <View>
             <ScrollView style={styles.dataWrapper}>
@@ -132,8 +148,6 @@ export default connect(mapStateToProps, mapDispatchToProps)(ApplyList);
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 10,
-    paddingTop: 30,
     backgroundColor: '#fff',
   },
   head: {

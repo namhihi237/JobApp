@@ -13,6 +13,7 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {Toast} from 'native-base';
 import {getData} from '../../utils';
 import axios from 'axios';
+import {Header, Left, Body, Button, Icon, Title, Right} from 'native-base';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -73,6 +74,21 @@ export default class CvByCompany extends Component {
     }
     return (
       <View style={styles.container}>
+        <Header>
+          <Left>
+            <Button transparent onPress={() => this.props.navigation.goBack()}>
+              <Icon name="arrow-back" />
+            </Button>
+          </Left>
+          <Body>
+            <Title style={{fontFamily: 'Itim-Regular'}}>Candidate's CV</Title>
+          </Body>
+          <Right>
+            <Button transparent>
+              <Icon name="menu" />
+            </Button>
+          </Right>
+        </Header>
         <ScrollView showsVerticalScrollIndicator={false} style={styles.scroll}>
           <View>
             <View style={styles.cv}>
@@ -173,7 +189,6 @@ const styles = StyleSheet.create({
 
   container: {
     flex: 1,
-    margin: 5,
     borderRadius: 10,
   },
 

@@ -88,26 +88,14 @@ class SettingDrawer extends Component {
 class IterNav extends Component {
   render() {
     return (
-      <IterStack.Navigator initialRouteName="Loading">
-        <Stack.Screen
-          name="My CV"
-          component={getOneCv}
-          options={{
-            headerShown: false,
-          }}
-        />
-        <Stack.Screen
-          name="CreateCv"
-          component={Cv}
-          options={{headerTitleAlign: 'center', title: 'Create Cv'}}
-        />
-        <Stack.Screen
-          name="UpdateCV"
-          component={UpdateCv}
-          options={{
-            headerShown: false,
-          }}
-        />
+      <IterStack.Navigator
+        initialRouteName="Loading"
+        screenOptions={{
+          headerShown: false,
+        }}>
+        <Stack.Screen name="My CV" component={getOneCv} />
+        <Stack.Screen name="CreateCv" component={Cv} />
+        <Stack.Screen name="UpdateCV" component={UpdateCv} />
       </IterStack.Navigator>
     );
   }
