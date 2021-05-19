@@ -16,6 +16,8 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from 'react-native';
+import {Header, Left, Body, Button, Icon, Title, Right} from 'native-base';
+
 import {Toast} from 'native-base';
 import {connect} from 'react-redux';
 import {editWaitingPost} from '../../redux/actions';
@@ -237,10 +239,27 @@ class EditPost extends Component {
       description,
     } = this.state;
     return (
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-          <KeyboardAvoidingView style={{flex: 1, paddingTop: 15}}>
-            <Loader status={this.props.loading} msg={'Updating'}></Loader>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <KeyboardAvoidingView style={{flex: 1}}>
+          <Loader status={this.props.loading} msg={'Updating'}></Loader>
+          <Header>
+            <Left>
+              <Button
+                transparent
+                onPress={() => this.props.navigation.goBack()}>
+                <Icon name="arrow-back" />
+              </Button>
+            </Left>
+            <Body>
+              <Title style={{fontFamily: 'Itim-Regular'}}>Update CV</Title>
+            </Body>
+            <Right>
+              <Button transparent>
+                <Icon name="menu" />
+              </Button>
+            </Right>
+          </Header>
+          <ScrollView showsVerticalScrollIndicator={false}>
             <View style={styles.container}>
               <View style={styles.choice}>
                 <TextInput
@@ -353,9 +372,9 @@ class EditPost extends Component {
                 </View>
               </Modal>
             </View>
-          </KeyboardAvoidingView>
-        </TouchableWithoutFeedback>
-      </ScrollView>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </TouchableWithoutFeedback>
     );
   }
 }
