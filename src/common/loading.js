@@ -1,12 +1,5 @@
 import React, {Component} from 'react';
-import {
-  ActivityIndicator,
-  StyleSheet,
-  View,
-  Modal,
-  Text,
-  TouchableOpacity,
-} from 'react-native';
+import {ActivityIndicator, StyleSheet, View, Modal, Text} from 'react-native';
 
 export class Loader extends Component {
   constructor(props) {
@@ -22,7 +15,7 @@ export class Loader extends Component {
         <View style={styles.modalBackground}>
           <View style={styles.activityIndicatorWrapper}>
             <ActivityIndicator size="large" color="#00ff00" />
-            <Text>{this.props.msg}</Text>
+            {this.props.msg ? <Text>{this.props.msg}</Text> : null}
           </View>
         </View>
       </Modal>
