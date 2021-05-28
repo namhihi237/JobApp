@@ -131,6 +131,8 @@ class UpdateCv extends Component {
     } = this.state;
 
     try {
+      this.props.navigation.goBack();
+
       let newImage = image;
       if (photo) {
         newImage = await this.handleUpload();
@@ -158,7 +160,6 @@ class UpdateCv extends Component {
       const {status, msg} = this.props;
       if (status == 200 || status == 304) {
         this.showToast(msg, 'success');
-        this.props.navigation.goBack();
         return;
       }
       this.showToast(msg, 'warning');
@@ -293,7 +294,7 @@ class UpdateCv extends Component {
       <ScrollView showsVerticalScrollIndicator={false}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
           <KeyboardAvoidingView style={{flex: 1}}>
-            <Loader status={this.props.loading} msg={'Updating'}></Loader>
+            {/* <Loader status={this.props.loading} msg={'Updating'}></Loader> */}
             <Header>
               <Left>
                 <Button
