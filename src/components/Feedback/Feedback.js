@@ -48,7 +48,6 @@ class Feedback extends Component {
     const data = {
       content: this.state.content,
     };
-    console.log(data);
     await this.props.sendFeedback(data);
     if (this.props.msg == 'Success') {
       this.setState({content: ''});
