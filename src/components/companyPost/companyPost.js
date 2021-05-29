@@ -20,6 +20,9 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import axios from 'axios';
+import {apiUrl} from '../../api/api';
+import {getData} from '../../utils';
 class CompanyPost extends Component {
   _isMounted = false;
 
@@ -102,7 +105,7 @@ class CompanyPost extends Component {
         style: 'cancel',
       },
       {text: 'Apply List', onPress: () => this.moveToApplyList(postId)},
-      {text: 'Done', onPress: () => console.log('OK Pressed')},
+      {text: 'Done', onPress: async () => this.completePost(postId)},
     ]);
 
   showAlert = (postId) =>
@@ -114,6 +117,29 @@ class CompanyPost extends Component {
       {text: 'Edit', onPress: () => this.moveToEditForm(postId)},
       {text: 'Delete', onPress: async () => await this.deletePost(postId)},
     ]);
+
+  completePost = async (postId) => {
+    try {
+      const token = await getData('token');
+      const result = await axios.patch(
+        `${apiUrl.BASE_URL}/api/v1/posts/${postId}/complete`,
+        null,
+        {headers: {authorization: `Bearer ${token}`}},
+      );
+      if (result.data.msg == 'Success') {
+        await this.props.getCompanyPost();
+        this.setState({
+          dataWait: this.props.posts.filter((e) => e.status == 'WAITING'),
+          dataAccept: this.props.posts.filter((e) => e.status == 'ACCEPTED'),
+          dataComplete: this.props.posts.filter((e) => e.status == 'DONE'),
+        });
+        this.showToast(result.data.msg);
+      }
+      return;
+    } catch (error) {
+      return;
+    }
+  };
 
   deletePost = async (postId) => {
     Alert.alert('Confirm', `Are you sure you want to delete`, [
@@ -143,7 +169,9 @@ class CompanyPost extends Component {
 
   renderItemAccept = ({item, index, separators}) => (
     <TouchableOpacity
-      onLongPress={() => this.showAlertAccept(item._id)}
+      onLongPress={() => {
+        this.showAlertAccept(item._id);
+      }}
       onShowUnderlay={separators.highlight}
       onHideUnderlay={separators.unhighlight}>
       <View style={styles.item}>

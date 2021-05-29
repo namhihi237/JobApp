@@ -66,8 +66,10 @@ class Job extends Component {
   };
 
   renderApply = (listApply) => {
-    for (let applier in listApply) {
-      if (applier.iterId === this.state.userId)
+    for (let applier of listApply) {
+      if (
+        JSON.stringify(applier.iterId) === JSON.stringify(this.state.userId)
+      ) {
         return (
           <View style={{display: 'flex', flexDirection: 'row'}}>
             <FontAwesome5
@@ -84,6 +86,7 @@ class Job extends Component {
             </Text>
           </View>
         );
+      }
     }
   };
 
