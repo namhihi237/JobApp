@@ -1,12 +1,10 @@
 import React, {Component} from 'react';
 import _ from 'lodash';
 import {connect} from 'react-redux';
-import {Toast} from 'native-base';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {Loader} from '../../common';
 import axios from 'axios';
 import {apiUrl} from '../../api/api';
-
 import {getCompanies} from '../../redux/actions';
 import {
   widthPercentageToDP as wp,

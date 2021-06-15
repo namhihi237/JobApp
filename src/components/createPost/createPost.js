@@ -252,12 +252,13 @@ class CreatePost extends Component {
                   value={date}
                   mode={'date'}
                   onChange={this.onChangeDate}
+                  minimumDate={new Date()}
                 />
               )}
               <TextInput
                 onChangeText={this.onChangeDescription}
                 multiline={true}
-                numberOfLines={4}
+                numberOfLines={6}
                 style={styles.desInput}
                 placeholder="Description. . ."
                 autoCorrect={false}
@@ -347,7 +348,7 @@ const styles = StyleSheet.create({
   desInput: {
     borderColor: '#3f51b5',
     borderWidth: 1,
-    height: 100,
+    height: 150,
     width: windowWidth * 0.8,
     marginBottom: 15,
     paddingLeft: 6,

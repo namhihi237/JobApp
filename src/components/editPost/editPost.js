@@ -320,6 +320,7 @@ class EditPost extends Component {
                   value={date}
                   mode={'date'}
                   onChange={this.onChangeDate}
+                  minimumDate={new Date()}
                 />
               )}
               <TextInput
@@ -416,7 +417,7 @@ const styles = StyleSheet.create({
   desInput: {
     borderColor: '#3f51b5',
     borderWidth: 1,
-    height: 100,
+    height: 150,
     width: windowWidth * 0.8,
     marginBottom: 15,
     paddingLeft: 6,

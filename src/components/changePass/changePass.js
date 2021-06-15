@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Toast} from 'native-base';
-import {Loader} from '../../common';
+import {Loader, HeaderRight} from '../../common';
 import {
   StyleSheet,
   View,
@@ -10,15 +10,13 @@ import {
   ScrollView,
   Keyboard,
 } from 'react-native';
-import {TextInput} from 'react-native-gesture-handler';
 import {connect} from 'react-redux';
 import {changePassword} from '../../redux/actions';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import {Header, Left, Body, Button, Icon, Title} from 'native-base';
-
+import {Input} from './components';
 class changePass extends Component {
   constructor(props) {
     super(props);
@@ -74,49 +72,22 @@ class changePass extends Component {
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View style={{flex: 1, backgroundColor: '#c5c7db'}}>
-          <Header>
-            <Left>
-              <Button transparent onPress={this.openBar}>
-                <Icon name="menu" />
-              </Button>
-            </Left>
-            <Body>
-              <Title style={{fontFamily: 'Itim-Regular'}}>
-                Update Password
-              </Title>
-            </Body>
-          </Header>
+          <HeaderRight title={'Update Password'} onPress={this.openBar} />
           <ScrollView showsVerticalScrollIndicator={false}>
             <View style={styles.container}>
-              <Loader status={this.props.loading} msg={'Changing '}></Loader>
-              <View style={styles.inputView}>
-                <TextInput
-                  onChangeText={this.changeTextOldPass}
-                  style={styles.inputText}
-                  placeholder="Type password..."
-                  placeholderTextColor="#003f5c"
-                  secureTextEntry={true}
-                />
-              </View>
-              <View style={styles.inputView}>
-                <TextInput
-                  onChangeText={this.changeTextNewPass}
-                  style={styles.inputText}
-                  placeholder="New Password..."
-                  placeholderTextColor="#003f5c"
-                  secureTextEntry={true}
-                />
-              </View>
-              <View style={styles.inputView}>
-                <TextInput
-                  onChangeText={this.changeTextNewPass}
-                  style={styles.inputText}
-                  placeholder="Confirm Password..."
-                  placeholderTextColor="#003f5c"
-                  secureTextEntry={true}
-                />
-              </View>
-
+              <Loader status={this.props.loading} msg={'Updating'}></Loader>
+              <Input
+                onChangeText={this.changeTextOldPass}
+                placeholder={'Type password...'}
+              />
+              <Input
+                onChangeText={this.changeTextNewPass}
+                placeholder={'New Password...'}
+              />
+              <Input
+                onChangeText={this.changeTextNewPass}
+                placeholder={'Confirm Password...'}
+              />
               <View style={styles.buttonContainer}>
                 <TouchableOpacity
                   style={styles.loginBtn}
@@ -166,21 +137,6 @@ const styles = StyleSheet.create({
     elevation: 6,
     shadowRadius: 15,
     shadowOffset: {width: 1, height: 13},
-  },
-  inputView: {
-    width: wp('80%'),
-    backgroundColor: '#d6d3e5',
-    borderRadius: 25,
-    height: 50,
-    marginBottom: 20,
-    justifyContent: 'center',
-    borderColor: '#7b72aa',
-    borderWidth: 1,
-    padding: 20,
-  },
-  inputText: {
-    height: 60,
-    color: 'black',
   },
   buttonContainer: {
     display: 'flex',
