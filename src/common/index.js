@@ -1,2 +1,4 @@
 import {Loader} from './loading';
-export {Loader};
+import HeaderRight from './headerRight';
+
+export {Loader, HeaderRight};

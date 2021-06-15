@@ -362,6 +362,7 @@ class UpdateCv extends Component {
                   value={date}
                   mode={'date'}
                   onChange={this.onChangeDate}
+                  maximumDate={new Date()}
                 />
               )}
               <View style={styles.choice}>
