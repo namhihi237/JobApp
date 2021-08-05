@@ -21,6 +21,7 @@ import {
   TouchableOpacity,
   Modal,
   TouchableHighlight,
+  Alert,
 } from 'react-native';
 
 const windowWidth = Dimensions.get('window').width;
@@ -35,8 +36,15 @@ class JobCompanies extends Component {
       role: '',
       posts: [],
       userId: '',
+      isFetching: false,
     };
   }
+
+  onRefresh = async () => {
+    this.setState({isFetching: true});
+    await this.props.getJobCompany(this.props.route.params.companyId);
+    this.setState({isFetching: false});
+  };
 
   showToast = (msg) => {
     Toast.show({
@@ -138,12 +146,28 @@ class JobCompanies extends Component {
   };
 
   iterApplyJob = async () => {
+    if (!this.state.role) {
+      Alert.alert('You must be login to apply!', `Pick your option `, [
+        {
+          text: 'Later',
+          style: 'cancel',
+        },
+        {
+          text: 'Login',
+          onPress: () => {
+            this.props.navigation.navigate('Login');
+            this.setModalVisible(!this.state.modalVisible);
+          },
+        },
+      ]);
+      return;
+    }
     await this.props.applyJob(this.state.item._id);
     this.showToast(this.props.msgApply);
   };
 
   renderButtonApply = () => {
-    if (this.state.role == 'iter') {
+    if (this.state.role == 'iter' || !this.state.role) {
       return (
         <TouchableHighlight
           style={{...styles.openButton, backgroundColor: '#37ce3f'}}
@@ -189,6 +213,8 @@ class JobCompanies extends Component {
             data={this.props.posts}
             keyExtractor={this.keyExtractor}
             renderItem={this.renderItem}
+            onRefresh={() => this.onRefresh()}
+            refreshing={this.state.isFetching}
             onEndReached={this.handleLoadMore}></FlatList>
         </View>
         <View style={styles.centeredView}>

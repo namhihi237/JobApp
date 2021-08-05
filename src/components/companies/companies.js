@@ -33,8 +33,15 @@ class Companies extends Component {
       page: 1,
       search: '',
       companies: [],
+      isFetching: false,
     };
   }
+
+  onRefresh = async () => {
+    this.setState({isFetching: true});
+    await this.props.getCompanies();
+    this.setState({isFetching: false});
+  };
 
   updateSearch = (search) => {
     this.setState({search});
@@ -49,14 +56,14 @@ class Companies extends Component {
     this.props.navigation.navigate('ListJobs', {companyId});
   };
 
-  componentDidMount() {
-    this._isMounted = true;
-    const unsubscribe = this.props.navigation.addListener('focus', async () => {
-      this.setState({search: ''});
-      await this.props.getCompanies();
-      this.setState({companies: this.props.companies, page: 1});
-    });
-    return unsubscribe;
+  async componentDidMount() {
+    // this._isMounted = true;
+    // const unsubscribe = this.props.navigation.addListener('focus', async () => {
+    this.setState({search: ''});
+    await this.props.getCompanies();
+    this.setState({companies: this.props.companies, page: 1});
+    // });
+    // return unsubscribe;
   }
   keyExtractor = (item) => {
     return item._id;
@@ -144,6 +151,8 @@ class Companies extends Component {
             data={this.state.companies}
             keyExtractor={this.keyExtractor}
             renderItem={this.renderItem}
+            onRefresh={() => this.onRefresh()}
+            refreshing={this.state.isFetching}
             onEndReached={this.handleLoadMore}></FlatList>
         </View>
       </View>

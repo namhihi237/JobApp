@@ -71,6 +71,7 @@ class SettingDrawer extends Component {
                 onPress={async () => {
                   await storeData('token', '');
                   await storeData('role', '');
+                  await storeData('userId', '');
                   props.navigation.navigate('Loading');
                 }}
               />
@@ -238,6 +239,30 @@ class tabBarForCompany extends Component {
   }
 }
 
+class tabBarForGuest extends Component {
+  render() {
+    return (
+      <Tab.Navigator
+        screenOptions={({route}) => ({
+          tabBarIcon: ({color, size}) => {
+            if (route.name === 'Home') {
+              return <Icon name="home" size={28}></Icon>;
+            } else if (route.name === 'Companies') {
+              return <FontAwesome5 name={'building'} style={{fontSize: 22}} />;
+            }
+          },
+        })}
+        tabBarOptions={{
+          activeTintColor: 'tomato',
+          inactiveTintColor: 'gray',
+        }}>
+        <Tab.Screen name="Home" component={HomeJob} />
+        <Tab.Screen name="Companies" component={ListCompaniesnav} />
+      </Tab.Navigator>
+    );
+  }
+}
+
 export class App extends Component {
   checkLogin = async () => {
     const token = await getData('token');
@@ -282,6 +307,7 @@ export class App extends Component {
               />
               <Stack.Screen name="MainIter" component={tabBarForIter} />
               <Stack.Screen name="MainCompany" component={tabBarForCompany} />
+              <Stack.Screen name="MainGuest" component={tabBarForGuest} />
             </Stack.Navigator>
           </NavigationContainer>
         </Root>

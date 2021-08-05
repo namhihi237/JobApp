@@ -8,7 +8,6 @@ import {
   Text,
   TouchableOpacity,
   Dimensions,
-  ImageBackground,
   Image,
 } from 'react-native';
 import {Easing} from 'react-native-reanimated';
@@ -68,6 +67,9 @@ export class Landing extends Component {
 
   clear = async () => {
     await storeData('token', '');
+    await storeData('role', '');
+    await storeData('userId', '');
+    this.props.navigation.navigate('MainGuest');
   };
 
   render() {
@@ -100,7 +102,7 @@ export class Landing extends Component {
         </View>
         <View style={styles.buttonEmailContainer}>
           <TouchableOpacity style={styles.loginEmailBtn} onPress={this.clear}>
-            <Text style={styles.loginText}>Login with Email</Text>
+            <Text style={styles.loginText}>Guest</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.buttonContainer}>
