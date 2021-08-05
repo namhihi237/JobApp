@@ -26,6 +26,7 @@ import {
   TouchableHighlight,
   ActivityIndicator,
   Image,
+  Alert,
 } from 'react-native';
 
 const windowWidth = Dimensions.get('window').width;
@@ -44,9 +45,16 @@ class Job extends Component {
       page: 1,
       isLoading: false,
       userId: '',
+      isFetching: false,
     };
     this.handleLoadMore = this.handleLoadMore.bind(this);
   }
+
+  onRefresh = async () => {
+    this.setState({isFetching: true});
+    await this.props.getJob();
+    this.setState({isFetching: false});
+  };
 
   showToast = (msg) => {
     Toast.show({
@@ -149,17 +157,17 @@ class Job extends Component {
     return item._id;
   };
 
-  componentDidMount() {
-    this._isMounted = true;
-    const unsubscribe = this.props.navigation.addListener('focus', async () => {
-      this.setState({search: ''});
-      await this.props.getJob();
-      const role = await getData('role');
-      const userId = await getData('userId');
-      this.setState({role, posts: this.props.posts, page: 1, userId});
-    });
+  async componentDidMount() {
+    // this._isMounted = true;
+    // const unsubscribe = this.props.navigation.addListener('focus', async () => {
+    this.setState({search: ''});
+    await this.props.getJob();
+    const role = await getData('role');
+    const userId = await getData('userId');
+    this.setState({role, posts: this.props.posts, page: 1, userId});
+    // });
 
-    return unsubscribe;
+    // return unsubscribe;
   }
 
   async handleLoadMore() {
@@ -208,12 +216,28 @@ class Job extends Component {
   };
 
   iterApplyJob = async () => {
+    if (!this.state.role) {
+      Alert.alert('You must be login to apply!', `Pick your option `, [
+        {
+          text: 'Later',
+          style: 'cancel',
+        },
+        {
+          text: 'Login',
+          onPress: () => {
+            this.props.navigation.navigate('Login');
+            this.setModalVisible(!this.state.modalVisible);
+          },
+        },
+      ]);
+      return;
+    }
     await this.props.applyJob(this.state.item._id);
     this.showToast(this.props.msgApply);
   };
 
   renderButtonApply = () => {
-    if (this.state.role == 'iter') {
+    if (this.state.role == 'iter' || !this.state.role) {
       return (
         <TouchableHighlight
           style={{...styles.openButton, backgroundColor: '#37ce3f'}}
@@ -273,6 +297,8 @@ class Job extends Component {
             keyExtractor={this.keyExtractor}
             renderItem={this.renderItem}
             onEndReached={this.handleLoadMore}
+            onRefresh={() => this.onRefresh()}
+            refreshing={this.state.isFetching}
             ListFooterComponent={this.footerList}></FlatList>
         </View>
         <View style={styles.centeredView}>

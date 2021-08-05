@@ -22,6 +22,7 @@ import {
   TextInput,
   TouchableHighlight,
   Image,
+  Alert,
 } from 'react-native';
 
 const windowWidth = Dimensions.get('window').width;
@@ -138,12 +139,28 @@ class Search extends Component {
   };
 
   iterApplyJob = async () => {
+    if (!this.state.role) {
+      Alert.alert('You must be login to apply!', `Pick your option `, [
+        {
+          text: 'Later',
+          style: 'cancel',
+        },
+        {
+          text: 'Login',
+          onPress: () => {
+            this.props.navigation.navigate('Login');
+            this.setModalVisible(!this.state.modalVisible);
+          },
+        },
+      ]);
+      return;
+    }
     await this.props.applyJob(this.state.item._id);
     this.showToast(this.props.msgApply);
   };
 
   renderButtonApply = () => {
-    if (this.state.role == 'iter') {
+    if (this.state.role == 'iter' || !this.state.role) {
       return (
         <TouchableHighlight
           style={{...styles.openButton, backgroundColor: '#37ce3f'}}
