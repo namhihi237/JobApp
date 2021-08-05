@@ -53,6 +53,7 @@ class Job extends Component {
   onRefresh = async () => {
     this.setState({isFetching: true});
     await this.props.getJob();
+    this.setState({posts: this.props.posts, page: 1});
     this.setState({isFetching: false});
   };
 

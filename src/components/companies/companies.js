@@ -20,6 +20,7 @@ import {
   TouchableOpacity,
   TextInput,
   Image,
+  ActivityIndicator,
 } from 'react-native';
 
 const windowWidth = Dimensions.get('window').width;
@@ -34,12 +35,15 @@ class Companies extends Component {
       search: '',
       companies: [],
       isFetching: false,
+      isLoading: false,
     };
+    this.handleLoadMore = this.handleLoadMore.bind(this);
   }
 
   onRefresh = async () => {
     this.setState({isFetching: true});
     await this.props.getCompanies();
+    this.setState({companies: this.props.companies, page: 1});
     this.setState({isFetching: false});
   };
 
@@ -71,17 +75,20 @@ class Companies extends Component {
 
   async handleLoadMore() {
     try {
-      await this.setState({page: this.state.page + 1});
+      let page = this.state.page + 1;
+      await this.setState({isLoading: true, page});
 
-      if (this.state.page > this.props.numPages) {
+      if (page > this.props.numPages) {
         return;
       }
+
       const result = await axios.get(
-        `${apiUrl}/api/v1/companies/info?page=${this.state.page}&take=${10}`,
+        `${apiUrl.BASE_URL}/api/v1/companies/info?page=${page}&take=${10}`,
       );
       this.setState({
-        posts: [...this.state.companies, ...result.data.data.result],
-        page: cresult.data.data.currentPage + 1,
+        companies: [...this.state.companies, ...result.data.data.result],
+        page,
+        isLoading: false,
       });
     } catch (error) {
       return;
@@ -117,6 +124,17 @@ class Companies extends Component {
       </View>
     </View>
   );
+  footerList = () => {
+    return (
+      <View style={{flex: 1}}>
+        {this.state.isLoading && (
+          <View>
+            <ActivityIndicator />
+          </View>
+        )}
+      </View>
+    );
+  };
   render() {
     return (
       <View>
@@ -153,7 +171,8 @@ class Companies extends Component {
             renderItem={this.renderItem}
             onRefresh={() => this.onRefresh()}
             refreshing={this.state.isFetching}
-            onEndReached={this.handleLoadMore}></FlatList>
+            onEndReached={this.handleLoadMore}
+            ListFooterComponent={this.footerList}></FlatList>
         </View>
       </View>
     );
