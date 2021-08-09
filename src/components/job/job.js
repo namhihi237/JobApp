@@ -280,7 +280,7 @@ class Job extends Component {
                 onChangeText={this.updateSearch}
                 value={this.state.search}
                 placeholder="Keyword (skill, company, position,...)"
-                placeholderTextColor="#aa5f5f"></TextInput>
+                placeholderTextColor="#44464f"></TextInput>
               <TouchableOpacity
                 style={styles.searchButton}
                 onPress={this.searchItem}>
@@ -386,8 +386,7 @@ const styles = StyleSheet.create({
   },
   flatlist: {
     marginTop: 3,
-    marginBottom: 3,
-    paddingBottom: 100,
+    marginBottom: hp('10%'),
     paddingTop: 10,
   },
   searchContaier: {

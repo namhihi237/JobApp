@@ -34,30 +34,41 @@ class CompanyPost extends Component {
       dataComplete: [],
       index: 0,
       routes: [
-        {key: 'Waiting', title: 'Waiting'},
-        {key: 'Accepted', title: 'Accepted'},
-        {key: 'Complete', title: 'Complete'},
+        {key: 'Waiting', title: 'Approving'},
+        {key: 'Accepted', title: 'Approved'},
+        {key: 'Complete', title: 'Expired'},
       ],
     };
   }
 
-  AcceptRoute = () => (
-    <FlatList
-      horizontal={false}
-      data={this.state.dataAccept}
-      renderItem={this.renderItemAccept}
-      keyExtractor={this.keyExtractor}
-    />
-  );
+  AcceptRoute = () =>
+    this.state.dataAccept.length > 0 ? (
+      <FlatList
+        horizontal={false}
+        data={this.state.dataAccept}
+        renderItem={this.renderItemAccept}
+        keyExtractor={this.keyExtractor}
+      />
+    ) : (
+      <View style={styles.nodata}>
+        <Text style={styles.textNodata}>No data</Text>
+      </View>
+    );
 
   WaitingRoute = () => (
     <View style={styles.waitingContainer}>
-      <FlatList
-        horizontal={false}
-        data={this.state.dataWait}
-        renderItem={this.renderItemWait}
-        keyExtractor={this.keyExtractor}
-      />
+      {this.state.dataWait.length > 0 ? (
+        <FlatList
+          horizontal={false}
+          data={this.state.dataWait}
+          renderItem={this.renderItemWait}
+          keyExtractor={this.keyExtractor}
+        />
+      ) : (
+        <View style={styles.nodata}>
+          <Text style={styles.textNodata}>No data</Text>
+        </View>
+      )}
       <TouchableOpacity
         style={styles.buttonAdd}
         onPress={this.moveToCreatePost}>
@@ -66,14 +77,19 @@ class CompanyPost extends Component {
     </View>
   );
 
-  CompleteRoute = () => (
-    <FlatList
-      horizontal={false}
-      data={this.state.dataComplete}
-      renderItem={this.renderItemAccept}
-      keyExtractor={this.keyExtractor}
-    />
-  );
+  CompleteRoute = () =>
+    this.state.dataComplete.length > 0 ? (
+      <FlatList
+        horizontal={false}
+        data={this.state.dataComplete}
+        renderItem={this.renderItemAccept}
+        keyExtractor={this.keyExtractor}
+      />
+    ) : (
+      <View style={styles.nodata}>
+        <Text style={styles.textNodata}>No data</Text>
+      </View>
+    );
 
   renderScene = SceneMap({
     Accepted: this.AcceptRoute,
@@ -106,6 +122,15 @@ class CompanyPost extends Component {
       },
       {text: 'Apply List', onPress: () => this.moveToApplyList(postId)},
       {text: 'Done', onPress: async () => this.completePost(postId)},
+    ]);
+
+  showAlertComplete = (postId) =>
+    Alert.alert('Option', `Pick your option `, [
+      {
+        text: 'Cancel',
+        style: 'cancel',
+      },
+      {text: 'Apply List', onPress: () => this.moveToApplyList(postId)},
     ]);
 
   showAlert = (postId) =>
@@ -170,7 +195,7 @@ class CompanyPost extends Component {
   renderItemAccept = ({item, index, separators}) => (
     <TouchableOpacity
       onLongPress={() => {
-        this.showAlertAccept(item._id);
+        this.showAlertComplete(item._id);
       }}
       onShowUnderlay={separators.highlight}
       onHideUnderlay={separators.unhighlight}>
@@ -334,5 +359,13 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: 'TimesNewRoman',
     fontSize: hp('2.2%'),
+  },
+  nodata: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  textNodata: {
+    fontSize: 30,
   },
 });

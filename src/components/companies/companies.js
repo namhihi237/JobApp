@@ -56,19 +56,16 @@ class Companies extends Component {
     this.props.navigation.navigate('Search', {search: this.state.search});
   };
 
-  moveToListJobs = async (companyId) => {
-    this.props.navigation.navigate('ListJobs', {companyId});
+  moveToListJobs = async (companyId, companyName) => {
+    this.props.navigation.navigate('ListJobs', {companyId, companyName});
   };
 
   async componentDidMount() {
-    // this._isMounted = true;
-    // const unsubscribe = this.props.navigation.addListener('focus', async () => {
     this.setState({search: ''});
     await this.props.getCompanies();
     this.setState({companies: this.props.companies, page: 1});
-    // });
-    // return unsubscribe;
   }
+
   keyExtractor = (item) => {
     return item._id;
   };
@@ -114,7 +111,9 @@ class Companies extends Component {
           </View>
           <View style={styles.seeMore}>
             <TouchableOpacity
-              onPress={() => this.moveToListJobs(item.accountId)}>
+              onPress={() =>
+                this.moveToListJobs(item.accountId, _.get(item, 'name'))
+              }>
               <Text style={{color: 'green'}}>
                 {_.get(item, 'recruitingPost')} Jobs
               </Text>
@@ -151,8 +150,8 @@ class Companies extends Component {
                 }}
                 onChangeText={this.updateSearch}
                 value={this.state.search}
-                placeholder="Company..."
-                placeholderTextColor="#aa5f5f"></TextInput>
+                placeholder="Company name..."
+                placeholderTextColor="#44464f"></TextInput>
               <TouchableOpacity
                 style={styles.searchButton}
                 onPress={this.searchItem}>
@@ -233,12 +232,12 @@ const styles = StyleSheet.create({
   },
   flatlist: {
     marginTop: 3,
-    marginBottom: 3,
+    marginBottom: hp('8%'),
     paddingBottom: 100,
     paddingTop: 10,
   },
   item: {
-    height: (hp('100%') - 5) / 5,
+    height: hp('90%') / 5,
     marginBottom: 15,
     marginLeft: 15,
     marginRight: 15,
@@ -248,10 +247,9 @@ const styles = StyleSheet.create({
     flex: 1,
     display: 'flex',
     flexDirection: 'column',
-    paddingLeft: 10,
+    paddingLeft: 15,
     paddingRight: 10,
-    paddingTop: 5,
-
+    justifyContent: 'center',
     borderRadius: 7,
     shadowColor: '#000',
     shadowOffset: {
@@ -265,6 +263,8 @@ const styles = StyleSheet.create({
   logoContainer: {
     display: 'flex',
     flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   logo: {
     marginTop: 25,
