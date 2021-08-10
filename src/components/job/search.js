@@ -38,6 +38,7 @@ class Search extends Component {
       item: null,
       role: '',
       posts: [],
+      userId: '',
     };
   }
 
@@ -60,6 +61,30 @@ class Search extends Component {
     this.setState({posts: this.props.postsSearch});
   };
 
+  renderApply = (listApply) => {
+    for (let applier of listApply) {
+      if (
+        JSON.stringify(applier.iterId) === JSON.stringify(this.state.userId)
+      ) {
+        return (
+          <View style={{display: 'flex', flexDirection: 'row'}}>
+            <FontAwesome5
+              name={'check-circle'}
+              style={{fontSize: 15, marginTop: 2, color: 'green'}}
+            />
+            <Text
+              style={{
+                fontFamily: 'TimesNewRoman',
+                marginLeft: 2,
+                color: '#996f6f',
+              }}>
+              Applied
+            </Text>
+          </View>
+        );
+      }
+    }
+  };
   renderItem = ({item}) => (
     <View style={styles.item}>
       <View style={styles.logoContainer}>
@@ -101,6 +126,7 @@ class Search extends Component {
             <TouchableOpacity onPress={() => this.showDetail(item)}>
               <Text style={{color: 'green'}}>See more</Text>
             </TouchableOpacity>
+            {this.renderApply(item.apply)}
             <View style={styles.fiedlsText}>
               <FontAwesome5
                 name={'history'}
@@ -124,8 +150,9 @@ class Search extends Component {
       await this.setState({search: this.props.route.params.search});
       await this.props.searchJob(this.state.search);
       const role = await getData('role');
+      const userId = await getData('userId');
 
-      this.setState({role, posts: this.props.postsSearch});
+      this.setState({role, posts: this.props.postsSearch, userId});
     });
   }
 
@@ -214,7 +241,7 @@ class Search extends Component {
                   value={this.state.search}
                   onChangeText={this.updateSearch}
                   placeholder="Keyword (skill, company, position,...)"
-                  placeholderTextColor="#aa5f5f"></TextInput>
+                  placeholderTextColor="#44464f"></TextInput>
                 <TouchableOpacity
                   style={styles.searchButton}
                   onPress={this.searchItem}>
@@ -227,13 +254,31 @@ class Search extends Component {
             </View>
           </View>
 
-          <FlatList
-            style={styles.flatlist}
-            scrollEventThrottle={16}
-            data={this.state.posts}
-            keyExtractor={this.keyExtractor}
-            renderItem={this.renderItem}
-            onEndReached={this.handleLoadMore}></FlatList>
+          {this.state.posts.length > 0 ? (
+            <FlatList
+              style={styles.flatlist}
+              scrollEventThrottle={16}
+              data={this.state.posts}
+              keyExtractor={this.keyExtractor}
+              renderItem={this.renderItem}
+              onEndReached={this.handleLoadMore}></FlatList>
+          ) : (
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Text
+                style={{
+                  fontFamily: 'TimesNewRoman',
+                  fontSize: hp('3.1%'),
+                  padding: 30,
+                }}>
+                Sorry, we couldn't find any results for your search!
+              </Text>
+            </View>
+          )}
         </View>
         <View style={styles.centeredView}>
           <Modal
@@ -412,7 +457,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   bgHeader: {
-    backgroundColor: 'rgba(249, 242, 242, 0.8)',
     justifyContent: 'space-around',
     alignItems: 'center',
     display: 'flex',

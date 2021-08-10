@@ -20,6 +20,7 @@ import {
   TouchableOpacity,
   TextInput,
   Image,
+  ActivityIndicator,
 } from 'react-native';
 
 const windowWidth = Dimensions.get('window').width;
@@ -34,12 +35,15 @@ class Companies extends Component {
       search: '',
       companies: [],
       isFetching: false,
+      isLoading: false,
     };
+    this.handleLoadMore = this.handleLoadMore.bind(this);
   }
 
   onRefresh = async () => {
     this.setState({isFetching: true});
     await this.props.getCompanies();
+    this.setState({companies: this.props.companies, page: 1});
     this.setState({isFetching: false});
   };
 
@@ -52,36 +56,36 @@ class Companies extends Component {
     this.props.navigation.navigate('Search', {search: this.state.search});
   };
 
-  moveToListJobs = async (companyId) => {
-    this.props.navigation.navigate('ListJobs', {companyId});
+  moveToListJobs = async (companyId, companyName) => {
+    this.props.navigation.navigate('ListJobs', {companyId, companyName});
   };
 
   async componentDidMount() {
-    // this._isMounted = true;
-    // const unsubscribe = this.props.navigation.addListener('focus', async () => {
     this.setState({search: ''});
     await this.props.getCompanies();
     this.setState({companies: this.props.companies, page: 1});
-    // });
-    // return unsubscribe;
   }
+
   keyExtractor = (item) => {
     return item._id;
   };
 
   async handleLoadMore() {
     try {
-      await this.setState({page: this.state.page + 1});
+      let page = this.state.page + 1;
+      await this.setState({isLoading: true, page});
 
-      if (this.state.page > this.props.numPages) {
+      if (page > this.props.numPages) {
         return;
       }
+
       const result = await axios.get(
-        `${apiUrl}/api/v1/companies/info?page=${this.state.page}&take=${10}`,
+        `${apiUrl.BASE_URL}/api/v1/companies/info?page=${page}&take=${10}`,
       );
       this.setState({
-        posts: [...this.state.companies, ...result.data.data.result],
-        page: cresult.data.data.currentPage + 1,
+        companies: [...this.state.companies, ...result.data.data.result],
+        page,
+        isLoading: false,
       });
     } catch (error) {
       return;
@@ -107,7 +111,9 @@ class Companies extends Component {
           </View>
           <View style={styles.seeMore}>
             <TouchableOpacity
-              onPress={() => this.moveToListJobs(item.accountId)}>
+              onPress={() =>
+                this.moveToListJobs(item.accountId, _.get(item, 'name'))
+              }>
               <Text style={{color: 'green'}}>
                 {_.get(item, 'recruitingPost')} Jobs
               </Text>
@@ -117,6 +123,17 @@ class Companies extends Component {
       </View>
     </View>
   );
+  footerList = () => {
+    return (
+      <View style={{flex: 1}}>
+        {this.state.isLoading && (
+          <View>
+            <ActivityIndicator />
+          </View>
+        )}
+      </View>
+    );
+  };
   render() {
     return (
       <View>
@@ -133,8 +150,8 @@ class Companies extends Component {
                 }}
                 onChangeText={this.updateSearch}
                 value={this.state.search}
-                placeholder="Company..."
-                placeholderTextColor="#aa5f5f"></TextInput>
+                placeholder="Company name..."
+                placeholderTextColor="#44464f"></TextInput>
               <TouchableOpacity
                 style={styles.searchButton}
                 onPress={this.searchItem}>
@@ -153,7 +170,8 @@ class Companies extends Component {
             renderItem={this.renderItem}
             onRefresh={() => this.onRefresh()}
             refreshing={this.state.isFetching}
-            onEndReached={this.handleLoadMore}></FlatList>
+            onEndReached={this.handleLoadMore}
+            ListFooterComponent={this.footerList}></FlatList>
         </View>
       </View>
     );
@@ -214,12 +232,12 @@ const styles = StyleSheet.create({
   },
   flatlist: {
     marginTop: 3,
-    marginBottom: 3,
+    marginBottom: hp('8%'),
     paddingBottom: 100,
     paddingTop: 10,
   },
   item: {
-    height: (hp('100%') - 5) / 5,
+    height: hp('90%') / 5,
     marginBottom: 15,
     marginLeft: 15,
     marginRight: 15,
@@ -229,10 +247,9 @@ const styles = StyleSheet.create({
     flex: 1,
     display: 'flex',
     flexDirection: 'column',
-    paddingLeft: 10,
+    paddingLeft: 15,
     paddingRight: 10,
-    paddingTop: 5,
-
+    justifyContent: 'center',
     borderRadius: 7,
     shadowColor: '#000',
     shadowOffset: {
@@ -246,6 +263,8 @@ const styles = StyleSheet.create({
   logoContainer: {
     display: 'flex',
     flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   logo: {
     marginTop: 25,

@@ -55,7 +55,7 @@ class JobCompanies extends Component {
   };
 
   renderApply = (listApply) => {
-    for (let applier in listApply) {
+    for (let applier of listApply) {
       if (applier.iterId === this.state.userId)
         return (
           <View style={{display: 'flex', flexDirection: 'row'}}>
@@ -203,7 +203,7 @@ class JobCompanies extends Component {
             </Button>
           </Left>
           <Body>
-            <Title></Title>
+            <Title>{this.props.route.param.companyName}</Title>
           </Body>
         </Header>
         <View style={styles.container}>

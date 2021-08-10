@@ -36,6 +36,7 @@ import {
   JobCompanies,
   Feedback,
 } from './components';
+import {MyTabBar} from './common';
 import {store} from './redux/store';
 import {Provider} from 'react-redux';
 import {storeData, getData} from './utils';
@@ -105,27 +106,40 @@ class tabBarForIter extends Component {
   render() {
     return (
       <Tab.Navigator
-        screenOptions={({route}) => ({
-          tabBarIcon: ({color, size}) => {
-            if (route.name === 'Home') {
-              return <Icon name="home" size={28}></Icon>;
-            } else if (route.name === 'My CV') {
-              return <Icon name="contact-page" size={28}></Icon>;
-            } else if (route.name === 'Setting') {
-              return <Icon name="settings" size={28}></Icon>;
-            } else if (route.name === 'Companies') {
-              return <FontAwesome5 name={'building'} style={{fontSize: 22}} />;
-            }
-          },
-        })}
+        tabBar={(props) => <MyTabBar {...props} />}
+        // screenOptions={({route}) => ({
+        //   tabBarIcon: ({color, size}) => {
+        //     if (route.name === 'Home') {
+        //       return <Icon name="home" size={28}></Icon>;
+        //     } else if (route.name === 'My CV') {
+        //       return <Icon name="contact-page" size={28}></Icon>;
+        //     } else if (route.name === 'Setting') {
+        //       return <Icon name="settings" size={28}></Icon>;
+        //     } else if (route.name === 'Companies') {
+        //       return <FontAwesome5 name={'building'} style={{fontSize: 22}} />;
+        //     }
+        //   },
+        // })}
         tabBarOptions={{
           activeTintColor: 'tomato',
           inactiveTintColor: 'gray',
         }}>
-        <Tab.Screen name="Home" component={HomeJob} />
-        <Tab.Screen name="Companies" component={ListCompaniesnav} />
-        <Tab.Screen name="My CV" component={IterNav} />
-        <Tab.Screen name="Setting" component={SettingDrawer} />
+        <Tab.Screen name="Home" component={HomeJob} options={{icon: 'home'}} />
+        <Tab.Screen
+          name="Companies"
+          component={ListCompaniesnav}
+          options={{icon: 'building'}}
+        />
+        <Tab.Screen
+          name="My CV"
+          component={IterNav}
+          options={{icon: 'file-signature'}}
+        />
+        <Tab.Screen
+          name="Setting"
+          component={SettingDrawer}
+          options={{icon: 'cog'}}
+        />
       </Tab.Navigator>
     );
   }
@@ -201,38 +215,39 @@ class tabBarForCompany extends Component {
   render() {
     return (
       <Tab.Navigator
-        screenOptions={({route}) => ({
-          tabBarIcon: ({color, size}) => {
-            if (route.name === 'Home') {
-              return <Icon name="home" size={28}></Icon>;
-            } else if (route.name === 'My Post') {
-              return <Icon name="work" size={28}></Icon>;
-            } else if (route.name === 'Setting') {
-              return <Icon name="settings" size={28}></Icon>;
-            } else if (route.name === 'Companies') {
-              return <FontAwesome5 name={'building'} style={{fontSize: 22}} />;
-            }
-          },
-        })}
+        tabBar={(props) => <MyTabBar {...props} />}
+        // screenOptions={({route}) => ({
+        //   tabBarIcon: ({color, size}) => {
+        //     if (route.name === 'Home') {
+        //       return <Icon name="home" size={28}></Icon>;
+        //     } else if (route.name === 'My Post') {
+        //       return <Icon name="work" size={28}></Icon>;
+        //     } else if (route.name === 'Setting') {
+        //       return <Icon name="settings" size={28}></Icon>;
+        //     } else if (route.name === 'Companies') {
+        //       return <FontAwesome5 name={'building'} style={{fontSize: 22}} />;
+        //     }
+        //   },
+        // })}
         tabBarOptions={{
           activeTintColor: 'tomato',
           inactiveTintColor: 'gray',
         }}>
-        <Tab.Screen name="Home" component={HomeJob} />
-        <Tab.Screen name="Companies" component={ListCompaniesnav} />
-        <Tab.Screen name="My Post" component={CompanyPostnav} />
+        <Tab.Screen name="Home" component={HomeJob} options={{icon: 'home'}} />
+        <Tab.Screen
+          name="Companies"
+          component={ListCompaniesnav}
+          options={{icon: 'building'}}
+        />
+        <Tab.Screen
+          name="My Post"
+          component={CompanyPostnav}
+          options={{icon: 'briefcase'}}
+        />
         <Tab.Screen
           name="Setting"
           component={SettingDrawer}
-          options={{
-            headerRight: () => (
-              <Button
-                onPress={() => alert('This is a button!')}
-                title="Info"
-                color="#00cc00"
-              />
-            ),
-          }}
+          options={{icon: 'cog'}}
         />
       </Tab.Navigator>
     );
@@ -243,21 +258,26 @@ class tabBarForGuest extends Component {
   render() {
     return (
       <Tab.Navigator
-        screenOptions={({route}) => ({
-          tabBarIcon: ({color, size}) => {
-            if (route.name === 'Home') {
-              return <Icon name="home" size={28}></Icon>;
-            } else if (route.name === 'Companies') {
-              return <FontAwesome5 name={'building'} style={{fontSize: 22}} />;
-            }
-          },
-        })}
+        tabBar={(props) => <MyTabBar {...props} />}
+        // screenOptions={({route}) => ({
+        //   tabBarIcon: ({color, size}) => {
+        //     if (route.name === 'Home') {
+        //       return <Icon name="home" size={28}></Icon>;
+        //     } else if (route.name === 'Companies') {
+        //       return <FontAwesome5 name={'building'} style={{fontSize: 22}} />;
+        //     }
+        //   },
+        // })}
         tabBarOptions={{
           activeTintColor: 'tomato',
           inactiveTintColor: 'gray',
         }}>
-        <Tab.Screen name="Home" component={HomeJob} />
-        <Tab.Screen name="Companies" component={ListCompaniesnav} />
+        <Tab.Screen name="Home" component={HomeJob} options={{icon: 'home'}} />
+        <Tab.Screen
+          name="Companies"
+          component={ListCompaniesnav}
+          options={{icon: 'building'}}
+        />
       </Tab.Navigator>
     );
   }

@@ -1,4 +1,4 @@
 import {Loader} from './loading';
 import HeaderRight from './headerRight';
-
-export {Loader, HeaderRight};
+import MyTabBar from './tab';
+export {Loader, HeaderRight, MyTabBar};
