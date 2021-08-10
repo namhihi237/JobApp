@@ -203,7 +203,7 @@ class JobCompanies extends Component {
             </Button>
           </Left>
           <Body>
-            <Title>{this.props.route.param.companyName}</Title>
+            <Title>{}</Title>
           </Body>
         </Header>
         <View style={styles.container}>
