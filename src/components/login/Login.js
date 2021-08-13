@@ -14,7 +14,7 @@ import {
 
 import {TextInput} from 'react-native-gesture-handler';
 import {connect} from 'react-redux';
-import {login} from '../../redux/actions';
+import {login, getFollowing} from '../../redux/actions';
 import {getData} from '../../utils';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 const windowWidth = Dimensions.get('window').width;
@@ -178,6 +178,7 @@ class Login extends Component {
 }
 const mapDispatchToProps = {
   login,
+  getFollowing,
 };
 
 const mapStateToProps = (state) => {

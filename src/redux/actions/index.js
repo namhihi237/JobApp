@@ -19,6 +19,8 @@ import {updateCv} from './updateCv';
 import {getCompanies} from './companies';
 import {getJobCompany} from './jobCompany';
 import {sendFeedback} from './feedback';
+import {follow} from './follow';
+import {getFollowing} from './getFollowing';
 export {
   login,
   registerIter,
@@ -41,4 +43,6 @@ export {
   getCompanies,
   getJobCompany,
   sendFeedback,
+  follow,
+  getFollowing,
 };

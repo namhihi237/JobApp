@@ -27,6 +27,7 @@ import {
   ActivityIndicator,
   Image,
   Alert,
+  LogBox,
 } from 'react-native';
 
 const windowWidth = Dimensions.get('window').width;

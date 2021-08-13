@@ -35,6 +35,7 @@ import {
   Companies,
   JobCompanies,
   Feedback,
+  Notification,
 } from './components';
 import {MyTabBar} from './common';
 import {store} from './redux/store';
@@ -107,19 +108,6 @@ class tabBarForIter extends Component {
     return (
       <Tab.Navigator
         tabBar={(props) => <MyTabBar {...props} />}
-        // screenOptions={({route}) => ({
-        //   tabBarIcon: ({color, size}) => {
-        //     if (route.name === 'Home') {
-        //       return <Icon name="home" size={28}></Icon>;
-        //     } else if (route.name === 'My CV') {
-        //       return <Icon name="contact-page" size={28}></Icon>;
-        //     } else if (route.name === 'Setting') {
-        //       return <Icon name="settings" size={28}></Icon>;
-        //     } else if (route.name === 'Companies') {
-        //       return <FontAwesome5 name={'building'} style={{fontSize: 22}} />;
-        //     }
-        //   },
-        // })}
         tabBarOptions={{
           activeTintColor: 'tomato',
           inactiveTintColor: 'gray',
@@ -134,6 +122,11 @@ class tabBarForIter extends Component {
           name="My CV"
           component={IterNav}
           options={{icon: 'file-signature'}}
+        />
+        <Tab.Screen
+          name="Notification"
+          component={Notification}
+          options={{icon: 'bell'}}
         />
         <Tab.Screen
           name="Setting"
@@ -216,19 +209,6 @@ class tabBarForCompany extends Component {
     return (
       <Tab.Navigator
         tabBar={(props) => <MyTabBar {...props} />}
-        // screenOptions={({route}) => ({
-        //   tabBarIcon: ({color, size}) => {
-        //     if (route.name === 'Home') {
-        //       return <Icon name="home" size={28}></Icon>;
-        //     } else if (route.name === 'My Post') {
-        //       return <Icon name="work" size={28}></Icon>;
-        //     } else if (route.name === 'Setting') {
-        //       return <Icon name="settings" size={28}></Icon>;
-        //     } else if (route.name === 'Companies') {
-        //       return <FontAwesome5 name={'building'} style={{fontSize: 22}} />;
-        //     }
-        //   },
-        // })}
         tabBarOptions={{
           activeTintColor: 'tomato',
           inactiveTintColor: 'gray',
@@ -245,6 +225,11 @@ class tabBarForCompany extends Component {
           options={{icon: 'briefcase'}}
         />
         <Tab.Screen
+          name="Notification"
+          component={Notification}
+          options={{icon: 'bell'}}
+        />
+        <Tab.Screen
           name="Setting"
           component={SettingDrawer}
           options={{icon: 'cog'}}
@@ -259,15 +244,6 @@ class tabBarForGuest extends Component {
     return (
       <Tab.Navigator
         tabBar={(props) => <MyTabBar {...props} />}
-        // screenOptions={({route}) => ({
-        //   tabBarIcon: ({color, size}) => {
-        //     if (route.name === 'Home') {
-        //       return <Icon name="home" size={28}></Icon>;
-        //     } else if (route.name === 'Companies') {
-        //       return <FontAwesome5 name={'building'} style={{fontSize: 22}} />;
-        //     }
-        //   },
-        // })}
         tabBarOptions={{
           activeTintColor: 'tomato',
           inactiveTintColor: 'gray',

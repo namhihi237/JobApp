@@ -14,6 +14,7 @@ import {Profile} from './profile';
 import {EditPost} from './editPost';
 import {Companies, JobCompanies} from './companies';
 import {Feedback} from './Feedback';
+import Notification from './notifications';
 export {
   Landing,
   Login,
@@ -37,4 +38,5 @@ export {
   Companies,
   JobCompanies,
   Feedback,
+  Notification,
 };

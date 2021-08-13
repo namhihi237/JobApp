@@ -291,27 +291,28 @@ class UpdateCv extends Component {
       email,
     } = this.state;
     return (
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-          <KeyboardAvoidingView style={{flex: 1}}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <KeyboardAvoidingView style={{flex: 1}}>
+          <Header>
+            <Left>
+              <Button
+                transparent
+                onPress={() => this.props.navigation.goBack()}>
+                <Icon name="arrow-back" />
+              </Button>
+            </Left>
+            <Body>
+              <Title style={{fontFamily: 'Itim-Regular'}}>Update CV</Title>
+            </Body>
+            <Right>
+              <Button transparent>
+                <Icon name="menu" />
+              </Button>
+            </Right>
+          </Header>
+          <ScrollView showsVerticalScrollIndicator={false}>
             {/* <Loader status={this.props.loading} msg={'Updating'}></Loader> */}
-            <Header>
-              <Left>
-                <Button
-                  transparent
-                  onPress={() => this.props.navigation.goBack()}>
-                  <Icon name="arrow-back" />
-                </Button>
-              </Left>
-              <Body>
-                <Title style={{fontFamily: 'Itim-Regular'}}>Update CV</Title>
-              </Body>
-              <Right>
-                <Button transparent>
-                  <Icon name="menu" />
-                </Button>
-              </Right>
-            </Header>
+
             <View style={styles.container}>
               <Image
                 source={{
@@ -430,9 +431,9 @@ class UpdateCv extends Component {
                 </View>
               </Modal>
             </View>
-          </KeyboardAvoidingView>
-        </TouchableWithoutFeedback>
-      </ScrollView>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </TouchableWithoutFeedback>
     );
   }
 }

@@ -5,12 +5,13 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {Loader} from '../../common';
 import axios from 'axios';
 import {apiUrl} from '../../api/api';
-import {getCompanies} from '../../redux/actions';
+import FollowButton from './followButton';
+import {getCompanies, follow, getFollowing} from '../../redux/actions';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-
+import {getObject} from '../../utils';
 import {
   StyleSheet,
   View,
@@ -36,6 +37,7 @@ class Companies extends Component {
       companies: [],
       isFetching: false,
       isLoading: false,
+      following: [],
     };
     this.handleLoadMore = this.handleLoadMore.bind(this);
   }
@@ -43,6 +45,7 @@ class Companies extends Component {
   onRefresh = async () => {
     this.setState({isFetching: true});
     await this.props.getCompanies();
+
     this.setState({companies: this.props.companies, page: 1});
     this.setState({isFetching: false});
   };
@@ -63,7 +66,13 @@ class Companies extends Component {
   async componentDidMount() {
     this.setState({search: ''});
     await this.props.getCompanies();
-    this.setState({companies: this.props.companies, page: 1});
+    await this.props.getFollowing();
+    console.log(this.props.following);
+    this.setState({
+      companies: this.props.companies,
+      page: 1,
+      following: this.props.following,
+    });
   }
 
   keyExtractor = (item) => {
@@ -92,11 +101,28 @@ class Companies extends Component {
     }
   }
 
+  follow = async (companyId) => {
+    try {
+      await this.props.follow({companyId});
+    } catch (error) {
+      return;
+    }
+  };
+
   renderItem = ({item}) => (
     <View style={styles.item}>
       <View style={styles.logoContainer}>
         <Image source={{uri: _.get(item, 'image')}} style={styles.logo}></Image>
         <View style={{padding: 1, marginLeft: 10, maxWidth: wp('60%')}}>
+          <View style={styles.follow}>
+            <FollowButton
+              isFollow={
+                this.state.following.includes(item.accountId) != -1
+                  ? true
+                  : false
+              }
+              onPress={() => this.follow(item.accountId)}></FollowButton>
+          </View>
           <Text
             style={{...styles.text, fontSize: hp('2.5%')}}
             numberOfLines={2}
@@ -179,6 +205,8 @@ class Companies extends Component {
 }
 const mapDispatchToProps = {
   getCompanies,
+  follow,
+  getFollowing,
 };
 
 const mapStateToProps = (state) => {
@@ -190,6 +218,7 @@ const mapStateToProps = (state) => {
     currentPage: _.get(state.getCompanies, 'data.scurrentPage') || null,
     numPages: _.get(state.getCompanies, 'data.numPages') || null,
     companies: _.get(state.getCompanies, 'data.result') || [],
+    following: _.get(state.getFollowing, 'following') || [],
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Companies);
@@ -294,5 +323,10 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     fontFamily: 'TimesNewRoman',
     fontSize: hp('2.1%'),
+  },
+  follow: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    flexDirection: 'row',
   },
 });
