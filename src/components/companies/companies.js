@@ -67,7 +67,6 @@ class Companies extends Component {
     this.setState({search: ''});
     await this.props.getCompanies();
     await this.props.getFollowing();
-    console.log(this.props.following);
     this.setState({
       companies: this.props.companies,
       page: 1,
@@ -103,6 +102,14 @@ class Companies extends Component {
 
   follow = async (companyId) => {
     try {
+      if (!this.state.following.includes(companyId)) {
+        this.setState({following: [...this.props.following, companyId]});
+      } else {
+        let index = this.state.following.indexOf(companyId);
+        let newFollow = this.state.following;
+        newFollow.splice(index, 1);
+        this.setState({following: newFollow});
+      }
       await this.props.follow({companyId});
     } catch (error) {
       return;
@@ -116,11 +123,7 @@ class Companies extends Component {
         <View style={{padding: 1, marginLeft: 10, maxWidth: wp('60%')}}>
           <View style={styles.follow}>
             <FollowButton
-              isFollow={
-                this.state.following.includes(item.accountId) != -1
-                  ? true
-                  : false
-              }
+              isFollow={this.state.following.includes(item.accountId)}
               onPress={() => this.follow(item.accountId)}></FollowButton>
           </View>
           <Text
