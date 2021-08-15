@@ -22,6 +22,7 @@ import {sendFeedback} from './feedback';
 import {follow} from './follow';
 import {getFollowing} from './getFollowing';
 import {notifications} from './notification';
+import {savePost} from './savePost';
 export {
   login,
   registerIter,
@@ -47,4 +48,5 @@ export {
   follow,
   getFollowing,
   notifications,
+  savePost,
 };

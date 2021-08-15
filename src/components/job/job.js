@@ -7,7 +7,7 @@ import {Loader} from '../../common';
 import axios from 'axios';
 import {apiUrl} from '../../api/api';
 import {JobDetail} from './jobDtail';
-import {getJob, applyJob} from '../../redux/actions';
+import {getJob, applyJob, savePost} from '../../redux/actions';
 import {getData} from '../../utils';
 import {
   widthPercentageToDP as wp,
@@ -27,14 +27,12 @@ import {
   ActivityIndicator,
   Image,
   Alert,
-  LogBox,
 } from 'react-native';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 const {GET_JOBS_URL} = apiUrl;
 class Job extends Component {
-  _isMounted = false;
   constructor(props) {
     super(props);
     this.state = {
@@ -100,19 +98,36 @@ class Job extends Component {
     }
   };
 
+  savePost = async (postId) => {
+    await this.props.savePost({postId});
+  };
+
   renderItem = ({item}) => (
     <View style={styles.item}>
       <View style={styles.logoContainer}>
         <Image
           source={{uri: _.get(item.company[0], 'image')}}
           style={styles.logo}></Image>
-        <View style={{padding: 1, marginLeft: 10, maxWidth: wp('60%')}}>
-          <Text
-            style={{...styles.text, fontSize: hp('2.5%')}}
-            numberOfLines={1}
-            ellipsizeMode="tail">
-            {item.title}
-          </Text>
+        <View style={{padding: 1, marginLeft: 10, width: wp('65%')}}>
+          <View
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            }}>
+            <Text
+              style={{...styles.text, fontSize: hp('2.5%')}}
+              numberOfLines={1}
+              ellipsizeMode="tail">
+              {item.title}
+            </Text>
+            <TouchableOpacity onPress={() => this.savePost(item._id)}>
+              <FontAwesome5
+                name={'bookmark'}
+                style={{color: 'black', fontSize: hp('2.5%')}}
+              />
+            </TouchableOpacity>
+          </View>
           <Text
             style={{...styles.text, fontSize: hp('2.1%')}}
             numberOfLines={1}
@@ -160,16 +175,11 @@ class Job extends Component {
   };
 
   async componentDidMount() {
-    // this._isMounted = true;
-    // const unsubscribe = this.props.navigation.addListener('focus', async () => {
     this.setState({search: ''});
     await this.props.getJob();
     const role = await getData('role');
     const userId = await getData('userId');
     this.setState({role, posts: this.props.posts, page: 1, userId});
-    // });
-
-    // return unsubscribe;
   }
 
   async handleLoadMore() {
@@ -250,10 +260,6 @@ class Job extends Component {
     }
     return null;
   };
-
-  componentWillUnmount() {
-    this._isMounted = false;
-  }
 
   render() {
     const {modalVisible, item} = this.state;
@@ -336,6 +342,7 @@ class Job extends Component {
 const mapDispatchToProps = {
   getJob,
   applyJob,
+  savePost,
 };
 
 const mapStateToProps = (state) => {
@@ -437,6 +444,7 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     fontFamily: 'TimesNewRoman',
     fontSize: hp('2.1%'),
+    maxWidth: wp('61%') - 20,
   },
   logoContainer: {
     display: 'flex',

@@ -11,26 +11,25 @@ const Card = (props) => {
   const {item} = props;
   return (
     <TouchableOpacity style={styles.container} onPress={props.onPress}>
-      <View style={{justifyContent: 'center', alignItems: 'center'}}>
-        {/* <Image source={{uri: item.image}} style={styles.image}></Image> */}
-      </View>
+      {/* <View style={{justifyContent: 'center', alignItems: 'center'}}> */}
+      {/* <Image source={{uri: item.image}} style={styles.image}></Image> */}
+      {/* </View> */}
       <View style={{display: 'flex', justifyContent: 'space-between'}}>
-        <View>
-          <View
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              flexDirection: 'row',
-            }}>
-            <Text style={styles.title}>{_.get(item, 'title')}</Text>
-            <Text style={styles.createdAt}>
-              {moment(item.createdAt).format('lll')}
-            </Text>
-          </View>
-          <Text style={styles.body} numberOfLines={3} ellipsizeMode="tail">
-            {_.get(item, 'content')}
+        <View
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            flexDirection: 'row',
+            width: wp('88%'),
+          }}>
+          <Text style={styles.title}>{_.get(item, 'title')}</Text>
+          <Text style={styles.createdAt}>
+            {moment(item.createdAt).format('lll')}
           </Text>
         </View>
+        <Text style={styles.body} numberOfLines={3} ellipsizeMode="tail">
+          {_.get(item, 'content')}
+        </Text>
       </View>
     </TouchableOpacity>
   );
