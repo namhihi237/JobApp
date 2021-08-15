@@ -21,6 +21,7 @@ import {getJobCompany} from './jobCompany';
 import {sendFeedback} from './feedback';
 import {follow} from './follow';
 import {getFollowing} from './getFollowing';
+import {notifications} from './notification';
 export {
   login,
   registerIter,
@@ -45,4 +46,5 @@ export {
   sendFeedback,
   follow,
   getFollowing,
+  notifications,
 };

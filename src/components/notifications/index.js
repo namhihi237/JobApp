@@ -1,28 +1,159 @@
-import React, {useEffect, useState} from 'react';
-import {FlatList, StyleSheet, Text, View} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import React, {Component} from 'react';
 import _ from 'lodash';
+import {connect} from 'react-redux';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import {Loader} from '../../common';
+import axios from 'axios';
+import {apiUrl} from '../../api/api';
+import {notifications} from '../../redux/actions';
+import Card from './Card';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import {Header, Left, Body, Button, Icon, Title} from 'native-base';
+import {
+  StyleSheet,
+  View,
+  Text,
+  FlatList,
+  Dimensions,
+  TouchableOpacity,
+  ActivityIndicator,
+  Image,
+} from 'react-native';
 
-const Notification = () => {
-  const navigation = useNavigation();
-  const [notifications, setNotifications] = useState([]);
-  const [total, setTotal] = useState(0);
-  const [isFetching, setIsFetching] = useState(false);
-  const keyExtractor = (item) => item.id;
+const windowHeight = Dimensions.get('window').height;
+const {BASE_URL} = apiUrl;
+class Notification extends Component {
+  _isMounted = false;
+  constructor(props) {
+    super(props);
+    this.state = {
+      modalVisible: false,
+      item: null,
+      notifications: [],
+      page: 1,
+      isLoading: false,
+      isFetching: false,
+    };
+    this.handleLoadMore = this.handleLoadMore.bind(this);
+  }
 
-  const renderItem = (item) => <Card item={item}></Card>;
+  onRefresh = async () => {
+    this.setState({isFetching: true});
+    await this.props.notifications();
+    this.setState({notifications: this.props.listNotifications, page: 1});
+    this.setState({isFetching: false});
+  };
 
-  return <View></View>;
+  renderItem = ({item}) => <Card item={item}></Card>;
+
+  keyExtractor = (item) => {
+    return item._id;
+  };
+
+  async componentDidMount() {
+    const unsubscribe = this.props.navigation.addListener('focus', async () => {
+      await this.props.notifications();
+      this.setState({notifications: this.props.listNotifications, page: 1});
+    });
+    return unsubscribe;
+  }
+
+  async handleLoadMore() {
+    try {
+      await this.setState({page: this.state.page + 1, isLoading: true});
+
+      if (this.state.page > this.props.numPages) {
+        return;
+      }
+      const result = await axios.get(
+        `${BASE_URL}/api/v1/notifications?page=${this.state.page}&take=${10}`,
+      );
+      const addPost = result.data.data.notifications;
+      const currentPage = result.data.data.currentPage;
+      let newPost = [...this.state.notifications, ...addPost];
+
+      this.setState({
+        notifications: newPost,
+        isLoading: false,
+        page: currentPage + 1,
+      });
+    } catch (error) {
+      return;
+    }
+  }
+
+  footerList = () => {
+    return (
+      <View style={{flex: 1}}>
+        {this.state.isLoading && (
+          <View style={styles.loading}>
+            <ActivityIndicator />
+          </View>
+        )}
+      </View>
+    );
+  };
+
+  setModalVisible = (visible) => {
+    this.setState({modalVisible: visible});
+  };
+
+  render() {
+    if (this.props.status != 200 && this.props.status != 304) {
+      return (
+        <View>
+          <Loader status={this.props.loading}></Loader>
+        </View>
+      );
+    }
+    return (
+      <View style={{flex: 1}}>
+        <Loader status={this.props.loading}></Loader>
+        <Header>
+          <Left>
+            <Button transparent></Button>
+          </Left>
+          <Body>
+            <Title>Notifications</Title>
+          </Body>
+        </Header>
+        <FlatList
+          style={styles.flatList}
+          scrollEventThrottle={16}
+          data={this.state.notifications}
+          keyExtractor={this.keyExtractor}
+          renderItem={this.renderItem}
+          onEndReached={this.handleLoadMore}
+          onRefresh={() => this.onRefresh()}
+          refreshing={this.state.isFetching}
+          ListFooterComponent={this.footerList}></FlatList>
+      </View>
+    );
+  }
+}
+const mapDispatchToProps = {
+  notifications,
 };
 
-export default Notification;
+const mapStateToProps = (state) => {
+  const {loading, status, msg} = state.notifications;
+  return {
+    loading,
+    listNotifications: _.get(state.notifications, 'data.notifications') || [],
+    status,
+    msg,
+    currentPage: _.get(state.notifications, 'data.currentPage') || null,
+    numPages: _.get(state.notifications, 'data.numPages') || null,
+  };
+};
+export default connect(mapStateToProps, mapDispatchToProps)(Notification);
 
 const styles = StyleSheet.create({
-  flatListContainer: {
-    marginBottom: hp('8%'),
+  flatList: {
+    marginBottom: hp('1%'),
+    marginTop: hp('1%'),
   },
 });

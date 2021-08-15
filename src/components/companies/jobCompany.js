@@ -203,19 +203,33 @@ class JobCompanies extends Component {
             </Button>
           </Left>
           <Body>
-            <Title>{}</Title>
+            <Title>{this.props.route.params.companyName}</Title>
           </Body>
         </Header>
         <View style={styles.container}>
-          <FlatList
-            style={styles.flatlist}
-            scrollEventThrottle={16}
-            data={this.props.posts}
-            keyExtractor={this.keyExtractor}
-            renderItem={this.renderItem}
-            onRefresh={() => this.onRefresh()}
-            refreshing={this.state.isFetching}
-            onEndReached={this.handleLoadMore}></FlatList>
+          {this.state.posts.length > 0 ? (
+            <FlatList
+              style={styles.flatlist}
+              scrollEventThrottle={16}
+              data={this.props.posts}
+              keyExtractor={this.keyExtractor}
+              renderItem={this.renderItem}
+              onRefresh={() => this.onRefresh()}
+              refreshing={this.state.isFetching}
+              onEndReached={this.handleLoadMore}></FlatList>
+          ) : !this.props.loading ? (
+            <View
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                flex: 1,
+                padding: 20,
+              }}>
+              <Text style={{fontWeight: 'bold', fontSize: 20}}>
+                The company does not currently have any vacancies
+              </Text>
+            </View>
+          ) : null}
         </View>
         <View style={styles.centeredView}>
           <Modal

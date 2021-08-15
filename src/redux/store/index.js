@@ -24,6 +24,7 @@ import {
   sendFeedback,
   follow,
   getFollowing,
+  notifications,
 } from '../reducer/';
 
 const AppReduces = combineReducers({
@@ -50,6 +51,7 @@ const AppReduces = combineReducers({
   sendFeedback,
   follow,
   getFollowing,
+  notifications,
 });
 const rootReducer = (state, action) => {
   return AppReduces(state, action);
