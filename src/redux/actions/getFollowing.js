@@ -9,6 +9,7 @@ export const getFollowing = () => async (dispatch) => {
   dispatch({type: GET_FOLLOWING});
   try {
     const token = await getData('token');
+
     const result = await axios.get(
       `${apiUrl.BASE_URL}/api/v1/followers/following`,
       {

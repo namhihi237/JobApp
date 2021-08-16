@@ -5,9 +5,10 @@ import {Toast} from 'native-base';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {Loader} from '../../common';
 import axios from 'axios';
+``;
 import {apiUrl} from '../../api/api';
 import {JobDetail} from './jobDtail';
-import {getJob, applyJob, savePost} from '../../redux/actions';
+import {getJob, applyJob, savePost, getSavedPost} from '../../redux/actions';
 import {getData} from '../../utils';
 import {
   widthPercentageToDP as wp,
@@ -45,6 +46,7 @@ class Job extends Component {
       isLoading: false,
       userId: '',
       isFetching: false,
+      savedPost: [],
     };
     this.handleLoadMore = this.handleLoadMore.bind(this);
   }
@@ -98,77 +100,72 @@ class Job extends Component {
     }
   };
 
-  savePost = async (postId) => {
-    await this.props.savePost({postId});
-  };
-
-  renderItem = ({item}) => (
-    <View style={styles.item}>
-      <View style={styles.logoContainer}>
-        <Image
-          source={{uri: _.get(item.company[0], 'image')}}
-          style={styles.logo}></Image>
-        <View style={{padding: 1, marginLeft: 10, width: wp('65%')}}>
-          <View
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-            }}>
+  renderItem = ({item}) => {
+    return (
+      <View style={styles.item}>
+        <View style={styles.logoContainer}>
+          <Image
+            source={{uri: _.get(item.company[0], 'image')}}
+            style={styles.logo}></Image>
+          <View style={{padding: 1, marginLeft: 10, width: wp('65%')}}>
+            <View
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+              }}>
+              <Text
+                style={{...styles.text, fontSize: hp('2.5%')}}
+                numberOfLines={1}
+                ellipsizeMode="tail">
+                {item.title}
+              </Text>
+              {this.renderButtonSaved(item._id)}
+            </View>
             <Text
-              style={{...styles.text, fontSize: hp('2.5%')}}
+              style={{...styles.text, fontSize: hp('2.1%')}}
               numberOfLines={1}
               ellipsizeMode="tail">
-              {item.title}
+              {_.get(item.company[0], 'name')}
             </Text>
-            <TouchableOpacity onPress={() => this.savePost(item._id)}>
-              <FontAwesome5
-                name={'bookmark'}
-                style={{color: 'black', fontSize: hp('2.5%')}}
-              />
-            </TouchableOpacity>
-          </View>
-          <Text
-            style={{...styles.text, fontSize: hp('2.1%')}}
-            numberOfLines={1}
-            ellipsizeMode="tail">
-            {_.get(item.company[0], 'name')}
-          </Text>
-          <View style={styles.fiedlsText}>
-            <FontAwesome5 name={'money-bill'} style={styles.iconText} />
-            <Text style={styles.text} numberOfLines={1} ellipsizeMode="tail">
-              {item.salary}
-            </Text>
-          </View>
-          <View style={styles.fiedlsText}>
-            <FontAwesome5 name={'code'} style={styles.iconText} />
-            <Text style={styles.text} numberOfLines={1} ellipsizeMode="tail">
-              {item.skill.join(', ')}
-            </Text>
-          </View>
-          <View style={styles.fiedlsText}>
-            <FontAwesome5 name={'map-marker-alt'} style={styles.iconText} />
-            <Text style={styles.text} numberOfLines={1} ellipsizeMode="tail">
-              {item.address}
-            </Text>
-          </View>
-          <View style={styles.seeMore}>
-            <TouchableOpacity onPress={() => this.showDetail(item)} style={{}}>
-              <Text style={{color: 'green'}}>See more</Text>
-            </TouchableOpacity>
-            {this.renderApply(item.apply)}
             <View style={styles.fiedlsText}>
-              <FontAwesome5
-                name={'history'}
-                style={{...styles.iconText, color: 'red'}}
-              />
-              <Text style={{marginLeft: 10}}>{item.endTime}</Text>
+              <FontAwesome5 name={'money-bill'} style={styles.iconText} />
+              <Text style={styles.text} numberOfLines={1} ellipsizeMode="tail">
+                {item.salary}
+              </Text>
+            </View>
+            <View style={styles.fiedlsText}>
+              <FontAwesome5 name={'code'} style={styles.iconText} />
+              <Text style={styles.text} numberOfLines={1} ellipsizeMode="tail">
+                {item.skill.join(', ')}
+              </Text>
+            </View>
+            <View style={styles.fiedlsText}>
+              <FontAwesome5 name={'map-marker-alt'} style={styles.iconText} />
+              <Text style={styles.text} numberOfLines={1} ellipsizeMode="tail">
+                {item.address}
+              </Text>
+            </View>
+            <View style={styles.seeMore}>
+              <TouchableOpacity
+                onPress={() => this.showDetail(item)}
+                style={{}}>
+                <Text style={{color: 'green'}}>See more</Text>
+              </TouchableOpacity>
+              {this.renderApply(item.apply)}
+              <View style={styles.fiedlsText}>
+                <FontAwesome5
+                  name={'history'}
+                  style={{...styles.iconText, color: 'red'}}
+                />
+                <Text style={{marginLeft: 10}}>{item.endTime}</Text>
+              </View>
             </View>
           </View>
         </View>
       </View>
-    </View>
-  );
+    );
+  };
 
   keyExtractor = (item) => {
     return item._id;
@@ -179,7 +176,19 @@ class Job extends Component {
     await this.props.getJob();
     const role = await getData('role');
     const userId = await getData('userId');
-    this.setState({role, posts: this.props.posts, page: 1, userId});
+    let savedPost = [];
+    if (role === 'iter') {
+      await this.props.getSavedPost();
+      savedPost = this.props.savedPost.map((e) => e.postId);
+    }
+
+    this.setState({
+      role,
+      posts: this.props.posts,
+      page: 1,
+      userId,
+      savedPost,
+    });
   }
 
   async handleLoadMore() {
@@ -227,27 +236,76 @@ class Job extends Component {
     this.setState({item});
   };
 
+  alertLogin = () =>
+    Alert.alert('You must be login to apply!', null, [
+      {
+        text: 'Later',
+        style: 'cancel',
+      },
+      {
+        text: 'Login now',
+        onPress: () => {
+          this.props.navigation.navigate('Login');
+          this.setModalVisible(!this.state.modalVisible);
+        },
+      },
+    ]);
+  alertLoginSaved = () =>
+    Alert.alert('You must be login to apply!', null, [
+      {
+        text: 'Later',
+        style: 'cancel',
+      },
+      {
+        text: 'Login now',
+        onPress: () => {
+          this.props.navigation.navigate('Login');
+        },
+      },
+    ]);
+
+  savePost = async (postId) => {
+    if (!this.state.userId) {
+      this.alertLoginSaved();
+      return;
+    }
+    if (!this.state.savedPost.includes(postId)) {
+      this.setState({savedPost: [...this.state.savedPost, postId]});
+    } else {
+      let index = this.state.savedPost.indexOf(postId);
+      let newSavedPost = this.state.savedPost;
+      newSavedPost.splice(index, 1);
+      this.setState({savedPost: newSavedPost});
+    }
+    await this.props.savePost({postId});
+  };
+
   iterApplyJob = async () => {
     if (!this.state.role) {
-      Alert.alert('You must be login to apply!', `Pick your option `, [
-        {
-          text: 'Later',
-          style: 'cancel',
-        },
-        {
-          text: 'Login',
-          onPress: () => {
-            this.props.navigation.navigate('Login');
-            this.setModalVisible(!this.state.modalVisible);
-          },
-        },
-      ]);
+      this.alertLogin();
       return;
     }
     await this.props.applyJob(this.state.item._id);
     this.showToast(this.props.msgApply);
   };
-
+  renderButtonSaved = (postId) => {
+    if (this.state.role == 'iter' || !this.state.role) {
+      return (
+        <TouchableOpacity onPress={() => this.savePost(postId)}>
+          <FontAwesome5
+            name={'bookmark'}
+            style={{
+              color: `${
+                this.state.savedPost.includes(postId) ? 'red' : 'black'
+              }`,
+              fontSize: hp('2.5%'),
+            }}
+          />
+        </TouchableOpacity>
+      );
+    }
+    return null;
+  };
   renderButtonApply = () => {
     if (this.state.role == 'iter' || !this.state.role) {
       return (
@@ -343,6 +401,7 @@ const mapDispatchToProps = {
   getJob,
   applyJob,
   savePost,
+  getSavedPost,
 };
 
 const mapStateToProps = (state) => {
@@ -357,6 +416,7 @@ const mapStateToProps = (state) => {
     numPages: _.get(state.getJob, 'data.numPages') || null,
     statusApply: state.applyJob.status,
     msgApply: state.applyJob.msg,
+    savedPost: _.get(state.getSavedPost, 'posts') || [],
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Job);
