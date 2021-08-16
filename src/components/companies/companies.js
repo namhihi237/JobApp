@@ -6,6 +6,7 @@ import {Loader} from '../../common';
 import axios from 'axios';
 import {apiUrl} from '../../api/api';
 import FollowButton from './followButton';
+import {getData} from '../../utils';
 import {getCompanies, follow, getFollowing} from '../../redux/actions';
 import {
   widthPercentageToDP as wp,
@@ -21,6 +22,7 @@ import {
   TextInput,
   Image,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
 
 const windowWidth = Dimensions.get('window').width;
@@ -37,6 +39,7 @@ class Companies extends Component {
       isFetching: false,
       isLoading: false,
       following: [],
+      role: '',
     };
     this.handleLoadMore = this.handleLoadMore.bind(this);
   }
@@ -65,11 +68,18 @@ class Companies extends Component {
   async componentDidMount() {
     this.setState({search: ''});
     await this.props.getCompanies();
-    await this.props.getFollowing();
+    const token = await getData('token');
+    const role = await getData('role');
+    let following = [];
+    if (token && role == 'iter') {
+      await this.props.getFollowing();
+      following = this.props.following;
+    }
     this.setState({
       companies: this.props.companies,
       page: 1,
-      following: this.props.following,
+      following,
+      role,
     });
   }
 
@@ -101,6 +111,22 @@ class Companies extends Component {
 
   follow = async (companyId) => {
     try {
+      const token = await getData('token');
+      if (!token) {
+        Alert.alert('You must be login to follow!', null, [
+          {
+            text: 'Later',
+            style: 'cancel',
+          },
+          {
+            text: 'Login now',
+            onPress: () => {
+              this.props.navigation.navigate('Login');
+            },
+          },
+        ]);
+        return;
+      }
       if (!this.state.following.includes(companyId)) {
         this.setState({following: [...this.props.following, companyId]});
       } else {
@@ -115,16 +141,22 @@ class Companies extends Component {
     }
   };
 
+  renderFollow = (accountId) => {
+    if (this.state.role == 'iter' || !this.state.role) {
+      return (
+        <FollowButton
+          isFollow={this.state.following.includes(accountId)}
+          onPress={() => this.follow(accountId)}></FollowButton>
+      );
+    }
+    return null;
+  };
   renderItem = ({item}) => (
     <View style={styles.item}>
       <View style={styles.logoContainer}>
         <Image source={{uri: _.get(item, 'image')}} style={styles.logo}></Image>
         <View style={{padding: 1, marginLeft: 10, maxWidth: wp('60%')}}>
-          <View style={styles.follow}>
-            <FollowButton
-              isFollow={this.state.following.includes(item.accountId)}
-              onPress={() => this.follow(item.accountId)}></FollowButton>
-          </View>
+          <View style={styles.follow}>{this.renderFollow(item.accountId)}</View>
           <Text
             style={{...styles.text, fontSize: hp('2.5%')}}
             numberOfLines={2}
