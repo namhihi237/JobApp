@@ -36,6 +36,7 @@ import {
   JobCompanies,
   Feedback,
   Notification,
+  SavedPosts,
 } from './components';
 import {MyTabBar} from './common';
 import {store} from './redux/store';
@@ -51,6 +52,17 @@ const HomeStack = createStackNavigator();
 const ListCompaniesStack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 class SettingDrawer extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      role: '',
+    };
+  }
+  async componentDidMount() {
+    const role = await getData('role');
+    this.setState({role});
+  }
+
   render() {
     return (
       <Drawer.Navigator
@@ -81,6 +93,9 @@ class SettingDrawer extends Component {
           );
         }}>
         <Drawer.Screen name="My Profile" component={Profile} />
+        {this.state.role === 'iter' ? (
+          <Drawer.Screen name="Saved Posts" component={SavedPosts} />
+        ) : null}
         <Drawer.Screen name="Change Password" component={changePass} />
         <Drawer.Screen name="Feedback" component={Feedback} />
       </Drawer.Navigator>
