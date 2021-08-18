@@ -3,6 +3,7 @@ const {
   GET_SAVED_POSTS,
   GET_SAVED_POSTS_SUCCESS,
   GET_SAVED_POSTS_FAIL,
+  UPDATE_SAVE_POST,
 } = actionType;
 const initialState = {
   msg: '',
@@ -16,6 +17,8 @@ export const getSavedPost = (state = initialState, actions) => {
       return {...state, ...actions.payload, loading: false};
     case GET_SAVED_POSTS_FAIL:
       return {...state, ...actions.payload, loading: false};
+    case UPDATE_SAVE_POST:
+      return {...state, ...actions.payload};
     default:
       return state;
   }

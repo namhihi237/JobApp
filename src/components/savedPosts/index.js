@@ -3,13 +3,10 @@ import _ from 'lodash';
 import {connect} from 'react-redux';
 import {Toast} from 'native-base';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import {Loader} from '../../common';
-import axios from 'axios';
-``;
-import {apiUrl} from '../../api/api';
-import {JobDetail} from './jobDtail';
-import {getJob, applyJob, savePost, getSavedPost} from '../../redux/actions';
+import {JobDetail} from '../job/jobDtail';
+import {applyJob, savePost, getSavedPost} from '../../redux/actions';
 import {getData} from '../../utils';
+import {Header, Left, Body, Button, Icon, Title} from 'native-base';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -23,38 +20,29 @@ import {
   Dimensions,
   TouchableOpacity,
   Modal,
-  TextInput,
   TouchableHighlight,
-  ActivityIndicator,
   Image,
-  Alert,
 } from 'react-native';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-const {GET_JOBS_URL} = apiUrl;
-class Job extends Component {
+class SavedPost extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      search: '',
       modalVisible: false,
       item: null,
-      role: '',
-      posts: [],
-      page: 1,
-      isLoading: false,
       userId: '',
       isFetching: false,
     };
-    this.handleLoadMore = this.handleLoadMore.bind(this);
   }
 
   onRefresh = async () => {
-    this.setState({isFetching: true});
-    await this.props.getJob();
-    this.setState({posts: this.props.posts, page: 1});
-    this.setState({isFetching: false});
+    await this.props.getSavedPost();
+  };
+
+  openBar = () => {
+    this.props.navigation.openDrawer();
   };
 
   showToast = (msg) => {
@@ -63,15 +51,6 @@ class Job extends Component {
       buttonText: 'Okey',
       duration: 3000,
     });
-  };
-
-  updateSearch = (search) => {
-    this.setState({search});
-  };
-
-  searchItem = async () => {
-    if (this.state.search == '') return;
-    this.props.navigation.navigate('Search', {search: this.state.search});
   };
 
   renderApply = (listApply) => {
@@ -171,57 +150,11 @@ class Job extends Component {
   };
 
   async componentDidMount() {
-    this.setState({search: ''});
-    await this.props.getJob();
-    const role = await getData('role');
     const userId = await getData('userId');
-    if (role === 'iter') {
-      await this.props.getSavedPost();
-    }
-
     this.setState({
-      role,
-      posts: this.props.posts,
-      page: 1,
       userId,
     });
   }
-
-  async handleLoadMore() {
-    try {
-      await this.setState({page: this.state.page + 1, isLoading: true});
-
-      if (this.state.page > this.props.numPages) {
-        return;
-      }
-      const result = await axios.get(
-        `${GET_JOBS_URL}?page=${this.state.page}&take=${10}`,
-      );
-      const addPost = result.data.data.posts;
-      const currentPage = result.data.data.currentPage;
-      let newPost = [...this.state.posts, ...addPost];
-
-      this.setState({
-        posts: newPost,
-        isLoading: false,
-        page: currentPage + 1,
-      });
-    } catch (error) {
-      return;
-    }
-  }
-
-  footerList = () => {
-    return (
-      <View style={{flex: 1}}>
-        {this.state.isLoading && (
-          <View style={styles.loading}>
-            <ActivityIndicator />
-          </View>
-        )}
-      </View>
-    );
-  };
 
   setModalVisible = (visible) => {
     this.setState({modalVisible: visible});
@@ -232,44 +165,12 @@ class Job extends Component {
     this.setState({item});
   };
 
-  alertLogin = () =>
-    Alert.alert('You must be login to apply!', null, [
-      {
-        text: 'Later',
-        style: 'cancel',
-      },
-      {
-        text: 'Login now',
-        onPress: () => {
-          this.props.navigation.navigate('Login');
-          this.setModalVisible(!this.state.modalVisible);
-        },
-      },
-    ]);
-  alertLoginSaved = () =>
-    Alert.alert('You must be login to apply!', null, [
-      {
-        text: 'Later',
-        style: 'cancel',
-      },
-      {
-        text: 'Login now',
-        onPress: () => {
-          this.props.navigation.navigate('Login');
-        },
-      },
-    ]);
-
   savePost = async (post) => {
-    if (!this.state.userId) {
-      this.alertLoginSaved();
-      return;
-    }
     let newPost = [];
-    if (!this.props.savedPost.map((e) => e.postId).includes(post._id)) {
-      newPost = [...this.props.savedPost, {postId: post._id, post: [post]}];
+    if (!this.props.posts.map((e) => e.postId).includes(post._id)) {
+      newPost = [...this.props.posts, {postId: post._id, post: [post]}];
     } else {
-      this.props.savedPost.forEach((element) => {
+      this.props.posts.forEach((element) => {
         if (element.postId != post._id) {
           newPost.push(element);
         }
@@ -279,93 +180,57 @@ class Job extends Component {
   };
 
   iterApplyJob = async () => {
-    if (!this.state.role) {
-      this.alertLogin();
-      return;
-    }
     await this.props.applyJob(this.state.item._id);
     this.showToast(this.props.msgApply);
   };
+
   renderButtonSaved = (post) => {
-    if (this.state.role == 'iter' || !this.state.role) {
-      return (
-        <TouchableOpacity onPress={() => this.savePost(post)}>
-          <FontAwesome5
-            name={'bookmark'}
-            style={{
-              color: `${
-                this.props.savedPost.map((e) => e.postId).includes(post._id)
-                  ? 'red'
-                  : 'black'
-              }`,
-              fontSize: hp('2.5%'),
-            }}
-          />
-        </TouchableOpacity>
-      );
-    }
-    return null;
+    return (
+      <TouchableOpacity onPress={() => this.savePost(post)}>
+        <FontAwesome5
+          name={'bookmark'}
+          style={{
+            color: 'red',
+            fontSize: hp('2.5%'),
+          }}
+        />
+      </TouchableOpacity>
+    );
   };
+
   renderButtonApply = () => {
-    if (this.state.role == 'iter' || !this.state.role) {
-      return (
-        <TouchableHighlight
-          style={{...styles.openButton, backgroundColor: '#37ce3f'}}
-          onPress={this.iterApplyJob}>
-          <Text style={styles.textStyle}>Apply</Text>
-        </TouchableHighlight>
-      );
-    }
-    return null;
+    return (
+      <TouchableHighlight
+        style={{...styles.openButton, backgroundColor: '#37ce3f'}}
+        onPress={this.iterApplyJob}>
+        <Text style={styles.textStyle}>Apply</Text>
+      </TouchableHighlight>
+    );
   };
 
   render() {
     const {modalVisible, item} = this.state;
-
-    if (this.props.status != 200 && this.props.status != 304) {
-      return (
-        <View>
-          <Loader status={this.props.loading}></Loader>
-        </View>
-      );
-    }
     return (
       <View>
-        <Loader status={this.props.loading}></Loader>
         <View style={styles.container}>
-          <View style={styles.searchContaier}>
-            <View style={{...styles.searchInput}}>
-              <TextInput
-                style={{
-                  height: 50,
-                  width: wp('75%'),
-                  fontFamily: 'TimesNewRoman',
-                  fontSize: 16,
-                }}
-                onChangeText={this.updateSearch}
-                value={this.state.search}
-                placeholder="Keyword (skill, company, position,...)"
-                placeholderTextColor="#44464f"></TextInput>
-              <TouchableOpacity
-                style={styles.searchButton}
-                onPress={this.searchItem}>
-                <FontAwesome5
-                  name={'search'}
-                  style={{fontSize: 22, marginTop: 2}}
-                />
-              </TouchableOpacity>
-            </View>
-          </View>
+          <Header>
+            <Left>
+              <Button transparent onPress={this.openBar}>
+                <Icon name="menu" />
+              </Button>
+            </Left>
+            <Body>
+              <Title style={{fontFamily: 'Itim-Regular'}}>Saved Posts</Title>
+            </Body>
+          </Header>
           <FlatList
             style={styles.flatlist}
             scrollEventThrottle={16}
-            data={this.state.posts}
+            data={_.flattenDepth(this.props.posts.map((e) => e.post))}
             keyExtractor={this.keyExtractor}
             renderItem={this.renderItem}
-            onEndReached={this.handleLoadMore}
             onRefresh={() => this.onRefresh()}
-            refreshing={this.state.isFetching}
-            ListFooterComponent={this.footerList}></FlatList>
+            refreshing={this.state.isFetching}></FlatList>
         </View>
         <View style={styles.centeredView}>
           <Modal
@@ -398,28 +263,19 @@ class Job extends Component {
   }
 }
 const mapDispatchToProps = {
-  getJob,
   applyJob,
   savePost,
   getSavedPost,
 };
 
 const mapStateToProps = (state) => {
-  const {loading, status, msg} = state.getJob;
-
   return {
-    loading,
-    posts: _.get(state.getJob, 'data.posts') || [],
-    status,
-    msg,
-    currentPage: _.get(state.getJob, 'data.scurrentPage') || null,
-    numPages: _.get(state.getJob, 'data.numPages') || null,
     statusApply: state.applyJob.status,
     msgApply: state.applyJob.msg,
-    savedPost: _.get(state.getSavedPost, 'posts') || [],
+    posts: _.get(state.getSavedPost, 'posts') || [],
   };
 };
-export default connect(mapStateToProps, mapDispatchToProps)(Job);
+export default connect(mapStateToProps, mapDispatchToProps)(SavedPost);
 
 const styles = StyleSheet.create({
   container: {
@@ -436,42 +292,11 @@ const styles = StyleSheet.create({
     width: (windowWidth * 1.8) / 3,
     marginTop: 1,
   },
-  searchInput: {
-    height: 50,
-    width: windowWidth - 10,
-    borderColor: '#7e8591',
-    marginLeft: 3,
-    marginRight: 3,
-    borderWidth: 1,
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: 1,
-    paddingLeft: 15,
-    borderRadius: 50,
-    backgroundColor: '#c7cadd',
-    opacity: 0.7,
-  },
+
   flatlist: {
     marginTop: 3,
     marginBottom: hp('10%'),
     paddingTop: 10,
-  },
-  searchContaier: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: windowWidth,
-    paddingLeft: 3,
-    paddingRight: 3,
-    paddingTop: 2,
-    backgroundColor: 'rgba(249, 247, 247, 0.1)',
-  },
-  searchButton: {
-    height: 40,
-    width: windowWidth * 0.18,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   item: {
     height: (hp('100%') - 5) / 5,
@@ -552,16 +377,5 @@ const styles = StyleSheet.create({
   containerButton: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-  },
-  loading: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
-    opacity: 0.5,
-    backgroundColor: 'black',
-    justifyContent: 'center',
-    alignItems: 'center',
   },
 });

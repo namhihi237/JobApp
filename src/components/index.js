@@ -15,6 +15,7 @@ import {EditPost} from './editPost';
 import {Companies, JobCompanies} from './companies';
 import {Feedback} from './Feedback';
 import Notification from './notifications';
+import SavedPosts from './savedPosts';
 export {
   Landing,
   Login,
@@ -39,4 +40,5 @@ export {
   JobCompanies,
   Feedback,
   Notification,
+  SavedPosts,
 };

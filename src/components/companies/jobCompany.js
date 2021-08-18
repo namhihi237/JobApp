@@ -22,6 +22,7 @@ import {
   Modal,
   TouchableHighlight,
   Alert,
+  Image,
 } from 'react-native';
 
 const windowWidth = Dimensions.get('window').width;
@@ -78,42 +79,53 @@ class JobCompanies extends Component {
 
   renderItem = ({item}) => (
     <View style={styles.item}>
-      <View style={{padding: 1, marginLeft: 10, maxWidth: wp('60%')}}>
-        <Text
-          style={{...styles.text, fontSize: hp('2.5%')}}
-          numberOfLines={1}
-          ellipsizeMode="tail">
-          {item.title}
-        </Text>
-        <View style={styles.fiedlsText}>
-          <FontAwesome5 name={'money-bill'} style={styles.iconText} />
-          <Text style={styles.text} numberOfLines={1} ellipsizeMode="tail">
-            {item.salary}
+      <View style={styles.logoContainer}>
+        <Image
+          source={{uri: this.props.company?.image || ''}}
+          style={styles.logo}></Image>
+        <View style={{padding: 1, marginLeft: 10, maxWidth: wp('60%')}}>
+          <Text
+            style={{...styles.text, fontSize: 20}}
+            numberOfLines={1}
+            ellipsizeMode="tail">
+            {item.title}
           </Text>
-        </View>
-        <View style={styles.fiedlsText}>
-          <FontAwesome5 name={'code'} style={styles.iconText} />
-          <Text style={styles.text} numberOfLines={1} ellipsizeMode="tail">
-            {item.skill.join(', ')}
+          <Text
+            style={{...styles.text, fontSize: 15}}
+            numberOfLines={1}
+            ellipsizeMode="tail">
+            {this.props.company?.name}
           </Text>
-        </View>
-        <View style={styles.fiedlsText}>
-          <FontAwesome5 name={'map-marker-alt'} style={styles.iconText} />
-          <Text style={styles.text} numberOfLines={1} ellipsizeMode="tail">
-            {item.address}
-          </Text>
-        </View>
-        <View style={styles.seeMore}>
-          <TouchableOpacity onPress={() => this.showDetail(item)} style={{}}>
-            <Text style={{color: 'green'}}>See more</Text>
-          </TouchableOpacity>
-          {this.renderApply(item.apply)}
           <View style={styles.fiedlsText}>
-            <FontAwesome5
-              name={'history'}
-              style={{...styles.iconText, color: 'red'}}
-            />
-            <Text style={{marginLeft: 10}}>{item.endTime}</Text>
+            <FontAwesome5 name={'money-bill'} style={styles.iconText} />
+            <Text style={styles.text} numberOfLines={1} ellipsizeMode="tail">
+              {item.salary}
+            </Text>
+          </View>
+          <View style={styles.fiedlsText}>
+            <FontAwesome5 name={'code'} style={styles.iconText} />
+            <Text style={styles.text} numberOfLines={1} ellipsizeMode="tail">
+              {item.skill.join(', ')}
+            </Text>
+          </View>
+          <View style={styles.fiedlsText}>
+            <FontAwesome5 name={'map-marker-alt'} style={styles.iconText} />
+            <Text style={styles.text} numberOfLines={1} ellipsizeMode="tail">
+              {item.address}
+            </Text>
+          </View>
+          <View style={styles.seeMore}>
+            <TouchableOpacity onPress={() => this.showDetail(item)}>
+              <Text style={{color: 'green'}}>See more</Text>
+            </TouchableOpacity>
+            {this.renderApply(item.apply)}
+            <View style={styles.fiedlsText}>
+              <FontAwesome5
+                name={'history'}
+                style={{...styles.iconText, color: 'red'}}
+              />
+              <Text style={{marginLeft: 10}}>{item.endTime}</Text>
+            </View>
           </View>
         </View>
       </View>
@@ -130,7 +142,7 @@ class JobCompanies extends Component {
       await this.props.getJobCompany(this.props.route.params.companyId);
       const role = await getData('role');
       const userId = await getData('userId');
-      this.setState({role, userId});
+      this.setState({role, userId, posts: this.props.posts});
     });
 
     return unsubscribe;
@@ -267,7 +279,7 @@ const mapDispatchToProps = {
 };
 
 const mapStateToProps = (state) => {
-  const {loading, status, msg, posts} = state.getJobCompany;
+  const {loading, status, msg, posts, company} = state.getJobCompany;
 
   return {
     loading,
@@ -276,6 +288,7 @@ const mapStateToProps = (state) => {
     msg,
     statusApply: state.applyJob.status,
     msgApply: state.applyJob.msg,
+    company,
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(JobCompanies);
