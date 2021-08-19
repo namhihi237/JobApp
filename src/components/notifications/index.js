@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import _ from 'lodash';
 import {connect} from 'react-redux';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {Loader} from '../../common';
 import axios from 'axios';
 import {apiUrl} from '../../api/api';
@@ -11,19 +10,9 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import {Header, Left, Body, Button, Icon, Title} from 'native-base';
-import {
-  StyleSheet,
-  View,
-  Text,
-  FlatList,
-  Dimensions,
-  TouchableOpacity,
-  ActivityIndicator,
-  Image,
-} from 'react-native';
-
-const windowHeight = Dimensions.get('window').height;
+import {Header, Left, Body, Button, Title} from 'native-base';
+import {StyleSheet, View, FlatList, ActivityIndicator} from 'react-native';
+import {getData} from '../../utils';
 const {BASE_URL} = apiUrl;
 class Notification extends Component {
   _isMounted = false;
@@ -68,13 +57,18 @@ class Notification extends Component {
       if (this.state.page > this.props.numPages) {
         return;
       }
+      const token = await getData('token');
       const result = await axios.get(
         `${BASE_URL}/api/v1/notifications?page=${this.state.page}&take=${10}`,
+        {
+          headers: {
+            Authorization: 'Bearer ' + token,
+          },
+        },
       );
       const addPost = result.data.data.notifications;
       const currentPage = result.data.data.currentPage;
       let newPost = [...this.state.notifications, ...addPost];
-
       this.setState({
         notifications: newPost,
         isLoading: false,

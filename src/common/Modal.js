@@ -7,17 +7,12 @@ import {
   Modal,
   Text,
 } from 'react-native';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from 'react-native-responsive-screen';
+
 const windowHeight = Dimensions.get('window').height;
 import {JobDetail} from '../components/job/jobDtail';
 import _ from 'lodash';
 const windowWidth = Dimensions.get('window').width;
 const ModalJob = (props) => {
-  console.log(props.item);
   return (
     <View style={styles.centeredView}>
       <Modal animationType="slide" transparent={true} visible={props.visible}>
