@@ -12,7 +12,6 @@ const {
 const {BASE_URL} = apiUrl;
 
 export const savePost = (data, newPosts) => async (dispatch) => {
-  console.log(newPosts.length);
   dispatch({type: UPDATE_SAVE_POST, payload: {posts: newPosts}});
   let result;
   dispatch({type: SAVE_POST});

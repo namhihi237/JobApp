@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import _ from 'lodash';
 import {connect} from 'react-redux';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import {Loader} from '../../common';
+import {Loader, SearchBar} from '../../common';
 import axios from 'axios';
 import {apiUrl} from '../../api/api';
 import FollowButton from './followButton';
@@ -19,14 +19,12 @@ import {
   FlatList,
   Dimensions,
   TouchableOpacity,
-  TextInput,
   Image,
   ActivityIndicator,
   Alert,
 } from 'react-native';
 
 const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
 
 class Companies extends Component {
   _isMounted = false;
@@ -199,29 +197,12 @@ class Companies extends Component {
       <View>
         <Loader status={this.props.loading}></Loader>
         <View style={styles.container}>
-          <View style={styles.searchContaier}>
-            <View style={{...styles.searchInput}}>
-              <TextInput
-                style={{
-                  height: 50,
-                  width: wp('75%'),
-                  fontFamily: 'TimesNewRoman',
-                  fontSize: 16,
-                }}
-                onChangeText={this.updateSearch}
-                value={this.state.search}
-                placeholder="Company name..."
-                placeholderTextColor="#44464f"></TextInput>
-              <TouchableOpacity
-                style={styles.searchButton}
-                onPress={this.searchItem}>
-                <FontAwesome5
-                  name={'search'}
-                  style={{fontSize: 22, marginTop: 2}}
-                />
-              </TouchableOpacity>
-            </View>
-          </View>
+          <SearchBar
+            onPress={this.searchItem}
+            onChangeText={this.updateSearch}
+            value={this.state.search}
+            placeholder={'Company name...'}
+          />
           <FlatList
             style={styles.flatlist}
             scrollEventThrottle={16}
@@ -259,45 +240,11 @@ export default connect(mapStateToProps, mapDispatchToProps)(Companies);
 
 const styles = StyleSheet.create({
   container: {
-    height: windowHeight - 26,
-  },
-  searchContaier: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: windowWidth,
-    paddingLeft: 3,
-    paddingRight: 3,
-    paddingTop: 2,
-    backgroundColor: 'rgba(249, 247, 247, 0.1)',
-  },
-  searchInput: {
-    height: 50,
-    width: windowWidth - 10,
-    borderColor: '#7e8591',
-    marginLeft: 3,
-    marginRight: 3,
-    borderWidth: 1,
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: 1,
-    paddingLeft: 15,
-    borderRadius: 50,
-    backgroundColor: '#c7cadd',
-    opacity: 0.7,
-  },
-  searchButton: {
-    height: 40,
-    width: windowWidth * 0.18,
-    justifyContent: 'center',
-    alignItems: 'center',
+    marginBottom: hp('10%'),
   },
   flatlist: {
     marginTop: 3,
-    marginBottom: hp('8%'),
-    paddingBottom: 100,
-    paddingTop: 10,
+    marginBottom: hp('10%'),
   },
   item: {
     height: hp('90%') / 5,
@@ -314,14 +261,6 @@ const styles = StyleSheet.create({
     paddingRight: 10,
     justifyContent: 'center',
     borderRadius: 7,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 8,
-    },
-    shadowOpacity: 0.34,
-    shadowRadius: 6.27,
-    elevation: 10,
   },
   logoContainer: {
     display: 'flex',
