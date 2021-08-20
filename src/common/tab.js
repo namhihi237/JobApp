@@ -7,6 +7,8 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import Pusher from 'pusher-js/react-native';
+import axios from 'axios';
+import {apiUrl} from '../api/api';
 
 // configuration settings pusher
 Pusher.logToConsole = true;
@@ -16,35 +18,55 @@ var pusher = new Pusher('8b94f31b5cb93338e859', {
 import {getData, storeData} from '../utils';
 
 const MyTabBar = ({state, descriptors, navigation}) => {
-  const [isNotification, setIsNotification] = React.useState(false);
   const [count, setCount] = React.useState(0);
+  const [token, setToken] = React.useState(null);
   let channel = null;
 
   React.useEffect(() => {
+    getData('token').then(async (token) => {
+      if (!token) return;
+      setToken(token);
+      const result = await axios.get(
+        `${apiUrl.BASE_URL}/api/v1/notifications/number`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+      result.data?.numberOfNotifications
+        ? setCount(result.data.numberOfNotifications)
+        : setCount(0);
+    });
     getData('userId').then((userId) => {
+      if (!userId) return;
       channel = pusher.subscribe(`notification-${userId}`);
-      getData('notify').then((notify) => {
-        console.log(isNaN(notify), notify);
-        if (isNaN(notify)) {
-        } else {
-          console.log(notify);
-          setCount((previousCount) => notify - 0);
-        }
-        if (channel) {
-          console.log(count);
-          channel.bind('push-new-notification', function (data) {
-            if (data.message) {
-              setIsNotification(true);
-              console.log(data.message);
-              console.log('count====', count);
-              setCount((previousCount) => previousCount + 1);
-              storeData('notify', count + 1 + '');
-            }
-          });
-        }
-      });
+      if (channel) {
+        channel.bind('push-new-notification', function (data) {
+          if (data.numberOfNotifications) {
+            setCount(data.numberOfNotifications);
+          }
+        });
+      }
     });
   }, []);
+
+  const resetNumberOfNotifications = async () => {
+    try {
+      setCount(0);
+      await axios.post(
+        `${apiUrl.BASE_URL}/api/v1/notifications/reset`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+    } catch (error) {
+      return;
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -53,7 +75,7 @@ const MyTabBar = ({state, descriptors, navigation}) => {
         const icon = options.icon;
         const isFocused = state.index === index;
 
-        const onPress = () => {
+        const onPress = async () => {
           const event = navigation.emit({
             type: 'tabPress',
             target: route.key,
@@ -61,16 +83,19 @@ const MyTabBar = ({state, descriptors, navigation}) => {
           if (!isFocused && !event.defaultPrevented) {
             navigation.navigate(route.name);
           }
+          if (route.name === 'Notification') {
+            await resetNumberOfNotifications();
+          }
         };
 
         return (
           <TouchableOpacity onPress={onPress} style={styles.button}>
             <View style={isFocused ? styles.focus : styles.noFocus}>
-              {options.icon == 'bell' && isNotification && count != 0 ? (
+              {options.icon == 'bell' && count != 0 ? (
                 <Badge
                   value={`${count}`}
                   status="error"
-                  container={{position: 'absolute', top: -1, right: -1}}
+                  containerStyle={{position: 'absolute', top: -1, right: -1}}
                 />
               ) : null}
               <FontAwesome5
@@ -92,7 +117,6 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     backgroundColor: '#1C1D26',
-    //backgroundColor: '#fff',
     height: hp('8%'),
     justifyContent: 'center',
     alignItems: 'center',
