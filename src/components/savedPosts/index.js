@@ -2,16 +2,14 @@ import React, {Component} from 'react';
 import _ from 'lodash';
 import {connect} from 'react-redux';
 import {Toast} from 'native-base';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import {JobDetail} from '../job/jobDtail';
+
 import {applyJob, savePost, getSavedPost} from '../../redux/actions';
 import {getData} from '../../utils';
-import {Header, Left, Body, Button, Icon, Title} from 'native-base';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import {Loader, CardItem, SearchBar, ModalJob} from '../../common';
+import {CardItem, ModalJob, Header} from '../../common';
 
 import {
   StyleSheet,
@@ -19,8 +17,6 @@ import {
   Text,
   FlatList,
   Dimensions,
-  TouchableOpacity,
-  Modal,
   TouchableHighlight,
 } from 'react-native';
 
@@ -117,16 +113,11 @@ class SavedPost extends Component {
     return (
       <View>
         <View style={styles.container}>
-          <Header>
-            <Left>
-              <Button transparent onPress={this.openBar}>
-                <Icon name="menu" />
-              </Button>
-            </Left>
-            <Body>
-              <Title style={{fontFamily: 'Itim-Regular'}}>Saved Posts</Title>
-            </Body>
-          </Header>
+          <Header
+            title={'           Saved Posts'}
+            left={true}
+            color="#0E1442"
+          />
           <FlatList
             style={styles.flatlist}
             scrollEventThrottle={16}

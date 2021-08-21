@@ -11,7 +11,7 @@ import axios from 'axios';
 import {apiUrl} from '../api/api';
 
 // configuration settings pusher
-Pusher.logToConsole = true;
+// Pusher.logToConsole = true;
 var pusher = new Pusher('8b94f31b5cb93338e859', {
   cluster: 'ap1',
 });

@@ -12,7 +12,7 @@ import {
 import {TextInput} from 'react-native-gesture-handler';
 import {connect} from 'react-redux';
 import {sendFeedback} from '../../redux/actions';
-import {Header, Left, Body, Button, Icon, Title} from 'native-base';
+import {Header} from '../../common';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -68,16 +68,7 @@ class Feedback extends Component {
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View style={{flex: 1, backgroundColor: '#c5c7db'}}>
-          <Header>
-            <Left>
-              <Button transparent onPress={this.openBar}>
-                <Icon name="menu" />
-              </Button>
-            </Left>
-            <Body>
-              <Title style={{fontFamily: 'Itim-Regular'}}>Send Feedback</Title>
-            </Body>
-          </Header>
+          <Header title={'           Feedback'} left={true} color="#0E1442" />
           <ScrollView showsVerticalScrollIndicator={false}>
             <TextInput
               onChangeText={this.changeContent}
