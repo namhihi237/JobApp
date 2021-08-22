@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Loader} from '../../common';
+import {Loader, Header} from '../../common';
 import {connect} from 'react-redux';
 import {getData} from '../../utils';
 import SelectMultiple from 'react-native-select-multiple';
@@ -8,14 +8,12 @@ import {Toast} from 'native-base';
 import _ from 'lodash';
 import * as ImagePicker from 'react-native-image-picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import {Header, Left, Body, Button, Icon, Title, Right} from 'native-base';
+import {Input, Textarea} from './components';
 
 import {
   StyleSheet,
@@ -23,8 +21,6 @@ import {
   Text,
   Dimensions,
   TouchableOpacity,
-  TextInput,
-  KeyboardAvoidingView,
   TouchableWithoutFeedback,
   Keyboard,
   ScrollView,
@@ -131,8 +127,6 @@ class UpdateCv extends Component {
     } = this.state;
 
     try {
-      this.props.navigation.goBack();
-
       let newImage = image;
       if (photo) {
         newImage = await this.handleUpload();
@@ -160,6 +154,7 @@ class UpdateCv extends Component {
       const {status, msg} = this.props;
       if (status == 200 || status == 304) {
         this.showToast(msg, 'success');
+        this.props.navigation.goBack();
         return;
       }
       this.showToast(msg, 'warning');
@@ -184,7 +179,7 @@ class UpdateCv extends Component {
     return data;
   };
 
-  onChangeDate = (evemt, selectedDate) => {
+  onChangeDate = (event, selectedDate) => {
     const currentDate = selectedDate || this.state.date;
 
     this.setState({
@@ -291,27 +286,15 @@ class UpdateCv extends Component {
       email,
     } = this.state;
     return (
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <View style={{paddingBottom: hp('5%')}}>
+        <Header
+          title={'     Update CV'}
+          left={true}
+          hideRight={false}
+          color="#0E1442"
+        />
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-          <KeyboardAvoidingView style={{flex: 1}}>
-            {/* <Loader status={this.props.loading} msg={'Updating'}></Loader> */}
-            <Header>
-              <Left>
-                <Button
-                  transparent
-                  onPress={() => this.props.navigation.goBack()}>
-                  <Icon name="arrow-back" />
-                </Button>
-              </Left>
-              <Body>
-                <Title style={{fontFamily: 'Itim-Regular'}}>Update CV</Title>
-              </Body>
-              <Right>
-                <Button transparent>
-                  <Icon name="menu" />
-                </Button>
-              </Right>
-            </Header>
+          <ScrollView showsVerticalScrollIndicator={false}>
             <View style={styles.container}>
               <Image
                 source={{
@@ -330,32 +313,15 @@ class UpdateCv extends Component {
                   Choose Avatar
                 </Text>
               </TouchableOpacity>
-              <View style={styles.choice}>
-                <TextInput
-                  style={styles.textInputChoice}
-                  value={name}
-                  placeholder="Name..."></TextInput>
-              </View>
-              <View style={styles.choice}>
-                <TextInput
-                  style={styles.textInputChoice}
-                  value={email}
-                  placeholder="Email..."></TextInput>
-              </View>
-              <View style={styles.choice}>
-                <TextInput
-                  value={birthday}
-                  style={styles.textName}
-                  editable={false}
-                  selectTextOnFocus={false}
-                  placeholder="Birthday. . ."></TextInput>
-                <TouchableOpacity onPress={this.showDatepicker}>
-                  <FontAwesome5
-                    name={'calendar-alt'}
-                    style={styles.iconCalendar}
-                  />
-                </TouchableOpacity>
-              </View>
+              <Input value={name}></Input>
+              <Input value={email}></Input>
+              <Input
+                value={birthday}
+                editable={false}
+                selectTextOnFocus={false}
+                placeholder="Birthday. . ."
+                iconName={'calendar-alt'}
+                onPress={this.showDatepicker}></Input>
               {showDate && (
                 <DateTimePicker
                   testID="dateTimePicker"
@@ -365,37 +331,27 @@ class UpdateCv extends Component {
                   maximumDate={new Date()}
                 />
               )}
-              <View style={styles.choice}>
-                <TextInput
-                  style={styles.textInputChoice}
-                  value={textSkill}
-                  editable={false}
-                  onChangeText={this.onChangesKill}
-                  placeholder="Skill..."></TextInput>
-                <TouchableOpacity onPress={this.showModalSkill}>
-                  <FontAwesome5 name={'cogs'} style={styles.iconCalendar} />
-                </TouchableOpacity>
-              </View>
-              <TextInput
-                style={styles.desInput}
+              <Input
+                value={textSkill}
+                editable={false}
+                onChangeText={this.onChangesKill}
+                placeholder="Skill..."
+                iconName={'cogs'}
+                onPress={this.showModalSkill}></Input>
+              <Textarea
                 onChangeText={this.onChangesoftSkill}
-                multiline={true}
                 numberOfLines={4}
                 value={softSkill}
-                placeholder="Soft Skill"></TextInput>
-              <TextInput
-                style={styles.desInput}
+                placeholder="Soft Skill"></Textarea>
+              <Textarea
                 onChangeText={this.onChangeExperience}
-                multiline={true}
                 numberOfLines={4}
                 value={experience}
-                placeholder="Experience"></TextInput>
-              <TextInput
+                placeholder="Experience"></Textarea>
+              <Textarea
                 onChangeText={this.onChangeDescription}
-                multiline={true}
                 numberOfLines={4}
                 value={description}
-                style={styles.desInput}
                 placeholder="Description"
                 autoCorrect={false}
               />
@@ -430,9 +386,9 @@ class UpdateCv extends Component {
                 </View>
               </Modal>
             </View>
-          </KeyboardAvoidingView>
+          </ScrollView>
         </TouchableWithoutFeedback>
-      </ScrollView>
+      </View>
     );
   }
 }
@@ -442,10 +398,9 @@ const mapDispatchToProps = {
 };
 
 const mapStateToProps = (state) => {
-  const {loading, status, msg} = state.updateCv;
+  const {status, msg} = state.updateCv;
   const {cv} = state.getCv;
   return {
-    loading,
     status,
     msg,
     cv,
@@ -494,8 +449,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
     elevation: 2,
-    width: wp('30%'),
-    marginLeft: wp('35%'),
+    width: wp('40%'),
+    marginLeft: wp('20%'),
     marginRight: 35,
     marginTop: 15,
     backgroundColor: '#adb0ce',
@@ -511,32 +466,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flex: 1,
     display: 'flex',
-    minHeight: (windowHeight * 9) / 10,
     paddingBottom: 20,
     paddingTop: 10,
-  },
-  textInput: {
-    borderColor: 'black',
-    borderWidth: 1,
-    height: 40,
-    width: wp('80%'),
-    marginBottom: 15,
-    paddingLeft: 6,
-    marginLeft: wp('10%'),
-    color: 'black',
-    borderRadius: 5,
-  },
-  desInput: {
-    borderColor: 'black',
-    borderWidth: 1,
-    height: 100,
-    width: wp('80%'),
-    marginBottom: 5,
-    paddingLeft: 6,
-    textAlignVertical: 'top',
-    marginLeft: wp('10%'),
-    borderRadius: 5,
-    fontFamily: 'TimesNewRoman',
+    paddingLeft: wp('10%'),
+    paddingRight: wp('10%'),
   },
   textStyle: {
     color: 'white',
@@ -547,27 +480,10 @@ const styles = StyleSheet.create({
   containerButton: {
     flexDirection: 'row',
   },
-  choice: {
-    flexDirection: 'row',
-    borderWidth: 1,
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    borderBottomColor: '#3f51b5',
-    marginBottom: 15,
-    width: wp('80%'),
-    marginLeft: wp('10%'),
-  },
-  iconCalendar: {
-    color: 'black',
-    fontSize: 25,
-    marginTop: 10,
-    marginRight: 5,
-  },
   buttonAvatar: {
     height: 40,
     width: wp('28%'),
-    marginLeft: wp('36%'),
+    marginLeft: wp('26%'),
     backgroundColor: '#8ccca1',
     justifyContent: 'center',
     alignItems: 'center',
@@ -580,11 +496,9 @@ const styles = StyleSheet.create({
     width: wp('26%'),
     height: 100,
     borderWidth: 1,
-    marginBottom: 5,
     borderColor: '#bfa8a8',
-    marginLeft: wp('37%'),
+    marginLeft: wp('27%'),
   },
-  textName: {},
   textInputChoice: {
     height: 40,
     width: windowWidth * 0.6,

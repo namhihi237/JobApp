@@ -1,24 +1,22 @@
 import React, {Component} from 'react';
 import {Toast} from 'native-base';
 import {Loader} from '../../common';
-import LinearGradient from 'react-native-linear-gradient';
+import {Button, TextInput} from './components';
 import {
   StyleSheet,
   View,
   Text,
   TouchableOpacity,
-  Dimensions,
   Keyboard,
   TouchableWithoutFeedback,
+  ScrollView,
+  Image,
 } from 'react-native';
 
-import {TextInput} from 'react-native-gesture-handler';
 import {connect} from 'react-redux';
-import {login} from '../../redux/actions';
+import {login, getFollowing} from '../../redux/actions';
 import {getData} from '../../utils';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
+
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -96,88 +94,52 @@ class Login extends Component {
   render() {
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-        <LinearGradient
-          colors={['#cdaeee', '#3b5998']}
-          style={{
-            width: windowWidth,
-            height: windowHeight + 20,
-            ...styles.container,
-          }}>
-          <Loader status={this.props.loading} msg={'Login'}></Loader>
-          <View
-            style={{
-              justifyContent: 'center',
-              alignItems: 'center',
-              backgroundColor: '#8094bc',
-              padding: 10,
-              borderRadius: 20,
-              paddingBottom: 30,
-              paddingTop: 30,
-              shadowColor: '#000',
-              shadowOffset: {
-                width: 0,
-                height: 8,
-              },
-              shadowOpacity: 0.34,
-              shadowRadius: 6.27,
-              elevation: 10,
-            }}>
-            <View style={styles.inputView}>
-              <FontAwesome5 name={'envelope'} style={styles.icon} />
-              <TextInput
-                onChangeText={this.changeTextEmail}
-                style={styles.inputText}
-                placeholder="Email. . ."
-                placeholderTextColor="#003f5c"
-              />
-            </View>
-            <View style={styles.inputView}>
-              <FontAwesome5 name={'key'} style={styles.icon} />
-              <TextInput
-                onChangeText={this.changeTextPass}
-                style={styles.inputText}
-                placeholder="Password..."
-                placeholderTextColor="#003f5c"
-                secureTextEntry={!this.state.eye}
-              />
-              <TouchableOpacity onPress={this.togglePassword}>
-                {this.state.eye ? (
-                  <FontAwesome5 name={'eye-slash'} style={styles.icon} />
-                ) : (
-                  <FontAwesome5 name={'eye'} style={styles.icon} />
-                )}
-              </TouchableOpacity>
-            </View>
-
-            <TouchableOpacity onPress={this.moveToForgotPassword}>
-              <Text style={styles.forgot}>Forgot Password?</Text>
+        <ScrollView
+          contentInsetAdjustmentBehavior="automatic"
+          showsVerticalScrollIndicator={false}
+          style={styles.container}>
+          <Loader status={this.props.loading} message={'logging'} />
+          <Image
+            source={require('../../assets/image/login.png')}
+            style={styles.image}
+          />
+          <Text style={styles.text}>Login</Text>
+          <View style={styles.form}>
+            <TextInput
+              iconName={'envelope'}
+              onChangeText={this.changeTextEmail}
+              value={this.state.email}
+              placeholder={'example@gmail.com'}></TextInput>
+            <TextInput
+              iconName={'key'}
+              placeholder={'******'}
+              value={this.state.password}
+              onChangeText={this.changeTextPass}
+              secureTextEntry={true}></TextInput>
+            <TouchableOpacity style={styles.forgot}>
+              <Text style={styles.textRegister}>Forgot your password?</Text>
             </TouchableOpacity>
-
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity
-                style={styles.loginBtn}
-                onPress={this.moveToMain}>
-                <Text style={{fontFamily: 'Itim-Regular', fontSize: 29}}>
-                  Login
-                </Text>
-              </TouchableOpacity>
-            </View>
-            <TouchableOpacity
-              onPress={this.moveToRegisterIter}
-              style={{marginBottom: 10}}>
-              <Text style={styles.loginText}>Signup for Iter</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={this.moveToRegisterCompany}>
-              <Text style={styles.loginText}>Signup for Company</Text>
+            <Button onPress={this.moveToMain} label={'Login'}></Button>
+          </View>
+          <View style={styles.textRegisterContainer}>
+            <Text style={styles.textRegister1}>New user? </Text>
+            <TouchableOpacity onPress={this.moveToRegisterIter}>
+              <Text style={styles.textRegister}>Register Iter</Text>
             </TouchableOpacity>
           </View>
-        </LinearGradient>
+          <View style={styles.textRegisterContainerDown}>
+            <TouchableOpacity onPress={this.moveToRegisterCompany}>
+              <Text style={styles.textRegister}>Company</Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
       </TouchableWithoutFeedback>
     );
   }
 }
 const mapDispatchToProps = {
   login,
+  getFollowing,
 };
 
 const mapStateToProps = (state) => {
@@ -190,66 +152,55 @@ export default connect(mapStateToProps, mapDispatchToProps)(Login);
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: 'center',
+    backgroundColor: '#fff',
+    paddingLeft: wp('5%'),
+  },
+  form: {
+    width: wp('90%'),
+    borderColor: '#3a455b',
+  },
+  image: {
+    height: wp('60%'),
+    width: wp('60%'),
+    marginTop: hp('3%'),
+    marginLeft: wp('15%'),
+  },
+  text: {
+    fontFamily: 'Itim-Regular',
+    fontSize: 40,
+  },
+  textRegisterContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    marginTop: hp('10%'),
+    width: wp('90%'),
     alignItems: 'center',
-    flex: 1,
+    justifyContent: 'center',
+  },
+  textRegisterContainerDown: {
+    display: 'flex',
+    flexDirection: 'row',
+    marginTop: hp('1%'),
+    width: wp('90%'),
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  textRegister1: {
+    fontSize: 20,
+    fontFamily: 'Itim-Regular',
+  },
+  textRegister: {
+    marginLeft: 3,
+    color: '#85adfc',
+    fontSize: 20,
+    fontFamily: 'Itim-Regular',
+  },
+  checkbox: {
+    marginTop: hp('1%'),
   },
   forgot: {
-    color: 'white',
-    fontSize: 13,
-  },
-  loginBtn: {
-    width: wp('55%'),
-    backgroundColor: 'rgba(251, 91, 90, 0.8)',
-    borderRadius: 25,
-    height: 50,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 40,
-    marginBottom: 10,
-    shadowColor: 'rgba(0, 0, 0, 0.1)',
-    shadowOpacity: 0.8,
-    elevation: 6,
-    shadowRadius: 15,
-    shadowOffset: {width: 1, height: 13},
-  },
-  inputView: {
-    width: wp('80%'),
-    backgroundColor: 'rgba(70, 88, 129 , 0.7)',
-    borderWidth: 1,
-    borderColor: '#3a455b',
-    borderRadius: 25,
-    height: 50,
-    marginBottom: 20,
-    paddingLeft: 20,
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  inputText: {
-    color: 'white',
-    width: wp('62%'),
-    fontFamily: 'TimesNewRoman',
-    fontSize: 17,
-    marginLeft: 5,
-  },
-
-  buttonLogin: {
-    height: 50,
-    width: 100,
-    backgroundColor: '#456745',
-    margin: 10,
-  },
-  buttonContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-  },
-  icon: {
-    fontSize: 16,
-  },
-  loginText: {
-    fontFamily: 'TimesNewRoman',
-    fontSize: 17,
-    textDecorationLine: 'underline',
+    marginTop: hp('3%'),
   },
 });

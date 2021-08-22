@@ -17,7 +17,7 @@ import {connect} from 'react-redux';
 import {getProfile} from '../../redux/actions';
 import {Toast} from 'native-base';
 import axios from 'axios';
-
+import {Header} from '../../common';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 import {
@@ -182,88 +182,71 @@ class Profile extends Component {
     );
   };
 
-  componentDidMount() {
-    const unsubscribe = this.props.navigation.addListener('focus', async () => {
-      await this.props.getProfile();
-      let role = await getData('role');
-      let phone = _.get(this.props.user, 'phone') || '';
-      let address = _.get(this.props.user, 'address') || '';
-      let name = _.get(this.props.user, 'name') || '';
-      this.setState({role, phone, address, name});
-    });
-    return unsubscribe;
+  async componentDidMount() {
+    let phone = _.get(this.props.user, 'phone') || '';
+    let address = _.get(this.props.user, 'address') || '';
+    let name = _.get(this.props.user, 'name') || '';
+    let role = await getData('role');
+    this.setState({role, phone, address, name});
   }
-
-  openBar = () => {
-    this.props.navigation.openDrawer();
-  };
 
   render() {
     const {photo, name} = this.state;
     return (
-      <ScrollView style={{flex: 1}}>
-        <View style={styles.container}>
-          <View style={styles.cv}>
-            <TouchableOpacity onPress={this.openBar}>
-              <FontAwesome5 name={'bars'} style={styles.iconBars} />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={this.handleChoosePhoto}
-              style={styles.containerImg}>
-              <Image
+      <View>
+        <Header title={'           Profile'} left={true} color="#0E1442" />
+        <ScrollView>
+          <View style={styles.container}>
+            <View style={styles.cv}>
+              <TouchableOpacity
+                onPress={this.handleChoosePhoto}
+                style={styles.containerImg}>
+                <Image
+                  style={{
+                    height: 150,
+                    width: 100,
+                    borderRadius: 15,
+                  }}
+                  source={{
+                    uri:
+                      _.get(photo, 'uri') ||
+                      _.get(this.props.user, 'image') ||
+                      'https://res.cloudinary.com/do-an-cnpm/image/upload/v1618073475/person_j0pvho.png',
+                  }}
+                />
+              </TouchableOpacity>
+              <View style={styles.content}>
+                <Text style={styles.textName}>{name || ``}</Text>
+              </View>
+            </View>
+            <View style={styles.info}>
+              <View>
+                <Text style={{fontFamily: 'Itim-Regular', fontSize: 25}}>
+                  General
+                </Text>
+                {this.infoCompany()}
+              </View>
+              <TouchableOpacity
+                onPress={async () => await this.handleUpload()}
                 style={{
-                  height: 150,
-                  width: 100,
-                  borderRadius: 15,
-                }}
-                source={{
-                  uri:
-                    _.get(photo, 'uri') ||
-                    _.get(this.props.user, 'image') ||
-                    'https://res.cloudinary.com/do-an-cnpm/image/upload/v1618073475/person_j0pvho.png',
-                }}
-              />
-            </TouchableOpacity>
-            <Text
-              style={{
-                color: '#fff',
-                fontFamily: 'Sailors Slant',
-                fontSize: 20,
-                marginLeft: wp('40%'),
-              }}>
-              Welcome to IT Jobs
-            </Text>
-            <View style={styles.content}>
-              <Text style={styles.textName}>{name || ``}</Text>
+                  flexDirection: 'row-reverse',
+                  display: 'flex',
+                  marginRight: wp('12%'),
+                  marginBottom: hp('3%g'),
+                }}>
+                <FontAwesome5
+                  name={'save'}
+                  style={{
+                    fontSize: 25,
+                    color: '#356fb7',
+                    marginRight: wp('9%'),
+                  }}
+                />
+              </TouchableOpacity>
             </View>
           </View>
-          <View style={styles.info}>
-            <View>
-              <Text style={{fontFamily: 'Itim-Regular', fontSize: 25}}>
-                General
-              </Text>
-              {this.infoCompany()}
-            </View>
-            <TouchableOpacity
-              onPress={async () => await this.handleUpload()}
-              style={{
-                flexDirection: 'row-reverse',
-                display: 'flex',
-                marginRight: wp('12%'),
-                marginBottom: hp('3%g'),
-              }}>
-              <FontAwesome5
-                name={'save'}
-                style={{
-                  fontSize: 25,
-                  color: '#356fb7',
-                  marginRight: wp('9%'),
-                }}
-              />
-            </TouchableOpacity>
-          </View>
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </View>
     );
   }
 }
@@ -284,9 +267,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(Profile);
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: '#e3e5ef',
-    height: windowHeight * 0.96,
+    height: hp('85%'),
   },
   tinyLogo: {
     width: 100,
@@ -309,7 +291,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'column',
     backgroundColor: '#0E1442',
-    height: 170,
+    height: 130,
     borderBottomLeftRadius: 40,
     borderBottomRightRadius: 40,
   },
@@ -323,12 +305,12 @@ const styles = StyleSheet.create({
 
   content: {
     marginLeft: 150,
-    marginTop: 20,
+    marginTop: 40,
     padding: 10,
   },
 
   containerImg: {
-    top: 60,
+    top: 30,
     height: 150,
     width: 100,
     position: 'absolute',
@@ -343,7 +325,7 @@ const styles = StyleSheet.create({
     shadowColor: '#dadbe8',
   },
   info: {
-    height: (windowHeight * 1.1) / 2,
+    height: hp('50%'),
     width: (windowWidth * 3.2) / 4,
     shadowOffset: {
       width: 0,

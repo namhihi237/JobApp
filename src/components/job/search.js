@@ -4,8 +4,9 @@ import {connect} from 'react-redux';
 import {Toast} from 'native-base';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {JobDetail} from './jobDtail';
-import {applyJob, searchJob} from '../../redux/actions';
+import {applyJob, searchJob, savePost, getSavedPost} from '../../redux/actions';
 import {getData} from '../../utils';
+import {Loader, CardItem, SearchBar} from '../../common';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -21,7 +22,6 @@ import {
   Modal,
   TextInput,
   TouchableHighlight,
-  Image,
   Alert,
 } from 'react-native';
 
@@ -61,95 +61,59 @@ class Search extends Component {
     this.setState({posts: this.props.postsSearch});
   };
 
-  renderApply = (listApply) => {
-    for (let applier of listApply) {
-      if (
-        JSON.stringify(applier.iterId) === JSON.stringify(this.state.userId)
-      ) {
-        return (
-          <View style={{display: 'flex', flexDirection: 'row'}}>
-            <FontAwesome5
-              name={'check-circle'}
-              style={{fontSize: 15, marginTop: 2, color: 'green'}}
-            />
-            <Text
-              style={{
-                fontFamily: 'TimesNewRoman',
-                marginLeft: 2,
-                color: '#996f6f',
-              }}>
-              Applied
-            </Text>
-          </View>
-        );
-      }
-    }
-  };
   renderItem = ({item}) => (
-    <View style={styles.item}>
-      <View style={styles.logoContainer}>
-        <Image
-          source={{uri: _.get(item.company[0], 'image')}}
-          style={styles.logo}></Image>
-        <View style={{padding: 1, marginLeft: 10, maxWidth: wp('60%')}}>
-          <Text
-            style={{...styles.text, fontSize: 20}}
-            numberOfLines={1}
-            ellipsizeMode="tail">
-            {item.title}
-          </Text>
-          <Text
-            style={{...styles.text, fontSize: 15}}
-            numberOfLines={1}
-            ellipsizeMode="tail">
-            {_.get(item.company[0], 'name')}
-          </Text>
-          <View style={styles.fiedlsText}>
-            <FontAwesome5 name={'money-bill'} style={styles.iconText} />
-            <Text style={styles.text} numberOfLines={1} ellipsizeMode="tail">
-              {item.salary}
-            </Text>
-          </View>
-          <View style={styles.fiedlsText}>
-            <FontAwesome5 name={'code'} style={styles.iconText} />
-            <Text style={styles.text} numberOfLines={1} ellipsizeMode="tail">
-              {item.skill.join(', ')}
-            </Text>
-          </View>
-          <View style={styles.fiedlsText}>
-            <FontAwesome5 name={'map-marker-alt'} style={styles.iconText} />
-            <Text style={styles.text} numberOfLines={1} ellipsizeMode="tail">
-              {item.address}
-            </Text>
-          </View>
-          <View style={styles.seeMore}>
-            <TouchableOpacity onPress={() => this.showDetail(item)}>
-              <Text style={{color: 'green'}}>See more</Text>
-            </TouchableOpacity>
-            {this.renderApply(item.apply)}
-            <View style={styles.fiedlsText}>
-              <FontAwesome5
-                name={'history'}
-                style={{...styles.iconText, color: 'red'}}
-              />
-              <Text style={{marginLeft: 10}}>{item.endTime}</Text>
-            </View>
-          </View>
-        </View>
-      </View>
-    </View>
+    <CardItem
+      item={item}
+      userId={this.state.userId}
+      savePost={this.savePost}
+      role={this.state.role}
+      showDetail={this.showDetail}
+      savedPosts={this.props.savedPost}></CardItem>
   );
+  alertLoginSaved = () =>
+    Alert.alert('You must be login to apply!', null, [
+      {
+        text: 'Later',
+        style: 'cancel',
+      },
+      {
+        text: 'Login now',
+        onPress: () => {
+          this.props.navigation.navigate('Login');
+        },
+      },
+    ]);
 
+  savePost = async (post) => {
+    if (!this.state.userId) {
+      this.alertLoginSaved();
+      return;
+    }
+    let newPost = [];
+    if (!this.props.savedPost.map((e) => e.postId).includes(post._id)) {
+      newPost = [...this.props.savedPost, {postId: post._id, post: [post]}];
+    } else {
+      this.props.savedPost.forEach((element) => {
+        if (element.postId != post._id) {
+          newPost.push(element);
+        }
+      });
+    }
+    await this.props.savePost(post, newPost);
+  };
   keyExtractor = (item) => {
     return item._id;
   };
 
-  componentDidMount() {
+  async componentDidMount() {
     this._isMounted = true;
     return this.props.navigation.addListener('focus', async () => {
       await this.setState({search: this.props.route.params.search});
       await this.props.searchJob(this.state.search);
       const role = await getData('role');
+      if (role === 'iter') {
+        await this.props.getSavedPost();
+      }
       const userId = await getData('userId');
 
       this.setState({role, posts: this.props.postsSearch, userId});
@@ -215,9 +179,8 @@ class Search extends Component {
     }
     return (
       <View>
-        {/* <Loader status={this.props.loading}></Loader> */}
         <View style={styles.container}>
-          <View style={styles.bgHeader}>
+          <View style={styles.searchContaier}>
             <TouchableOpacity
               onPress={this.backToHome}
               style={styles.buttonBack}>
@@ -229,28 +192,26 @@ class Search extends Component {
                 }}
               />
             </TouchableOpacity>
-            <View style={styles.searchContaier}>
-              <View style={{...styles.searchInput}}>
-                <TextInput
-                  style={{
-                    height: 50,
-                    width: wp('65%'),
-                    fontFamily: 'TimesNewRoman',
-                    fontSize: 16,
-                  }}
-                  value={this.state.search}
-                  onChangeText={this.updateSearch}
-                  placeholder="Keyword (skill, company, position,...)"
-                  placeholderTextColor="#44464f"></TextInput>
-                <TouchableOpacity
-                  style={styles.searchButton}
-                  onPress={this.searchItem}>
-                  <FontAwesome5
-                    name={'search'}
-                    style={{fontSize: 22, marginTop: 2}}
-                  />
-                </TouchableOpacity>
-              </View>
+            <View style={styles.searchInput}>
+              <TextInput
+                style={{
+                  height: 50,
+                  width: wp('65%'),
+                  fontFamily: 'TimesNewRoman',
+                  fontSize: 16,
+                }}
+                value={this.state.search}
+                onChangeText={this.updateSearch}
+                placeholder="Keyword (skill, company, position,...)"
+                placeholderTextColor="#44464f"></TextInput>
+              <TouchableOpacity
+                style={styles.searchButton}
+                onPress={this.searchItem}>
+                <FontAwesome5
+                  name={'search'}
+                  style={{fontSize: 22, marginTop: 2, color: '#f25430'}}
+                />
+              </TouchableOpacity>
             </View>
           </View>
 
@@ -311,6 +272,8 @@ class Search extends Component {
 const mapDispatchToProps = {
   applyJob,
   searchJob,
+  savePost,
+  getSavedPost,
 };
 
 const mapStateToProps = (state) => {
@@ -321,6 +284,7 @@ const mapStateToProps = (state) => {
     msgApply: state.applyJob.msg,
     loading: _.get(state.searchJob, 'loading'),
     status: state.searchJob.status,
+    savedPost: _.get(state.getSavedPost, 'posts') || [],
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Search);
@@ -329,32 +293,19 @@ const styles = StyleSheet.create({
   container: {
     height: windowHeight - 26,
   },
-  fiedlsText: {
-    display: 'flex',
-    flexDirection: 'row',
-  },
-  seeMore: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: (windowWidth * 1.8) / 3,
-    marginTop: 1,
-  },
   searchInput: {
     height: 50,
-    width: windowWidth * 0.85,
-    borderColor: '#7e8591',
-    marginLeft: 3,
-    marginRight: 3,
+    width: wp('85%'),
+    borderColor: '#E0E0E0',
+    margin: wp('4%'),
     borderWidth: 1,
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
     padding: 1,
     paddingLeft: 15,
-    borderRadius: 50,
-    backgroundColor: '#c7cadd',
-    opacity: 0.7,
+    borderRadius: 15,
+    backgroundColor: '#fff',
   },
   flatlist: {
     marginTop: 3,
@@ -366,57 +317,17 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: 200,
-    flex: 9,
     paddingLeft: 3,
     paddingRight: 3,
     paddingTop: 2,
+    backgroundColor: 'rgba(249, 247, 247, 0.1)',
   },
   searchButton: {
     height: 40,
-    width: windowWidth * 0.18,
+    paddingRight: 20,
+    width: wp('10%'),
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  item: {
-    height: (hp('100%') - 5) / 5,
-    marginBottom: 15,
-    marginLeft: 15,
-    marginRight: 15,
-    backgroundColor: '#fff',
-    shadowOpacity: 0.6,
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-    paddingLeft: 10,
-    paddingTop: 5,
-    borderRadius: 7,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 8,
-    },
-    paddingRight: 10,
-    shadowOpacity: 0.34,
-    shadowRadius: 6.27,
-
-    elevation: 10,
-  },
-  iconText: {marginTop: 4, marginLeft: 5},
-  text: {
-    marginBottom: 1,
-    marginLeft: 5,
-    fontFamily: 'TimesNewRoman',
-    fontSize: hp('2.1%'),
-  },
-  logoContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-  },
-  logo: {
-    marginTop: 25,
-    width: 80,
-    height: 80,
   },
   // modal
   centeredView: {
@@ -456,21 +367,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  bgHeader: {
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    display: 'flex',
-    flexDirection: 'row',
-    shadowOffset: {
-      width: 0,
-      height: 8,
-    },
-    paddingBottom: 3,
-    shadowOpacity: 0.34,
-    shadowRadius: 6.27,
-
-    elevation: 10,
-  },
   headerStyle: {
     fontSize: 25,
     textAlign: 'center',
@@ -478,8 +374,9 @@ const styles = StyleSheet.create({
     color: '#000',
   },
   buttonBack: {
-    flex: 1,
-    textAlign: 'center',
     alignItems: 'center',
+    justifyContent: 'center',
+    display: 'flex',
+    marginLeft: 6,
   },
 });

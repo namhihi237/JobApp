@@ -3,9 +3,14 @@ import _ from 'lodash';
 import {connect} from 'react-redux';
 import {Toast} from 'native-base';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import {Loader} from '../../common';
+import {Loader, ModalJob, CardItem} from '../../common';
 import {JobDetail} from './detail';
-import {getJobCompany, applyJob} from '../../redux/actions';
+import {
+  getJobCompany,
+  applyJob,
+  savePost,
+  getSavedPost,
+} from '../../redux/actions';
 import {getData} from '../../utils';
 import {
   widthPercentageToDP as wp,
@@ -17,15 +22,9 @@ import {
   View,
   Text,
   FlatList,
-  Dimensions,
-  TouchableOpacity,
-  Modal,
   TouchableHighlight,
   Alert,
 } from 'react-native';
-
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
 class JobCompanies extends Component {
   _isMounted = false;
   constructor(props) {
@@ -75,50 +74,20 @@ class JobCompanies extends Component {
         );
     }
   };
-
-  renderItem = ({item}) => (
-    <View style={styles.item}>
-      <View style={{padding: 1, marginLeft: 10, maxWidth: wp('60%')}}>
-        <Text
-          style={{...styles.text, fontSize: hp('2.5%')}}
-          numberOfLines={1}
-          ellipsizeMode="tail">
-          {item.title}
-        </Text>
-        <View style={styles.fiedlsText}>
-          <FontAwesome5 name={'money-bill'} style={styles.iconText} />
-          <Text style={styles.text} numberOfLines={1} ellipsizeMode="tail">
-            {item.salary}
-          </Text>
-        </View>
-        <View style={styles.fiedlsText}>
-          <FontAwesome5 name={'code'} style={styles.iconText} />
-          <Text style={styles.text} numberOfLines={1} ellipsizeMode="tail">
-            {item.skill.join(', ')}
-          </Text>
-        </View>
-        <View style={styles.fiedlsText}>
-          <FontAwesome5 name={'map-marker-alt'} style={styles.iconText} />
-          <Text style={styles.text} numberOfLines={1} ellipsizeMode="tail">
-            {item.address}
-          </Text>
-        </View>
-        <View style={styles.seeMore}>
-          <TouchableOpacity onPress={() => this.showDetail(item)} style={{}}>
-            <Text style={{color: 'green'}}>See more</Text>
-          </TouchableOpacity>
-          {this.renderApply(item.apply)}
-          <View style={styles.fiedlsText}>
-            <FontAwesome5
-              name={'history'}
-              style={{...styles.iconText, color: 'red'}}
-            />
-            <Text style={{marginLeft: 10}}>{item.endTime}</Text>
-          </View>
-        </View>
-      </View>
-    </View>
-  );
+  renderItem = ({item}) => {
+    if (item) {
+      item.company = [this.props.company];
+    }
+    return (
+      <CardItem
+        item={item}
+        userId={this.state.userId}
+        savePost={this.savePost}
+        role={this.state.role}
+        showDetail={this.showDetail}
+        savedPosts={this.props.savedPost}></CardItem>
+    );
+  };
 
   keyExtractor = (item) => {
     return item._id;
@@ -130,7 +99,7 @@ class JobCompanies extends Component {
       await this.props.getJobCompany(this.props.route.params.companyId);
       const role = await getData('role');
       const userId = await getData('userId');
-      this.setState({role, userId});
+      this.setState({role, userId, posts: this.props.posts});
     });
 
     return unsubscribe;
@@ -166,6 +135,37 @@ class JobCompanies extends Component {
     this.showToast(this.props.msgApply);
   };
 
+  savePost = async (post) => {
+    if (!this.state.userId) {
+      this.alertLoginSaved();
+      return;
+    }
+    let newPost = [];
+    if (!this.props.savedPost.map((e) => e.postId).includes(post._id)) {
+      newPost = [...this.props.savedPost, {postId: post._id, post: [post]}];
+    } else {
+      this.props.savedPost.forEach((element) => {
+        if (element.postId != post._id) {
+          newPost.push(element);
+        }
+      });
+    }
+    await this.props.savePost(post, newPost);
+  };
+
+  alertLoginSaved = () =>
+    Alert.alert('You must be login to apply!', null, [
+      {
+        text: 'Later',
+        style: 'cancel',
+      },
+      {
+        text: 'Login now',
+        onPress: () => {
+          this.props.navigation.navigate('Login');
+        },
+      },
+    ]);
   renderButtonApply = () => {
     if (this.state.role == 'iter' || !this.state.role) {
       return (
@@ -203,46 +203,40 @@ class JobCompanies extends Component {
             </Button>
           </Left>
           <Body>
-            <Title>{}</Title>
+            <Title>{this.props.route.params.companyName}</Title>
           </Body>
         </Header>
         <View style={styles.container}>
-          <FlatList
-            style={styles.flatlist}
-            scrollEventThrottle={16}
-            data={this.props.posts}
-            keyExtractor={this.keyExtractor}
-            renderItem={this.renderItem}
-            onRefresh={() => this.onRefresh()}
-            refreshing={this.state.isFetching}
-            onEndReached={this.handleLoadMore}></FlatList>
-        </View>
-        <View style={styles.centeredView}>
-          <Modal
-            style={styles.search}
-            animationType="slide"
-            transparent={true}
-            visible={modalVisible}>
-            <View style={styles.centeredView}>
-              <View style={styles.modalView}>
-                <Text style={{fontSize: 30, fontFamily: 'Sailors Slant'}}>
-                  Job Detail
-                </Text>
-                <JobDetail item={item}></JobDetail>
-                <View style={styles.containerButton}>
-                  <TouchableHighlight
-                    style={{...styles.openButton, backgroundColor: '#d14545'}}
-                    onPress={() => {
-                      this.setModalVisible(!modalVisible);
-                    }}>
-                    <Text style={styles.textStyle}>Cancel</Text>
-                  </TouchableHighlight>
-                  {this.renderButtonApply()}
-                </View>
-              </View>
+          {this.state.posts.length > 0 ? (
+            <FlatList
+              style={styles.flatlist}
+              scrollEventThrottle={16}
+              data={this.props.posts}
+              keyExtractor={this.keyExtractor}
+              renderItem={this.renderItem}
+              onRefresh={() => this.onRefresh()}
+              refreshing={this.state.isFetching}
+              onEndReached={this.handleLoadMore}></FlatList>
+          ) : !this.props.loading ? (
+            <View
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                // flex: 1,
+                height: 500,
+                padding: 20,
+              }}>
+              <Text style={{fontWeight: 'bold', fontSize: 20}}>
+                The company does not currently have any posts. Please try again!
+              </Text>
             </View>
-          </Modal>
+          ) : null}
         </View>
+        <ModalJob
+          item={item}
+          onPress={() => this.setModalVisible(!modalVisible)}
+          visible={modalVisible}
+          renderButtonApply={this.renderButtonApply()}></ModalJob>
       </View>
     );
   }
@@ -250,10 +244,12 @@ class JobCompanies extends Component {
 const mapDispatchToProps = {
   getJobCompany,
   applyJob,
+  savePost,
+  getSavedPost,
 };
 
 const mapStateToProps = (state) => {
-  const {loading, status, msg, posts} = state.getJobCompany;
+  const {loading, status, msg, posts, company} = state.getJobCompany;
 
   return {
     loading,
@@ -262,95 +258,22 @@ const mapStateToProps = (state) => {
     msg,
     statusApply: state.applyJob.status,
     msgApply: state.applyJob.msg,
+    company,
+    savedPost: _.get(state.getSavedPost, 'posts') || [],
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(JobCompanies);
 
 const styles = StyleSheet.create({
   container: {
-    height: windowHeight - 26,
+    marginBottom: hp('10%'),
   },
-  fiedlsText: {
-    display: 'flex',
-    flexDirection: 'row',
-  },
-  seeMore: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: (windowWidth * 1.8) / 3,
-    marginTop: 1,
-  },
-
   flatlist: {
     marginTop: 3,
-    marginBottom: 3,
-    paddingBottom: 100,
-    paddingTop: 10,
-  },
-  item: {
-    height: (hp('100%') - 5) / 5,
-    marginBottom: 15,
-    marginLeft: 15,
-    marginRight: 15,
-
-    backgroundColor: '#fff',
-    shadowOpacity: 0.6,
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-    paddingLeft: 10,
-    paddingRight: 10,
-    paddingTop: 5,
-
-    borderRadius: 7,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 8,
-    },
-    shadowOpacity: 0.34,
-    shadowRadius: 6.27,
-    elevation: 10,
-  },
-  iconText: {marginTop: 4, marginLeft: 5},
-  text: {
-    marginBottom: 1,
-    marginLeft: 10,
-    fontFamily: 'TimesNewRoman',
-    fontSize: hp('2.1%'),
-  },
-  logoContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-  },
-  logo: {
-    marginTop: 25,
-    width: 80,
-    height: 80,
+    marginBottom: hp('8%'),
   },
   // modal
-  centeredView: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 22,
-  },
-  modalView: {
-    margin: 20,
-    backgroundColor: 'rgba(103, 104, 107 , 0.95)',
-    borderRadius: 20,
-    maxHeight: windowHeight * 0.8,
-    minHeight: windowHeight * 0.6,
-    width: windowWidth / 1.15,
-    padding: 20,
-    alignItems: 'center',
-    shadowColor: 'red',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-  },
+
   openButton: {
     borderRadius: 6,
     padding: 10,
@@ -363,10 +286,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
   },
-  containerButton: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
+
   loading: {
     position: 'absolute',
     left: 0,

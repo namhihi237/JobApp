@@ -12,11 +12,12 @@ import {
 import {TextInput} from 'react-native-gesture-handler';
 import {connect} from 'react-redux';
 import {sendFeedback} from '../../redux/actions';
-import {Header, Left, Body, Button, Icon, Title} from 'native-base';
+import {Header} from '../../common';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 class Feedback extends Component {
   constructor(props) {
     super(props);
@@ -67,31 +68,40 @@ class Feedback extends Component {
   render() {
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-        <View style={{flex: 1, backgroundColor: '#c5c7db'}}>
-          <Header>
-            <Left>
-              <Button transparent onPress={this.openBar}>
-                <Icon name="menu" />
-              </Button>
-            </Left>
-            <Body>
-              <Title style={{fontFamily: 'Itim-Regular'}}>Send Feedback</Title>
-            </Body>
-          </Header>
+        <View style={{flex: 1, backgroundColor: '#fcf9f9'}}>
+          <Header title={'           Feedback'} left={true} color="#0E1442" />
           <ScrollView showsVerticalScrollIndicator={false}>
-            <TextInput
-              onChangeText={this.changeContent}
-              value={this.state.content}
-              multiline={true}
-              numberOfLines={4}
-              style={styles.desInput}
-              placeholder="Description"
-              autoCorrect={false}
-            />
+            <View style={styles.desInputContainer}>
+              <View>
+                <Text style={styles.feedBackText}>Feedback! 😋</Text>
+              </View>
+              <View style={styles.faceContainer}>
+                <FontAwesome5 name={'frown'} style={styles.face} />
+                <FontAwesome5 name={'meh'} style={styles.face} />
+                <FontAwesome5
+                  name={'smile'}
+                  style={{...styles.face, color: '#f29121'}}
+                />
+              </View>
+              <TextInput
+                onChangeText={this.changeContent}
+                value={this.state.content}
+                multiline={true}
+                numberOfLines={3}
+                style={styles.desInput}
+                placeholder="Description"
+                autoCorrect={false}
+              />
+            </View>
             <TouchableOpacity
               style={styles.loginBtn}
               onPress={this.sendFeedback}>
-              <Text style={{fontFamily: 'Itim-Regular', fontSize: 23}}>
+              <Text
+                style={{
+                  fontFamily: 'Itim-Regular',
+                  fontSize: 23,
+                  color: '#fff',
+                }}>
                 Send
               </Text>
             </TouchableOpacity>
@@ -120,7 +130,7 @@ const styles = StyleSheet.create({
   },
   loginBtn: {
     width: '80%',
-    backgroundColor: '#a18ef9',
+    backgroundColor: '#464e89',
     borderRadius: 25,
     height: 50,
     alignItems: 'center',
@@ -143,18 +153,42 @@ const styles = StyleSheet.create({
     marginLeft: 20,
   },
   desInput: {
-    borderColor: 'black',
-    borderWidth: 1,
-    height: 200,
-    width: wp('80%'),
+    height: hp('20%'),
+    width: wp('70%'),
     textAlignVertical: 'top',
-    marginLeft: wp('10%'),
     borderRadius: 5,
     fontFamily: 'TimesNewRoman',
-    backgroundColor: '#d6d3e5',
-    marginTop: hp('20%'),
-    borderColor: '#7b72aa',
-    borderWidth: 1,
+    backgroundColor: '#f7f4f4',
     padding: 20,
+    fontSize: 18,
+  },
+  desInputContainer: {
+    width: wp('80%'),
+    backgroundColor: '#fff',
+    marginTop: hp('20%'),
+    height: hp('40%'),
+    borderRadius: 10,
+    marginLeft: wp('10%'),
+    alignItems: 'center',
+    shadowColor: 'rgba(0, 0, 0, 0.1)',
+    shadowOpacity: 0.8,
+    elevation: 6,
+    shadowRadius: 15,
+    shadowOffset: {width: 1, height: 13},
+    justifyContent: 'space-between',
+    paddingBottom: 20,
+  },
+  feedBackText: {
+    fontSize: 30,
+    color: '#7b72aa',
+  },
+  face: {
+    fontSize: wp('13%'),
+  },
+  faceContainer: {
+    width: wp('60%'),
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
   },
 });

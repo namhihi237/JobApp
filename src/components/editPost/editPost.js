@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import SelectMultiple from 'react-native-select-multiple';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import {Loader} from '../../common';
+import {Loader, Header} from '../../common';
 import {
   StyleSheet,
   View,
@@ -16,7 +16,6 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from 'react-native';
-import {Header, Left, Body, Button, Icon, Title, Right} from 'native-base';
 
 import {Toast} from 'native-base';
 import {connect} from 'react-redux';
@@ -25,7 +24,6 @@ import axios from 'axios';
 import {getData} from '../../utils';
 import {dataSkill} from '../../constant';
 const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -239,143 +237,134 @@ class EditPost extends Component {
       description,
     } = this.state;
     return (
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-        <KeyboardAvoidingView style={{flex: 1}}>
-          <Loader status={this.props.loading} msg={'Updating'}></Loader>
-          <Header>
-            <Left>
-              <Button
-                transparent
-                onPress={() => this.props.navigation.goBack()}>
-                <Icon name="arrow-back" />
-              </Button>
-            </Left>
-            <Body>
-              <Title style={{fontFamily: 'Itim-Regular'}}>Update Post</Title>
-            </Body>
-            <Right>
-              <Button transparent>
-                <Icon name="menu" />
-              </Button>
-            </Right>
-          </Header>
-          <ScrollView showsVerticalScrollIndicator={false}>
-            <View style={styles.container}>
-              <View style={styles.choice}>
-                <TextInput
-                  style={{...styles.textInputChoice, marginLeft: 20}}
-                  onChangeText={this.onChangeTitle}
-                  value={title}
-                  placeholder="Title. . ."></TextInput>
-              </View>
-              <View style={styles.choice}>
-                <FontAwesome5 name={'code'} style={styles.icon} />
-                <TextInput
-                  value={textSkill}
-                  style={styles.textInputChoice}
-                  editable={false}
-                  selectTextOnFocus={false}
-                  placeholder="Skills. . ."></TextInput>
-                <TouchableOpacity
-                  style={styles.buttonChoice}
-                  onPress={this.showModalSkill}>
-                  <Text>choice</Text>
-                </TouchableOpacity>
-              </View>
-              <View style={styles.containerInput}>
-                <FontAwesome5 name={'money-bill'} style={styles.icon} />
-                <TextInput
-                  style={styles.textInputChoice}
-                  onChangeText={this.onChangeSalary}
-                  value={salary}
-                  placeholder="Salary. . ."></TextInput>
-              </View>
-              <View style={styles.containerInput}>
-                <FontAwesome5 name={'map-marker-alt'} style={styles.icon} />
-                <TextInput
-                  style={styles.textInputChoice}
-                  onChangeText={this.onChangeAddress}
-                  value={address}
-                  placeholder="Address. . ."></TextInput>
-              </View>
+      <View style={{backgroundColor: '#fffffe', flex: 1}}>
+        <Header
+          title={'     Edit Post'}
+          left={true}
+          hideRight={false}
+          color="#0E1442"
+        />
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+          <KeyboardAvoidingView style={{flex: 1}}>
+            <Loader status={this.props.loading} msg={'Updating'}></Loader>
+            <ScrollView showsVerticalScrollIndicator={false}>
+              <View style={styles.container}>
+                <View style={styles.choice}>
+                  <TextInput
+                    style={{...styles.textInputChoice, marginLeft: 20}}
+                    onChangeText={this.onChangeTitle}
+                    value={title}
+                    placeholder="Title. . ."></TextInput>
+                </View>
+                <View style={styles.choice}>
+                  <FontAwesome5 name={'code'} style={styles.icon} />
+                  <TextInput
+                    value={textSkill}
+                    style={styles.textInputChoice}
+                    editable={false}
+                    selectTextOnFocus={false}
+                    placeholder="Skills. . ."></TextInput>
+                  <TouchableOpacity
+                    style={styles.buttonChoice}
+                    onPress={this.showModalSkill}>
+                    <Text>choice</Text>
+                  </TouchableOpacity>
+                </View>
+                <View style={styles.containerInput}>
+                  <FontAwesome5 name={'money-bill'} style={styles.icon} />
+                  <TextInput
+                    style={styles.textInputChoice}
+                    onChangeText={this.onChangeSalary}
+                    value={salary}
+                    placeholder="Salary. . ."></TextInput>
+                </View>
+                <View style={styles.containerInput}>
+                  <FontAwesome5 name={'map-marker-alt'} style={styles.icon} />
+                  <TextInput
+                    style={styles.textInputChoice}
+                    onChangeText={this.onChangeAddress}
+                    value={address}
+                    placeholder="Address. . ."></TextInput>
+                </View>
 
-              <View style={styles.choice}>
-                <FontAwesome5 name={'history'} style={styles.icon} />
-                <TextInput
-                  value={this.state.endTime}
-                  style={styles.textInputChoice}
-                  editable={false}
-                  selectTextOnFocus={false}
-                  placeholder="End time. . ."></TextInput>
-                <TouchableOpacity onPress={this.showDatepicker}>
-                  <FontAwesome5
-                    name={'calendar-alt'}
-                    style={{color: 'black', fontSize: 25}}
+                <View style={styles.choice}>
+                  <FontAwesome5 name={'history'} style={styles.icon} />
+                  <TextInput
+                    value={this.state.endTime}
+                    style={styles.textInputChoice}
+                    editable={false}
+                    selectTextOnFocus={false}
+                    placeholder="End time. . ."></TextInput>
+                  <TouchableOpacity onPress={this.showDatepicker}>
+                    <FontAwesome5
+                      name={'calendar-alt'}
+                      style={{color: '#3DB2FF', fontSize: 25}}
+                    />
+                  </TouchableOpacity>
+                </View>
+                {this.state.showDate && (
+                  <DateTimePicker
+                    testID="dateTimePicker"
+                    value={date}
+                    mode={'date'}
+                    onChange={this.onChangeDate}
+                    minimumDate={new Date()}
                   />
+                )}
+                <TextInput
+                  onChangeText={this.onChangeDescription}
+                  multiline={true}
+                  numberOfLines={4}
+                  style={styles.desInput}
+                  placeholder="Description. . ."
+                  autoCorrect={false}
+                  value={description}
+                />
+                <TouchableOpacity
+                  style={styles.buttonCreate}
+                  onPress={this.updatePost}>
+                  <Text style={styles.textStyle}>Save</Text>
                 </TouchableOpacity>
               </View>
-              {this.state.showDate && (
-                <DateTimePicker
-                  testID="dateTimePicker"
-                  value={date}
-                  mode={'date'}
-                  onChange={this.onChangeDate}
-                  minimumDate={new Date()}
-                />
-              )}
-              <TextInput
-                onChangeText={this.onChangeDescription}
-                multiline={true}
-                numberOfLines={4}
-                style={styles.desInput}
-                placeholder="Description. . ."
-                autoCorrect={false}
-                value={description}
-              />
-              <TouchableOpacity
-                style={styles.buttonCreate}
-                onPress={this.updatePost}>
-                <Text style={styles.textStyle}>Save</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.centeredView}>
-              <Modal
-                animationType="slide"
-                transparent={true}
-                visible={modalVisible}>
-                <View style={styles.centeredView}>
-                  <View style={styles.modalView}>
-                    <Text style={styles.modalText}>Choice Skill</Text>
-                    {this.showSkill()}
-                    <View style={styles.containerButton}>
-                      <TouchableOpacity
-                        style={{
-                          ...styles.openButton,
-                          backgroundColor: '#363B59',
-                        }}
-                        onPress={() => {
-                          this.cancelSkill(!modalVisible);
-                        }}>
-                        <Text style={styles.textStyle}>Cancel</Text>
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        style={{
-                          ...styles.openButton,
-                          backgroundColor: '#3d84b8',
-                        }}
-                        onPress={() => {
-                          this.setModalVisible(!modalVisible);
-                        }}>
-                        <Text style={styles.textStyle}>Add</Text>
-                      </TouchableOpacity>
+              <View style={styles.centeredView}>
+                <Modal
+                  animationType="slide"
+                  transparent={true}
+                  visible={modalVisible}>
+                  <View style={styles.centeredView}>
+                    <View style={styles.modalView}>
+                      <Text style={styles.modalText}>Choice Skill</Text>
+                      {this.showSkill()}
+                      <View style={styles.containerButton}>
+                        <TouchableOpacity
+                          style={{
+                            ...styles.openButton,
+                            backgroundColor: '#363B59',
+                          }}
+                          onPress={() => {
+                            this.cancelSkill(!modalVisible);
+                          }}>
+                          <Text style={styles.textStyle}>Cancel</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                          style={{
+                            ...styles.openButton,
+                            backgroundColor: '#00ebc7',
+                          }}
+                          onPress={() => {
+                            this.setModalVisible(!modalVisible);
+                          }}>
+                          <Text style={styles.textStyle}>Add</Text>
+                        </TouchableOpacity>
+                      </View>
                     </View>
                   </View>
-                </View>
-              </Modal>
-            </View>
-          </ScrollView>
-        </KeyboardAvoidingView>
-      </TouchableWithoutFeedback>
+                </Modal>
+              </View>
+            </ScrollView>
+          </KeyboardAvoidingView>
+        </TouchableWithoutFeedback>
+      </View>
     );
   }
 }
@@ -497,7 +486,7 @@ const styles = StyleSheet.create({
   },
   buttonCreate: {
     backgroundColor: '#607f22',
-    width: 100,
+    width: wp('60%'),
     padding: 10,
     borderRadius: 6,
     elevation: 2,
