@@ -19,7 +19,6 @@ import {getData} from '../../utils';
 import axios from 'axios';
 
 const windowHeight = Dimensions.get('window').height;
-const windowWidth = Dimensions.get('window').width;
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,

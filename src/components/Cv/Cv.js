@@ -240,93 +240,91 @@ class Cv extends Component {
           <TouchableWithoutFeedback
             onPress={Keyboard.dismiss}
             accessible={false}>
-            <KeyboardAvoidingView>
-              <Loader status={this.props.loading} msg={'Creating'}></Loader>
-              <View style={styles.container}>
-                <Image
-                  source={{
-                    uri: photo
-                      ? photo.uri
-                      : 'https://res.cloudinary.com/do-an-cnpm/image/upload/v1618073475/person_j0pvho.png',
-                  }}
-                  style={styles.avatar}
+            <Loader status={this.props.loading} msg={'Creating'}></Loader>
+            <View style={styles.container}>
+              <Image
+                source={{
+                  uri: photo
+                    ? photo.uri
+                    : 'https://res.cloudinary.com/do-an-cnpm/image/upload/v1618073475/person_j0pvho.png',
+                }}
+                style={styles.avatar}
+              />
+              <TouchableOpacity
+                onPress={this.handleChoosePhoto}
+                style={styles.buttonAvatar}>
+                <Text style={{fontFamily: 'Itim-Regular', fontSize: 15}}>
+                  Choose Avatar
+                </Text>
+              </TouchableOpacity>
+              <Input
+                value={birthday}
+                editable={false}
+                selectTextOnFocus={false}
+                placeholder="Birthday. . ."
+                iconName={'calendar-alt'}
+                onPress={this.showDatepicker}></Input>
+              {showDate && (
+                <DateTimePicker
+                  testID="dateTimePicker"
+                  value={date}
+                  mode={'date'}
+                  onChange={this.onChangeDate}
+                  maximumDate={new Date()}
                 />
-                <TouchableOpacity
-                  onPress={this.handleChoosePhoto}
-                  style={styles.buttonAvatar}>
-                  <Text style={{fontFamily: 'Itim-Regular', fontSize: 15}}>
-                    Choose Avatar
-                  </Text>
-                </TouchableOpacity>
-                <Input
-                  value={birthday}
-                  editable={false}
-                  selectTextOnFocus={false}
-                  placeholder="Birthday. . ."
-                  iconName={'calendar-alt'}
-                  onPress={this.showDatepicker}></Input>
-                {showDate && (
-                  <DateTimePicker
-                    testID="dateTimePicker"
-                    value={date}
-                    mode={'date'}
-                    onChange={this.onChangeDate}
-                    maximumDate={new Date()}
-                  />
-                )}
-                <Input
-                  value={textSkill}
-                  editable={false}
-                  onChangeText={this.onChangesKill}
-                  placeholder="Skill..."
-                  iconName={'cogs'}
-                  onPress={this.showModalSkill}></Input>
-                <Textarea
-                  onChangeText={this.onChangesoftSkill}
-                  numberOfLines={4}
-                  placeholder="Soft Skill"></Textarea>
-                <Textarea
-                  onChangeText={this.onChangeExperience}
-                  numberOfLines={4}
-                  placeholder="Experience"></Textarea>
-                <Textarea
-                  onChangeText={this.onChangeDescription}
-                  numberOfLines={4}
-                  placeholder="Description"
-                  autoCorrect={false}
-                />
-                <TouchableOpacity
-                  style={styles.buttonCreate}
-                  onPress={this.createCv}>
-                  <Text style={styles.textStyle}>Create</Text>
-                </TouchableOpacity>
-              </View>
-              <View style={styles.centeredView}>
-                <Modal
-                  animationType="slide"
-                  transparent={true}
-                  visible={modalVisible}>
-                  <View style={styles.centeredView}>
-                    <View style={styles.modalView}>
-                      <Text style={styles.modalText}>Choose Skill</Text>
-                      {this.showSkill()}
-                      <View style={styles.containerButton}>
-                        <TouchableOpacity
-                          style={{
-                            ...styles.openButton,
-                            backgroundColor: '#3d84b8',
-                          }}
-                          onPress={() => {
-                            this.setModalVisible(!modalVisible);
-                          }}>
-                          <Text style={styles.textStyle}>Add</Text>
-                        </TouchableOpacity>
-                      </View>
+              )}
+              <Input
+                value={textSkill}
+                editable={false}
+                onChangeText={this.onChangesKill}
+                placeholder="Skill..."
+                iconName={'cogs'}
+                onPress={this.showModalSkill}></Input>
+              <Textarea
+                onChangeText={this.onChangesoftSkill}
+                numberOfLines={4}
+                placeholder="Soft Skill"></Textarea>
+              <Textarea
+                onChangeText={this.onChangeExperience}
+                numberOfLines={4}
+                placeholder="Experience"></Textarea>
+              <Textarea
+                onChangeText={this.onChangeDescription}
+                numberOfLines={4}
+                placeholder="Description"
+                autoCorrect={false}
+              />
+              <TouchableOpacity
+                style={styles.buttonCreate}
+                onPress={this.createCv}>
+                <Text style={styles.textStyle}>Create</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.centeredView}>
+              <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}>
+                <View style={styles.centeredView}>
+                  <View style={styles.modalView}>
+                    <Text style={styles.modalText}>Choose Skill</Text>
+                    {this.showSkill()}
+                    <View style={styles.containerButton}>
+                      <TouchableOpacity
+                        style={{
+                          ...styles.openButton,
+                          backgroundColor: '#3d84b8',
+                        }}
+                        onPress={() => {
+                          this.setModalVisible(!modalVisible);
+                        }}>
+                        <Text style={styles.textStyle}>Add</Text>
+                      </TouchableOpacity>
                     </View>
                   </View>
-                </Modal>
-              </View>
-            </KeyboardAvoidingView>
+                </View>
+              </Modal>
+            </View>
           </TouchableWithoutFeedback>
         </ScrollView>
       </View>
