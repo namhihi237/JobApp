@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Loader} from '../../common';
+import {Loader, Header} from '../../common';
 import {connect} from 'react-redux';
 import {getData} from '../../utils';
 import SelectMultiple from 'react-native-select-multiple';
@@ -15,7 +15,6 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import {Header, Left, Body, Button, Icon, Title, Right} from 'native-base';
 
 import {
   StyleSheet,
@@ -293,26 +292,13 @@ class UpdateCv extends Component {
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <KeyboardAvoidingView style={{flex: 1}}>
-          <Header>
-            <Left>
-              <Button
-                transparent
-                onPress={() => this.props.navigation.goBack()}>
-                <Icon name="arrow-back" />
-              </Button>
-            </Left>
-            <Body>
-              <Title style={{fontFamily: 'Itim-Regular'}}>Update CV</Title>
-            </Body>
-            <Right>
-              <Button transparent>
-                <Icon name="menu" />
-              </Button>
-            </Right>
-          </Header>
+          <Header
+            title={'     Update CV'}
+            left={true}
+            hideRight={false}
+            color="#0E1442"
+          />
           <ScrollView showsVerticalScrollIndicator={false}>
-            {/* <Loader status={this.props.loading} msg={'Updating'}></Loader> */}
-
             <View style={styles.container}>
               <Image
                 source={{

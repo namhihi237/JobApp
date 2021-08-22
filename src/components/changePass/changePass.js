@@ -72,11 +72,7 @@ class changePass extends Component {
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View style={{flex: 1, backgroundColor: '#c5c7db'}}>
-          <Header
-            title={'           Change Password'}
-            left={true}
-            color="#0E1442"
-          />
+          <Header title={'     Change Password'} left={true} color="#0E1442" />
           <ScrollView showsVerticalScrollIndicator={false}>
             <View style={styles.container}>
               <Loader status={this.props.loading} msg={'Updating'}></Loader>

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import _ from 'lodash';
 import {connect} from 'react-redux';
-import {Loader} from '../../common';
+import {Loader, Header} from '../../common';
 import axios from 'axios';
 import {apiUrl} from '../../api/api';
 import {notifications} from '../../redux/actions';
@@ -10,7 +10,6 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import {Header, Left, Body, Button, Title} from 'native-base';
 import {StyleSheet, View, FlatList, ActivityIndicator} from 'react-native';
 import {getData} from '../../utils';
 const {BASE_URL} = apiUrl;
@@ -106,14 +105,12 @@ class Notification extends Component {
     return (
       <View style={{flex: 1}}>
         <Loader status={this.props.loading}></Loader>
-        <Header>
-          <Left>
-            <Button transparent></Button>
-          </Left>
-          <Body>
-            <Title>Notifications</Title>
-          </Body>
-        </Header>
+        <Header
+          title={'    Notification'}
+          left={false}
+          hideRight={true}
+          color="#0E1442"
+        />
         <FlatList
           style={styles.flatList}
           scrollEventThrottle={16}

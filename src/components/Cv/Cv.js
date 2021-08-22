@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Loader} from '../../common';
+import {Loader, Header} from '../../common';
 import {connect} from 'react-redux';
 import SelectMultiple from 'react-native-select-multiple';
 import {createIterCv} from '../../redux/actions';
@@ -15,7 +15,6 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import {Header, Left, Body, Button, Icon, Title, Right} from 'native-base';
 
 import {
   StyleSheet,
@@ -235,23 +234,12 @@ class Cv extends Component {
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
           <KeyboardAvoidingView style={{flex: 1}}>
             <Loader status={this.props.loading} msg={'Creating'}></Loader>
-            <Header>
-              <Left>
-                <Button
-                  transparent
-                  onPress={() => this.props.navigation.goBack()}>
-                  <Icon name="arrow-back" />
-                </Button>
-              </Left>
-              <Body>
-                <Title style={{fontFamily: 'Itim-Regular'}}>Create CV</Title>
-              </Body>
-              <Right>
-                <Button transparent>
-                  <Icon name="menu" />
-                </Button>
-              </Right>
-            </Header>
+            <Header
+              title={'     Create CV'}
+              left={true}
+              hideRight={false}
+              color="#0E1442"
+            />
             <View style={styles.container}>
               <Image
                 source={{

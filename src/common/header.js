@@ -21,9 +21,11 @@ const MyHeader = (props) => {
         </Title>
       </Body>
       <Right>
-        <Button transparent onPress={props.onPressRight}>
-          <Icon name="menu" />
-        </Button>
+        {props.hideRight ? null : (
+          <Button transparent onPress={props.onPressRight}>
+            <Icon name="menu" />
+          </Button>
+        )}
       </Right>
     </Header>
   );

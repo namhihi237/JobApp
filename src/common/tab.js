@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Text, View, TouchableOpacity, StyleSheet} from 'react-native';
+import {View, TouchableOpacity, StyleSheet} from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {Badge} from 'react-native-elements';
 import {
@@ -15,7 +15,7 @@ import {apiUrl} from '../api/api';
 var pusher = new Pusher('8b94f31b5cb93338e859', {
   cluster: 'ap1',
 });
-import {getData, storeData} from '../utils';
+import {getData} from '../utils';
 
 const MyTabBar = ({state, descriptors, navigation}) => {
   const [count, setCount] = React.useState(0);

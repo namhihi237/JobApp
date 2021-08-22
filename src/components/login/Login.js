@@ -7,7 +7,6 @@ import {
   View,
   Text,
   TouchableOpacity,
-  Dimensions,
   Keyboard,
   TouchableWithoutFeedback,
   ScrollView,
@@ -17,7 +16,7 @@ import {
 import {connect} from 'react-redux';
 import {login, getFollowing} from '../../redux/actions';
 import {getData} from '../../utils';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,

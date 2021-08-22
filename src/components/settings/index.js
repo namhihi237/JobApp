@@ -44,15 +44,28 @@ class Settings extends Component {
       <ScrollView
         style={{flex: 1, backgroundColor: '#fff'}}
         showsVerticalScrollIndicator={false}>
-        <Image
-          style={styles.avatar}
-          source={{
-            uri:
-              _.get(user, 'image') ||
-              'https://res.cloudinary.com/do-an-cnpm/image/upload/v1618073475/person_j0pvho.png',
-          }}></Image>
-        <View style={styles.info}>
-          <Text style={styles.name}>{_.get(user, 'name')}</Text>
+        <View
+          style={{
+            backgroundColor: '#0E1442',
+            paddingBottom: 10,
+            borderBottomLeftRadius: 30,
+            borderBottomRightRadius: 30,
+          }}>
+          <Image
+            style={styles.avatar}
+            source={{
+              uri:
+                _.get(user, 'image') ||
+                'https://res.cloudinary.com/do-an-cnpm/image/upload/v1618073475/person_j0pvho.png',
+            }}></Image>
+          <View style={styles.info}>
+            <Text style={styles.name}>{_.get(user, 'name')}</Text>
+            {this.props.role == 'company' ? (
+              <Text style={styles.name}>
+                Follow: {_.get(user, 'numberOfFollowers')}
+              </Text>
+            ) : null}
+          </View>
         </View>
         <Card
           iconRight={'arrow-alt-circle-right'}
@@ -64,18 +77,18 @@ class Settings extends Component {
             iconRight={'arrow-alt-circle-right'}
             content={'Saved Posts'}
             onPress={() => this.moveToScreen('Saved Posts')}
-            source={require('../../assets/image/user.png')}></Card>
+            source={require('../../assets/image/bookmark.png')}></Card>
         ) : null}
         <Card
           iconRight={'arrow-alt-circle-right'}
           content={'Feedback'}
           onPress={() => this.moveToScreen('Feedback')}
-          source={require('../../assets/image/user.png')}></Card>
+          source={require('../../assets/image/feedback.png')}></Card>
         <Card
           iconRight={'arrow-alt-circle-right'}
           content={'Change password'}
           onPress={() => this.moveToScreen('Change Password')}
-          source={require('../../assets/image/user.png')}></Card>
+          source={require('../../assets/image/padlock.png')}></Card>
 
         <TouchableOpacity style={styles.logout} onPress={this.logout}>
           <Text style={styles.textLogout}>Logout</Text>
@@ -91,7 +104,6 @@ const mapDispatchToProps = {
 
 const mapStateToProps = (state) => {
   const {loading, user, status, msg} = state.getProfile;
-  console.log(state.login.role);
   return {
     loading,
     user,
@@ -107,8 +119,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   avatar: {
-    height: wp('34%'),
-    width: wp('34%'),
+    height: wp('32%'),
+    width: wp('32%'),
     borderRadius: 100,
     borderColor: '#52729e',
     borderWidth: 1,
@@ -118,6 +130,7 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 25,
     fontFamily: 'Itim-Regular',
+    color: '#fff',
   },
 
   info: {
