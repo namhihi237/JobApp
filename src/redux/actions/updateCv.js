@@ -17,6 +17,7 @@ export const updateCv = (data) => async (dispatch) => {
 
     dispatch({type: UPDATE_CV_SUCCESS, payload: result.data});
   } catch (error) {
+    console.log(error);
     const msg = _.get(error.response, 'data.msg') || "Cant't connect network";
     dispatch({
       type: UPDATE_CV_FAIL,

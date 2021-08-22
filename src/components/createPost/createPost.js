@@ -2,8 +2,7 @@ import React, {Component} from 'react';
 import SelectMultiple from 'react-native-select-multiple';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import {Loader} from '../../common';
-import {Header, Left, Body, Button, Icon, Title, Right} from 'native-base';
+import {Loader, Header} from '../../common';
 import {
   StyleSheet,
   View,
@@ -176,137 +175,132 @@ class CreatePost extends Component {
   render() {
     const {modalVisible, textSkill, date} = this.state;
     return (
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <Header>
-          <Left>
-            <Button transparent onPress={() => this.props.navigation.goBack()}>
-              <Icon name="arrow-back" />
-            </Button>
-          </Left>
-          <Body>
-            <Title>Create Post</Title>
-          </Body>
-          <Right>
-            <Button transparent>
-              <Icon name="menu" />
-            </Button>
-          </Right>
-        </Header>
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-          <KeyboardAvoidingView style={{flex: 1, paddingTop: 15}}>
-            <Loader status={this.props.loading} msg={'Creating '}></Loader>
-            <View style={styles.container}>
-              <View style={styles.choice}>
-                <TextInput
-                  style={{...styles.textInputChoice, marginLeft: 20}}
-                  onChangeText={this.onChangeTitle}
-                  placeholder="Title. . ."></TextInput>
-              </View>
-              <View style={styles.choice}>
-                <FontAwesome5 name={'code'} style={styles.icon} />
-                <TextInput
-                  value={textSkill}
-                  style={styles.textInputChoice}
-                  editable={false}
-                  selectTextOnFocus={false}
-                  placeholder="Skills. . ."></TextInput>
-                <TouchableOpacity
-                  style={styles.buttonChoice}
-                  onPress={this.showModalSkill}>
-                  <Text>choice</Text>
-                </TouchableOpacity>
-              </View>
-              <View style={styles.containerInput}>
-                <FontAwesome5 name={'money-bill'} style={styles.icon} />
-                <TextInput
-                  style={styles.textInputChoice}
-                  onChangeText={this.onChangeSalary}
-                  placeholder="Salary. . ."></TextInput>
-              </View>
-              <View style={styles.containerInput}>
-                <FontAwesome5 name={'map-marker-alt'} style={styles.icon} />
-                <TextInput
-                  style={styles.textInputChoice}
-                  onChangeText={this.onChangeAddress}
-                  placeholder="Address. . ."></TextInput>
-              </View>
+      <View style={{backgroundColor: '#fffffe', flex: 1}}>
+        <Header
+          title={'     Create Post'}
+          left={true}
+          hideRight={false}
+          color="#0E1442"
+        />
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <TouchableWithoutFeedback
+            onPress={Keyboard.dismiss}
+            accessible={false}>
+            <KeyboardAvoidingView style={{flex: 1, paddingTop: 15}}>
+              <Loader status={this.props.loading} msg={'Creating '}></Loader>
+              <View style={styles.container}>
+                <View style={styles.choice}>
+                  <TextInput
+                    style={{...styles.textInputChoice, marginLeft: 20}}
+                    onChangeText={this.onChangeTitle}
+                    placeholder="Title. . ."></TextInput>
+                </View>
+                <View style={styles.choice}>
+                  <FontAwesome5 name={'code'} style={styles.icon} />
+                  <TextInput
+                    value={textSkill}
+                    style={styles.textInputChoice}
+                    editable={false}
+                    selectTextOnFocus={false}
+                    placeholder="Skills. . ."></TextInput>
+                  <TouchableOpacity
+                    style={styles.buttonChoice}
+                    onPress={this.showModalSkill}>
+                    <Text>choice</Text>
+                  </TouchableOpacity>
+                </View>
+                <View style={styles.containerInput}>
+                  <FontAwesome5 name={'money-bill'} style={styles.icon} />
+                  <TextInput
+                    style={styles.textInputChoice}
+                    onChangeText={this.onChangeSalary}
+                    placeholder="Salary. . ."></TextInput>
+                </View>
+                <View style={styles.containerInput}>
+                  <FontAwesome5 name={'map-marker-alt'} style={styles.icon} />
+                  <TextInput
+                    style={styles.textInputChoice}
+                    onChangeText={this.onChangeAddress}
+                    placeholder="Address. . ."></TextInput>
+                </View>
 
-              <View style={styles.choice}>
-                <FontAwesome5 name={'history'} style={styles.icon} />
-                <TextInput
-                  value={this.state.endTime}
-                  style={styles.textInputChoice}
-                  editable={false}
-                  selectTextOnFocus={false}
-                  placeholder="End time. . ."></TextInput>
-                <TouchableOpacity onPress={this.showDatepicker}>
-                  <FontAwesome5
-                    name={'calendar-alt'}
-                    style={{color: 'black', fontSize: 25}}
+                <View style={styles.choice}>
+                  <FontAwesome5 name={'history'} style={styles.icon} />
+                  <TextInput
+                    value={this.state.endTime}
+                    style={styles.textInputChoice}
+                    editable={false}
+                    selectTextOnFocus={false}
+                    placeholder="End time. . ."></TextInput>
+                  <TouchableOpacity onPress={this.showDatepicker}>
+                    <FontAwesome5
+                      name={'calendar-alt'}
+                      style={{color: '#3DB2FF', fontSize: 25}}
+                    />
+                  </TouchableOpacity>
+                </View>
+                {this.state.showDate && (
+                  <DateTimePicker
+                    testID="dateTimePicker"
+                    value={date}
+                    mode={'date'}
+                    onChange={this.onChangeDate}
+                    minimumDate={new Date()}
                   />
+                )}
+                <TextInput
+                  onChangeText={this.onChangeDescription}
+                  multiline={true}
+                  numberOfLines={6}
+                  style={styles.desInput}
+                  placeholder="Description. . ."
+                  autoCorrect={false}
+                />
+                <TouchableOpacity
+                  style={styles.buttonCreate}
+                  onPress={this.createCompanyPost}>
+                  <Text style={styles.textStyle}>Create new post</Text>
                 </TouchableOpacity>
               </View>
-              {this.state.showDate && (
-                <DateTimePicker
-                  testID="dateTimePicker"
-                  value={date}
-                  mode={'date'}
-                  onChange={this.onChangeDate}
-                  minimumDate={new Date()}
-                />
-              )}
-              <TextInput
-                onChangeText={this.onChangeDescription}
-                multiline={true}
-                numberOfLines={6}
-                style={styles.desInput}
-                placeholder="Description. . ."
-                autoCorrect={false}
-              />
-              <TouchableOpacity
-                style={styles.buttonCreate}
-                onPress={this.createCompanyPost}>
-                <Text style={styles.textStyle}>Create</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.centeredView}>
-              <Modal
-                animationType="slide"
-                transparent={true}
-                visible={modalVisible}>
-                <View style={styles.centeredView}>
-                  <View style={styles.modalView}>
-                    <Text style={styles.modalText}>Choose Skill</Text>
-                    {this.showSkill()}
-                    <View style={styles.containerButton}>
-                      <TouchableOpacity
-                        style={{
-                          ...styles.openButton,
-                          backgroundColor: '#363B59',
-                        }}
-                        onPress={() => {
-                          this.cancelSkill(!modalVisible);
-                        }}>
-                        <Text style={styles.textStyle}>Cancel</Text>
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        style={{
-                          ...styles.openButton,
-                          backgroundColor: '#3d84b8',
-                        }}
-                        onPress={() => {
-                          this.setModalVisible(!modalVisible);
-                        }}>
-                        <Text style={styles.textStyle}>Add</Text>
-                      </TouchableOpacity>
+              <View style={styles.centeredView}>
+                <Modal
+                  animationType="slide"
+                  transparent={true}
+                  visible={modalVisible}>
+                  <View style={styles.centeredView}>
+                    <View style={styles.modalView}>
+                      <Text style={styles.modalText}>Choose Skill</Text>
+                      {this.showSkill()}
+                      <View style={styles.containerButton}>
+                        <TouchableOpacity
+                          style={{
+                            ...styles.openButton,
+                            backgroundColor: '#363B59',
+                          }}
+                          onPress={() => {
+                            this.cancelSkill(!modalVisible);
+                          }}>
+                          <Text style={styles.textStyle}>Cancel</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                          style={{
+                            ...styles.openButton,
+                            backgroundColor: '#00ebc7',
+                          }}
+                          onPress={() => {
+                            this.setModalVisible(!modalVisible);
+                          }}>
+                          <Text style={styles.textStyle}>Add</Text>
+                        </TouchableOpacity>
+                      </View>
                     </View>
                   </View>
-                </View>
-              </Modal>
-            </View>
-          </KeyboardAvoidingView>
-        </TouchableWithoutFeedback>
-      </ScrollView>
+                </Modal>
+              </View>
+            </KeyboardAvoidingView>
+          </TouchableWithoutFeedback>
+        </ScrollView>
+      </View>
     );
   }
 }
@@ -377,7 +371,7 @@ const styles = StyleSheet.create({
     margin: 20,
     backgroundColor: '#d5dee2',
     borderRadius: 20,
-    height: hp('65%'),
+    height: hp('60%'),
     width: wp('80%'),
     padding: 10,
     alignItems: 'center',
@@ -428,11 +422,10 @@ const styles = StyleSheet.create({
   },
   buttonCreate: {
     backgroundColor: '#607f22',
-    width: 100,
+    width: wp('60%'),
     padding: 10,
     borderRadius: 6,
     elevation: 2,
-    borderColor: '#737796',
     borderWidth: 1,
   },
   icon: {

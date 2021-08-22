@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Loader} from '../../common';
+import {Loader, Header} from '../../common';
 import {connect} from 'react-redux';
 import SelectMultiple from 'react-native-select-multiple';
 import {createIterCv} from '../../redux/actions';
@@ -15,15 +15,13 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import {Header, Left, Body, Button, Icon, Title, Right} from 'native-base';
-
+import {Input, Textarea} from './components';
 import {
   StyleSheet,
   View,
   Text,
   Dimensions,
   TouchableOpacity,
-  TextInput,
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
   Keyboard,
@@ -231,27 +229,18 @@ class Cv extends Component {
       modalVisible,
     } = this.state;
     return (
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-          <KeyboardAvoidingView style={{flex: 1}}>
+      <View style={{paddingBottom: hp('5%')}}>
+        <Header
+          title={'     Create CV'}
+          left={true}
+          hideRight={false}
+          color="#0E1442"
+        />
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <TouchableWithoutFeedback
+            onPress={Keyboard.dismiss}
+            accessible={false}>
             <Loader status={this.props.loading} msg={'Creating'}></Loader>
-            <Header>
-              <Left>
-                <Button
-                  transparent
-                  onPress={() => this.props.navigation.goBack()}>
-                  <Icon name="arrow-back" />
-                </Button>
-              </Left>
-              <Body>
-                <Title style={{fontFamily: 'Itim-Regular'}}>Create CV</Title>
-              </Body>
-              <Right>
-                <Button transparent>
-                  <Icon name="menu" />
-                </Button>
-              </Right>
-            </Header>
             <View style={styles.container}>
               <Image
                 source={{
@@ -268,20 +257,13 @@ class Cv extends Component {
                   Choose Avatar
                 </Text>
               </TouchableOpacity>
-              <View style={styles.choice}>
-                <TextInput
-                  value={birthday}
-                  style={styles.textInputChoice}
-                  editable={false}
-                  selectTextOnFocus={false}
-                  placeholder="Birthday. . ."></TextInput>
-                <TouchableOpacity onPress={this.showDatepicker}>
-                  <FontAwesome5
-                    name={'calendar-alt'}
-                    style={styles.iconCalendar}
-                  />
-                </TouchableOpacity>
-              </View>
+              <Input
+                value={birthday}
+                editable={false}
+                selectTextOnFocus={false}
+                placeholder="Birthday. . ."
+                iconName={'calendar-alt'}
+                onPress={this.showDatepicker}></Input>
               {showDate && (
                 <DateTimePicker
                   testID="dateTimePicker"
@@ -291,34 +273,24 @@ class Cv extends Component {
                   maximumDate={new Date()}
                 />
               )}
-              <View style={styles.choice}>
-                <TextInput
-                  style={styles.textInputChoice}
-                  value={textSkill}
-                  editable={false}
-                  onChangeText={this.onChangesKill}
-                  placeholder="Skill..."></TextInput>
-                <TouchableOpacity onPress={this.showModalSkill}>
-                  <FontAwesome5 name={'cogs'} style={styles.iconCalendar} />
-                </TouchableOpacity>
-              </View>
-              <TextInput
-                style={styles.desInput}
+              <Input
+                value={textSkill}
+                editable={false}
+                onChangeText={this.onChangesKill}
+                placeholder="Skill..."
+                iconName={'cogs'}
+                onPress={this.showModalSkill}></Input>
+              <Textarea
                 onChangeText={this.onChangesoftSkill}
-                multiline={true}
                 numberOfLines={4}
-                placeholder="Soft Skill"></TextInput>
-              <TextInput
-                style={styles.desInput}
+                placeholder="Soft Skill"></Textarea>
+              <Textarea
                 onChangeText={this.onChangeExperience}
-                multiline={true}
                 numberOfLines={4}
-                placeholder="Experience"></TextInput>
-              <TextInput
+                placeholder="Experience"></Textarea>
+              <Textarea
                 onChangeText={this.onChangeDescription}
-                multiline={true}
                 numberOfLines={4}
-                style={styles.desInput}
                 placeholder="Description"
                 autoCorrect={false}
               />
@@ -353,9 +325,9 @@ class Cv extends Component {
                 </View>
               </Modal>
             </View>
-          </KeyboardAvoidingView>
-        </TouchableWithoutFeedback>
-      </ScrollView>
+          </TouchableWithoutFeedback>
+        </ScrollView>
+      </View>
     );
   }
 }
@@ -415,8 +387,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
     elevation: 2,
-    width: wp('30%'),
-    marginLeft: wp('35%'),
+    width: wp('40%'),
+    marginLeft: wp('20%'),
     marginRight: 35,
     marginTop: 15,
     backgroundColor: '#adb0ce',
@@ -432,33 +404,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flex: 1,
     display: 'flex',
-    minHeight: (windowHeight * 9) / 10,
-    paddingBottom: 20,
+    paddingBottom: 10,
     paddingTop: 10,
-  },
-  textInput: {
-    borderColor: 'black',
-    borderWidth: 1,
-    height: 40,
-    width: wp('80%'),
-    marginBottom: 15,
-    paddingLeft: 6,
     marginLeft: wp('10%'),
-    color: 'black',
-    borderRadius: 5,
+    paddingRight: wp('10%'),
   },
-  desInput: {
-    borderColor: 'black',
-    borderWidth: 1,
-    height: 100,
-    width: wp('80%'),
-    marginBottom: 5,
-    paddingLeft: 6,
-    textAlignVertical: 'top',
-    marginLeft: wp('10%'),
-    borderRadius: 5,
-    fontFamily: 'TimesNewRoman',
-  },
+
   textStyle: {
     color: 'white',
     fontWeight: 'bold',
@@ -468,27 +419,10 @@ const styles = StyleSheet.create({
   containerButton: {
     flexDirection: 'row',
   },
-  choice: {
-    flexDirection: 'row',
-    borderWidth: 1,
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    borderBottomColor: '#3f51b5',
-    marginBottom: 15,
-    width: wp('80%'),
-    marginLeft: wp('10%'),
-  },
-  iconCalendar: {
-    color: 'black',
-    fontSize: 25,
-    marginTop: 10,
-    marginRight: 5,
-  },
   buttonAvatar: {
     height: 40,
     width: wp('28%'),
-    marginLeft: wp('36%'),
+    marginLeft: wp('26%'),
     backgroundColor: '#8ccca1',
     justifyContent: 'center',
     alignItems: 'center',
@@ -503,7 +437,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 5,
     borderColor: '#bfa8a8',
-    marginLeft: wp('37%'),
+    marginLeft: wp('27%'),
   },
   textInputChoice: {
     height: 40,

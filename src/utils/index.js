@@ -1,2 +1,2 @@
-import {getData, storeData} from './saveStorage';
-export {getData, storeData};
+import {getData, storeData, getObject, storeObject} from './saveStorage';
+export {getData, storeData, getObject, storeObject};

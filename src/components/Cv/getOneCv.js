@@ -19,7 +19,6 @@ import {getData} from '../../utils';
 import axios from 'axios';
 
 const windowHeight = Dimensions.get('window').height;
-const windowWidth = Dimensions.get('window').width;
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -161,28 +160,28 @@ class getOneCv extends Component {
                 <View style={styles.viewText}>
                   <Text style={styles.textLabel}>Technical skills</Text>
                   <Text
-                    style={{fontFamily: 'TimesNewRoman', fontSize: wp('5')}}>
+                    style={{fontFamily: 'TimesNewRoman', fontSize: wp('4')}}>
                     {_.get(this.props.cv, 'skill').join('\n') || ``}
                   </Text>
                 </View>
                 <View style={styles.viewText}>
                   <Text style={styles.textLabel}>Soft skill</Text>
                   <Text
-                    style={{fontFamily: 'TimesNewRoman', fontSize: wp('5')}}>
+                    style={{fontFamily: 'TimesNewRoman', fontSize: wp('4')}}>
                     {_.get(this.props.cv, 'softSkill') || ''}
                   </Text>
                 </View>
                 <View style={styles.viewText}>
                   <Text style={styles.textLabel}>Experience</Text>
                   <Text
-                    style={{fontFamily: 'TimesNewRoman', fontSize: wp('5')}}>
+                    style={{fontFamily: 'TimesNewRoman', fontSize: wp('4')}}>
                     {_.get(this.props.cv, 'experience') || ``}
                   </Text>
                 </View>
                 <View style={styles.viewText}>
                   <Text style={styles.textLabel}>Description</Text>
                   <Text
-                    style={{fontFamily: 'TimesNewRoman', fontSize: wp('5')}}>
+                    style={{fontFamily: 'TimesNewRoman', fontSize: wp('4')}}>
                     {_.get(this.props.cv, 'description')}
                   </Text>
                 </View>
@@ -281,7 +280,7 @@ const styles = StyleSheet.create({
     fontWeight: '900',
   },
   textLabel: {
-    fontSize: 20,
+    fontSize: hp('2.6%'),
     marginBottom: 5,
     fontFamily: 'Sailors Slant',
   },

@@ -15,7 +15,6 @@ import {TabView, SceneMap} from 'react-native-tab-view';
 import _ from 'lodash';
 
 const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -277,6 +276,7 @@ class CompanyPost extends Component {
     const {index, routes} = this.state;
     return (
       <TabView
+        style={{backgroundColor: '#fff'}}
         navigationState={{index, routes}}
         renderScene={this.renderScene}
         onIndexChange={this.setIndex}
@@ -344,7 +344,7 @@ const styles = StyleSheet.create({
     bottom: 10,
     right: 10,
     height: 60,
-    backgroundColor: '#907fa4',
+    backgroundColor: '#eebbc3',
     borderRadius: 100,
     shadowColor: 'rgba(0, 0, 0, 0.1)',
     shadowOpacity: 0.8,

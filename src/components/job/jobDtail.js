@@ -14,15 +14,15 @@ export class JobDetail extends Component {
     return (
       <View style={styles.itemDetail}>
         <ScrollView showsVerticalScrollIndicator={false}>
-          <Text style={styles.text}>{item.title}</Text>
-          <Text style={styles.text}>{item.company[0].name}</Text>
-          <Text style={styles.text}>Address: {item.address}</Text>
-          <Text style={styles.text}>Skill: {item.skill.join(', ')}</Text>
-          <Text style={styles.text}>Salary: {item.salary}</Text>
-          <Text style={styles.text}>End time: {item.endTime}</Text>
+          <Text style={styles.text}>{item?.title}</Text>
+          <Text style={styles.text}>{item?.company[0].name}</Text>
+          <Text style={styles.text}>Address: {item?.address}</Text>
+          <Text style={styles.text}>Skill: {item?.skill.join(', ')}</Text>
+          <Text style={styles.text}>Salary: {item?.salary}</Text>
+          <Text style={styles.text}>End time: {item?.endTime}</Text>
           <Text style={styles.text}>
             Description:{'\n'}
-            {item.description}
+            {item?.description}
           </Text>
         </ScrollView>
       </View>
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     marginLeft: 5,
     marginRight: 5,
-    backgroundColor: '#9bacb5',
+    backgroundColor: '#d9d2c5',
     shadowOpacity: 0.6,
     flex: 1,
     display: 'flex',

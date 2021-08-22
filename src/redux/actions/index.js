@@ -19,6 +19,11 @@ import {updateCv} from './updateCv';
 import {getCompanies} from './companies';
 import {getJobCompany} from './jobCompany';
 import {sendFeedback} from './feedback';
+import {follow} from './follow';
+import {getFollowing} from './getFollowing';
+import {notifications} from './notification';
+import {savePost} from './savePost';
+import {getSavedPost} from './getSavedPost';
 export {
   login,
   registerIter,
@@ -41,4 +46,9 @@ export {
   getCompanies,
   getJobCompany,
   sendFeedback,
+  follow,
+  getFollowing,
+  notifications,
+  savePost,
+  getSavedPost,
 };
