@@ -8,13 +8,13 @@ import {Toast} from 'native-base';
 import _ from 'lodash';
 import * as ImagePicker from 'react-native-image-picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import {Input, Textarea} from './components';
 
 import {
   StyleSheet,
@@ -22,7 +22,6 @@ import {
   Text,
   Dimensions,
   TouchableOpacity,
-  TextInput,
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
   Keyboard,
@@ -290,136 +289,111 @@ class UpdateCv extends Component {
       email,
     } = this.state;
     return (
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-        <KeyboardAvoidingView style={{flex: 1}}>
-          <Header
-            title={'     Update CV'}
-            left={true}
-            hideRight={false}
-            color="#0E1442"
-          />
-          <ScrollView showsVerticalScrollIndicator={false}>
-            <View style={styles.container}>
-              <Image
-                source={{
-                  uri: photo
-                    ? photo.uri
-                    : image != ''
-                    ? image
-                    : 'https://res.cloudinary.com/do-an-cnpm/image/upload/v1618073475/person_j0pvho.png',
-                }}
-                style={styles.avatar}
-              />
-              <TouchableOpacity
-                onPress={this.handleChoosePhoto}
-                style={styles.buttonAvatar}>
-                <Text style={{fontFamily: 'Itim-Regular', fontSize: 15}}>
-                  Choose Avatar
-                </Text>
-              </TouchableOpacity>
-              <View style={styles.choice}>
-                <TextInput
-                  style={styles.textInputChoice}
-                  value={name}
-                  placeholder="Name..."></TextInput>
-              </View>
-              <View style={styles.choice}>
-                <TextInput
-                  style={styles.textInputChoice}
-                  value={email}
-                  placeholder="Email..."></TextInput>
-              </View>
-              <View style={styles.choice}>
-                <TextInput
+      <View style={{paddingBottom: hp('5%')}}>
+        <Header
+          title={'     Update CV'}
+          left={true}
+          hideRight={false}
+          color="#0E1442"
+        />
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+          <KeyboardAvoidingView style={{flex: 1}}>
+            <ScrollView showsVerticalScrollIndicator={false}>
+              <View style={styles.container}>
+                <Image
+                  source={{
+                    uri: photo
+                      ? photo.uri
+                      : image != ''
+                      ? image
+                      : 'https://res.cloudinary.com/do-an-cnpm/image/upload/v1618073475/person_j0pvho.png',
+                  }}
+                  style={styles.avatar}
+                />
+                <TouchableOpacity
+                  onPress={this.handleChoosePhoto}
+                  style={styles.buttonAvatar}>
+                  <Text style={{fontFamily: 'Itim-Regular', fontSize: 15}}>
+                    Choose Avatar
+                  </Text>
+                </TouchableOpacity>
+                <Input value={name}></Input>
+                <Input value={email}></Input>
+                <Input
                   value={birthday}
-                  style={styles.textName}
                   editable={false}
                   selectTextOnFocus={false}
-                  placeholder="Birthday. . ."></TextInput>
-                <TouchableOpacity onPress={this.showDatepicker}>
-                  <FontAwesome5
-                    name={'calendar-alt'}
-                    style={styles.iconCalendar}
+                  placeholder="Birthday. . ."
+                  iconName={'calendar-alt'}
+                  onPress={this.showDatepicker}></Input>
+                {showDate && (
+                  <DateTimePicker
+                    testID="dateTimePicker"
+                    value={date}
+                    mode={'date'}
+                    onChange={this.onChangeDate}
+                    maximumDate={new Date()}
                   />
-                </TouchableOpacity>
-              </View>
-              {showDate && (
-                <DateTimePicker
-                  testID="dateTimePicker"
-                  value={date}
-                  mode={'date'}
-                  onChange={this.onChangeDate}
-                  maximumDate={new Date()}
-                />
-              )}
-              <View style={styles.choice}>
-                <TextInput
-                  style={styles.textInputChoice}
+                )}
+                <Input
                   value={textSkill}
                   editable={false}
                   onChangeText={this.onChangesKill}
-                  placeholder="Skill..."></TextInput>
-                <TouchableOpacity onPress={this.showModalSkill}>
-                  <FontAwesome5 name={'cogs'} style={styles.iconCalendar} />
+                  placeholder="Skill..."
+                  iconName={'cogs'}
+                  onPress={this.showModalSkill}></Input>
+                <Textarea
+                  onChangeText={this.onChangesoftSkill}
+                  numberOfLines={4}
+                  value={softSkill}
+                  placeholder="Soft Skill"></Textarea>
+                <Textarea
+                  onChangeText={this.onChangeExperience}
+                  numberOfLines={4}
+                  value={experience}
+                  placeholder="Experience"></Textarea>
+                <Textarea
+                  onChangeText={this.onChangeDescription}
+                  numberOfLines={4}
+                  value={description}
+                  placeholder="Description"
+                  autoCorrect={false}
+                />
+                <TouchableOpacity
+                  style={styles.buttonCreate}
+                  onPress={this.updateNewCv}>
+                  <Text style={styles.textStyle}>Update</Text>
                 </TouchableOpacity>
               </View>
-              <TextInput
-                style={styles.desInput}
-                onChangeText={this.onChangesoftSkill}
-                multiline={true}
-                numberOfLines={4}
-                value={softSkill}
-                placeholder="Soft Skill"></TextInput>
-              <TextInput
-                style={styles.desInput}
-                onChangeText={this.onChangeExperience}
-                multiline={true}
-                numberOfLines={4}
-                value={experience}
-                placeholder="Experience"></TextInput>
-              <TextInput
-                onChangeText={this.onChangeDescription}
-                multiline={true}
-                numberOfLines={4}
-                value={description}
-                style={styles.desInput}
-                placeholder="Description"
-                autoCorrect={false}
-              />
-              <TouchableOpacity
-                style={styles.buttonCreate}
-                onPress={this.updateNewCv}>
-                <Text style={styles.textStyle}>Update</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.centeredView}>
-              <Modal
-                animationType="slide"
-                transparent={true}
-                visible={modalVisible}>
-                <View style={styles.centeredView}>
-                  <View style={styles.modalView}>
-                    <Text style={styles.modalText}>Choose Skill</Text>
-                    {this.showSkill()}
-                    <View style={styles.containerButton}>
-                      <TouchableOpacity
-                        style={{
-                          ...styles.openButton,
-                          backgroundColor: '#3d84b8',
-                        }}
-                        onPress={() => {
-                          this.setModalVisible(!modalVisible);
-                        }}>
-                        <Text style={styles.textStyle}>Add</Text>
-                      </TouchableOpacity>
+              <View style={styles.centeredView}>
+                <Modal
+                  animationType="slide"
+                  transparent={true}
+                  visible={modalVisible}>
+                  <View style={styles.centeredView}>
+                    <View style={styles.modalView}>
+                      <Text style={styles.modalText}>Choose Skill</Text>
+                      {this.showSkill()}
+                      <View style={styles.containerButton}>
+                        <TouchableOpacity
+                          style={{
+                            ...styles.openButton,
+                            backgroundColor: '#3d84b8',
+                          }}
+                          onPress={() => {
+                            this.setModalVisible(!modalVisible);
+                          }}>
+                          <Text style={styles.textStyle}>Add</Text>
+                        </TouchableOpacity>
+                      </View>
                     </View>
                   </View>
-                </View>
-              </Modal>
-            </View>
-          </ScrollView>
-        </KeyboardAvoidingView>
-      </TouchableWithoutFeedback>
+                </Modal>
+              </View>
+            </ScrollView>
+          </KeyboardAvoidingView>
+        </TouchableWithoutFeedback>
+      </View>
     );
   }
 }
@@ -481,8 +455,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
     elevation: 2,
-    width: wp('30%'),
-    marginLeft: wp('35%'),
+    width: wp('40%'),
+    marginLeft: wp('20%'),
     marginRight: 35,
     marginTop: 15,
     backgroundColor: '#adb0ce',
@@ -498,32 +472,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flex: 1,
     display: 'flex',
-    minHeight: (windowHeight * 9) / 10,
     paddingBottom: 20,
     paddingTop: 10,
-  },
-  textInput: {
-    borderColor: 'black',
-    borderWidth: 1,
-    height: 40,
-    width: wp('80%'),
-    marginBottom: 15,
-    paddingLeft: 6,
-    marginLeft: wp('10%'),
-    color: 'black',
-    borderRadius: 5,
-  },
-  desInput: {
-    borderColor: 'black',
-    borderWidth: 1,
-    height: 100,
-    width: wp('80%'),
-    marginBottom: 5,
-    paddingLeft: 6,
-    textAlignVertical: 'top',
-    marginLeft: wp('10%'),
-    borderRadius: 5,
-    fontFamily: 'TimesNewRoman',
+    paddingLeft: wp('10%'),
+    paddingRight: wp('10%'),
   },
   textStyle: {
     color: 'white',
@@ -534,27 +486,10 @@ const styles = StyleSheet.create({
   containerButton: {
     flexDirection: 'row',
   },
-  choice: {
-    flexDirection: 'row',
-    borderWidth: 1,
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    borderBottomColor: '#3f51b5',
-    marginBottom: 15,
-    width: wp('80%'),
-    marginLeft: wp('10%'),
-  },
-  iconCalendar: {
-    color: 'black',
-    fontSize: 25,
-    marginTop: 10,
-    marginRight: 5,
-  },
   buttonAvatar: {
     height: 40,
     width: wp('28%'),
-    marginLeft: wp('36%'),
+    marginLeft: wp('26%'),
     backgroundColor: '#8ccca1',
     justifyContent: 'center',
     alignItems: 'center',
@@ -567,11 +502,9 @@ const styles = StyleSheet.create({
     width: wp('26%'),
     height: 100,
     borderWidth: 1,
-    marginBottom: 5,
     borderColor: '#bfa8a8',
-    marginLeft: wp('37%'),
+    marginLeft: wp('27%'),
   },
-  textName: {},
   textInputChoice: {
     height: 40,
     width: windowWidth * 0.6,
