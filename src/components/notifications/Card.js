@@ -11,16 +11,27 @@ const Card = (props) => {
   const {item} = props;
   return (
     <TouchableOpacity style={styles.container} onPress={props.onPress}>
-      {/* <View style={{justifyContent: 'center', alignItems: 'center'}}> */}
-      {/* <Image source={{uri: item.image}} style={styles.image}></Image> */}
-      {/* </View> */}
-      <View style={{display: 'flex', justifyContent: 'space-between'}}>
+      <View style={{justifyContent: 'center', alignItems: 'center'}}>
+        <Image
+          source={{
+            uri:
+              _.get(item, 'image') ||
+              'https://res.cloudinary.com/do-an-cnpm/image/upload/v1618073475/person_j0pvho.png',
+          }}
+          style={styles.image}></Image>
+      </View>
+      <View
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          width: wp('75%'),
+          padding: hp('1%'),
+        }}>
         <View
           style={{
             display: 'flex',
             justifyContent: 'space-between',
             flexDirection: 'row',
-            width: wp('88%'),
           }}>
           <Text style={styles.title}>{_.get(item, 'title')}</Text>
           <Text style={styles.createdAt}>
@@ -54,16 +65,17 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: 'TimesNewRoman',
-    fontSize: 22,
+    fontSize: 19,
     fontWeight: 'bold',
+    color: 'red',
   },
   body: {
     fontFamily: 'TimesNewRoman',
-    fontSize: 19,
+    fontSize: 17,
   },
   image: {
-    height: 100,
-    width: 100,
+    height: wp('15%'),
+    width: wp('15%'),
   },
   createdAt: {
     fontFamily: 'TimesNewRoman',

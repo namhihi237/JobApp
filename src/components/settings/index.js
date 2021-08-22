@@ -62,7 +62,7 @@ class Settings extends Component {
             <Text style={styles.name}>{_.get(user, 'name')}</Text>
             {this.props.role == 'company' ? (
               <Text style={styles.name}>
-                Follow: {_.get(user, 'numberOfFollowers')}
+                Follower: {_.get(user, 'numberOfFollowers')}
               </Text>
             ) : null}
           </View>
