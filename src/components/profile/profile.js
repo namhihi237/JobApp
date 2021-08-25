@@ -8,18 +8,17 @@ import {
   View,
   Text,
   Dimensions,
-  Image,
   TouchableOpacity,
   TextInput,
   ScrollView,
 } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import {connect} from 'react-redux';
 import {getProfile} from '../../redux/actions';
 import {Toast} from 'native-base';
 import axios from 'axios';
 import {Header} from '../../common';
 const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -85,7 +84,7 @@ class Profile extends Component {
             },
           },
         );
-        imageUrl = upload.data.url || null;
+        imageUrl = upload.data.secure_url || null;
         if (!imageUrl) {
           this.showToast('Faild');
           return;
@@ -201,7 +200,7 @@ class Profile extends Component {
               <TouchableOpacity
                 onPress={this.handleChoosePhoto}
                 style={styles.containerImg}>
-                <Image
+                <FastImage
                   style={{
                     height: 150,
                     width: 100,
@@ -212,7 +211,9 @@ class Profile extends Component {
                       _.get(photo, 'uri') ||
                       _.get(this.props.user, 'image') ||
                       'https://res.cloudinary.com/do-an-cnpm/image/upload/v1618073475/person_j0pvho.png',
+                    priority: FastImage.priority.normal,
                   }}
+                  resizeMode={FastImage.resizeMode.contain}
                 />
               </TouchableOpacity>
               <View style={styles.content}>

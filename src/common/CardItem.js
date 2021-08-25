@@ -5,8 +5,8 @@ import {
   TouchableOpacity,
   StyleSheet,
   Dimensions,
-  Image,
 } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import {
   widthPercentageToDP as wp,
@@ -77,9 +77,14 @@ const CardItem = (props) => {
             display: 'flex',
             alignItems: 'center',
           }}>
-          <Image
-            source={{uri: _.get(item.company[0], 'image')}}
-            style={styles.logo}></Image>
+          <FastImage
+            style={styles.logo}
+            source={{
+              uri: _.get(item.company[0], 'image'),
+              priority: FastImage.priority.normal,
+            }}
+            resizeMode={FastImage.resizeMode.contain}
+          />
           {renderApply(item.apply, userId)}
         </View>
         <View style={{padding: 1, marginLeft: 10, width: wp('65%')}}>

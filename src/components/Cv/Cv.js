@@ -8,13 +8,12 @@ import {getData} from '../../utils';
 import _ from 'lodash';
 import * as ImagePicker from 'react-native-image-picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import FastImage from 'react-native-fast-image';
 import {Input, Textarea} from './components';
 import {
   StyleSheet,
@@ -22,12 +21,10 @@ import {
   Text,
   Dimensions,
   TouchableOpacity,
-  KeyboardAvoidingView,
   TouchableWithoutFeedback,
   Keyboard,
   ScrollView,
   Modal,
-  Image,
 } from 'react-native';
 import FormData from 'form-data';
 import axios from 'axios';
@@ -213,7 +210,7 @@ class Cv extends Component {
           },
         },
       );
-      return upload.data.url || null;
+      return upload.data.secure_url || null;
     } catch (error) {
       return null;
     }
@@ -236,19 +233,19 @@ class Cv extends Component {
           hideRight={false}
           color="#0E1442"
         />
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <TouchableWithoutFeedback
-            onPress={Keyboard.dismiss}
-            accessible={false}>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+          <ScrollView showsVerticalScrollIndicator={false}>
             <Loader status={this.props.loading} msg={'Creating'}></Loader>
             <View style={styles.container}>
-              <Image
+              <FastImage
+                style={styles.avatar}
                 source={{
                   uri: photo
                     ? photo.uri
                     : 'https://res.cloudinary.com/do-an-cnpm/image/upload/v1618073475/person_j0pvho.png',
+                  priority: FastImage.priority.normal,
                 }}
-                style={styles.avatar}
+                resizeMode={FastImage.resizeMode.contain}
               />
               <TouchableOpacity
                 onPress={this.handleChoosePhoto}
@@ -325,8 +322,8 @@ class Cv extends Component {
                 </View>
               </Modal>
             </View>
-          </TouchableWithoutFeedback>
-        </ScrollView>
+          </ScrollView>
+        </TouchableWithoutFeedback>
       </View>
     );
   }

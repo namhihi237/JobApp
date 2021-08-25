@@ -1,24 +1,27 @@
 import React from 'react';
-import {StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native';
+import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import _ from 'lodash';
 import moment from 'moment';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-
+import FastImage from 'react-native-fast-image';
 const Card = (props) => {
   const {item} = props;
   return (
     <TouchableOpacity style={styles.container} onPress={props.onPress}>
       <View style={{justifyContent: 'center', alignItems: 'center'}}>
-        <Image
+        <FastImage
+          style={styles.image}
           source={{
             uri:
               _.get(item, 'image') ||
               'https://res.cloudinary.com/do-an-cnpm/image/upload/v1618073475/person_j0pvho.png',
+            priority: FastImage.priority.normal,
           }}
-          style={styles.image}></Image>
+          resizeMode={FastImage.resizeMode.contain}
+        />
       </View>
       <View
         style={{

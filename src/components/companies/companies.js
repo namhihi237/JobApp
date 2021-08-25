@@ -19,11 +19,9 @@ import {
   FlatList,
   Dimensions,
   TouchableOpacity,
-  Image,
-  ActivityIndicator,
   Alert,
 } from 'react-native';
-
+import FastImage from 'react-native-fast-image';
 const windowWidth = Dimensions.get('window').width;
 
 class Companies extends Component {
@@ -152,7 +150,14 @@ class Companies extends Component {
   renderItem = ({item}) => (
     <View style={styles.item}>
       <View style={styles.logoContainer}>
-        <Image source={{uri: _.get(item, 'image')}} style={styles.logo}></Image>
+        <FastImage
+          style={styles.logo}
+          source={{
+            uri: _.get(item, 'image'),
+            priority: FastImage.priority.normal,
+          }}
+          resizeMode={FastImage.resizeMode.contain}
+        />
         <View style={{padding: 1, marginLeft: 10, maxWidth: wp('60%')}}>
           <View style={styles.follow}>{this.renderFollow(item.accountId)}</View>
           <Text
@@ -183,13 +188,7 @@ class Companies extends Component {
   );
   footerList = () => {
     return (
-      <View style={{flex: 1}}>
-        {this.state.isLoading && (
-          <View>
-            <ActivityIndicator />
-          </View>
-        )}
-      </View>
+      <View style={{flex: 1}}>{this.state.isLoading && <View></View>}</View>
     );
   };
   render() {

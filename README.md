@@ -7,7 +7,7 @@ Clone project
   Mở terminal lên cd đến project
 - Cài thư viện : npm install or yarn install
 - Chạy project (đã cài android studio và biến môi trường)
-  npm react-native run-anndroid
+  npx react-native run-androids
 
 ## Build file apk
 

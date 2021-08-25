@@ -10,7 +10,13 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import {StyleSheet, View, FlatList, ActivityIndicator} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  FlatList,
+  ActivityIndicator,
+  Text,
+} from 'react-native';
 import {getData} from '../../utils';
 const {BASE_URL} = apiUrl;
 class Notification extends Component {
@@ -95,10 +101,11 @@ class Notification extends Component {
   };
 
   render() {
+    console.log(this.props.status);
     if (this.props.status != 200 && this.props.status != 304) {
       return (
         <View>
-          <Loader status={this.props.loading}></Loader>
+          <Text>Try again later</Text>
         </View>
       );
     }
@@ -111,16 +118,30 @@ class Notification extends Component {
           hideRight={true}
           color="#0E1442"
         />
-        <FlatList
-          style={styles.flatList}
-          scrollEventThrottle={16}
-          data={this.state.notifications}
-          keyExtractor={this.keyExtractor}
-          renderItem={this.renderItem}
-          onEndReached={this.handleLoadMore}
-          onRefresh={() => this.onRefresh()}
-          refreshing={this.state.isFetching}
-          ListFooterComponent={this.footerList}></FlatList>
+        {!this.props.loading && this.state.notifications.length > 0 ? (
+          <FlatList
+            style={styles.flatList}
+            scrollEventThrottle={16}
+            data={this.state.notifications}
+            keyExtractor={this.keyExtractor}
+            renderItem={this.renderItem}
+            onEndReached={this.handleLoadMore}
+            onRefresh={() => this.onRefresh()}
+            refreshing={this.state.isFetching}
+            ListFooterComponent={this.footerList}></FlatList>
+        ) : (
+          <View
+            style={{
+              padding: 20,
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginTop: 100,
+            }}>
+            <Text style={{fontSize: 20, fontWeight: 'bold'}}>
+              You have not any notifications yet
+            </Text>
+          </View>
+        )}
       </View>
     );
   }

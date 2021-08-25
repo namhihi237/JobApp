@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Loader, Header} from '../../common';
+import {Header} from '../../common';
 import {connect} from 'react-redux';
 import {getData} from '../../utils';
 import SelectMultiple from 'react-native-select-multiple';
@@ -14,7 +14,7 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import {Input, Textarea} from './components';
-
+import FastImage from 'react-native-fast-image';
 import {
   StyleSheet,
   View,
@@ -25,7 +25,6 @@ import {
   Keyboard,
   ScrollView,
   Modal,
-  Image,
 } from 'react-native';
 import FormData from 'form-data';
 import axios from 'axios';
@@ -264,7 +263,7 @@ class UpdateCv extends Component {
           },
         },
       );
-      return upload.data.url || null;
+      return upload.data.secure_url || null;
     } catch (error) {
       return null;
     }
@@ -296,15 +295,17 @@ class UpdateCv extends Component {
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
           <ScrollView showsVerticalScrollIndicator={false}>
             <View style={styles.container}>
-              <Image
+              <FastImage
+                style={styles.avatar}
                 source={{
                   uri: photo
                     ? photo.uri
                     : image != ''
                     ? image
                     : 'https://res.cloudinary.com/do-an-cnpm/image/upload/v1618073475/person_j0pvho.png',
+                  priority: FastImage.priority.normal,
                 }}
-                style={styles.avatar}
+                resizeMode={FastImage.resizeMode.contain}
               />
               <TouchableOpacity
                 onPress={this.handleChoosePhoto}
