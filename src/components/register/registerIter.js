@@ -18,6 +18,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import LinearGradient from 'react-native-linear-gradient';
 class Register extends Component {
   constructor(props) {
     super(props);
@@ -85,44 +86,48 @@ class Register extends Component {
   render() {
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          showsVerticalScrollIndicator={false}
-          style={styles.container}>
-          <Loader status={this.props.loading} message={'Sign up'} />
-          <Image
-            source={require('../../assets/image/register.png')}
-            style={styles.image}
-          />
-          <Text style={styles.text}>Signup Iter</Text>
-          <View style={styles.form}>
-            <TextInput
-              iconName={'user'}
-              onChangeText={this.changeTextname}
-              placeholder={'Full Name'}></TextInput>
-            <TextInput
-              iconName={'envelope'}
-              onChangeText={this.changeTextEmail}
-              placeholder={'Email'}></TextInput>
-            <TextInput
-              iconName={'key'}
-              placeholder={'Password'}
-              onChangeText={this.changeTextPass}
-              secureTextEntry={true}></TextInput>
-            <TextInput
-              iconName={'key'}
-              placeholder={'Confirm password'}
-              onChangeText={this.changeTextConfirmPass}
-              secureTextEntry={true}></TextInput>
-            <Button onPress={this.registerAcc} label={'Sign up'}></Button>
-          </View>
-          <View style={styles.textRegisterContainer}>
-            <Text style={styles.textRegister1}>Already Registered? </Text>
-            <TouchableOpacity onPress={this.moveToLogin}>
-              <Text style={styles.textRegister}>Login</Text>
-            </TouchableOpacity>
-          </View>
-        </ScrollView>
+        <LinearGradient
+          colors={['#e1dae9', '#e2ebf1', '#c8eef6']}
+          style={{flex: 1}}>
+          <ScrollView
+            contentInsetAdjustmentBehavior="automatic"
+            showsVerticalScrollIndicator={false}
+            style={styles.container}>
+            <Loader status={this.props.loading} message={'Sign up'} />
+            <Image
+              source={require('../../assets/image/register.png')}
+              style={styles.image}
+            />
+            <Text style={styles.text}>Signup Iter</Text>
+            <View style={styles.form}>
+              <TextInput
+                iconName={'user'}
+                onChangeText={this.changeTextname}
+                placeholder={'Full Name'}></TextInput>
+              <TextInput
+                iconName={'envelope'}
+                onChangeText={this.changeTextEmail}
+                placeholder={'Email'}></TextInput>
+              <TextInput
+                iconName={'key'}
+                placeholder={'Password'}
+                onChangeText={this.changeTextPass}
+                secureTextEntry={true}></TextInput>
+              <TextInput
+                iconName={'key'}
+                placeholder={'Confirm password'}
+                onChangeText={this.changeTextConfirmPass}
+                secureTextEntry={true}></TextInput>
+              <Button onPress={this.registerAcc} label={'Sign up'}></Button>
+            </View>
+            <View style={styles.textRegisterContainer}>
+              <Text style={styles.textRegister1}>Already Registered? </Text>
+              <TouchableOpacity onPress={this.moveToLogin}>
+                <Text style={styles.textRegister}>Login</Text>
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
+        </LinearGradient>
       </TouchableWithoutFeedback>
     );
   }
@@ -143,7 +148,6 @@ export default connect(mapStateToProps, mapDispatchToProps)(Register);
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff',
     paddingLeft: wp('5%'),
   },
   form: {

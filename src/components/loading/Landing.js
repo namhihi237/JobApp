@@ -76,7 +76,7 @@ export class Landing extends Component {
     const {marginLeftAnimA, marginRightAnimB} = this.state;
     return (
       <LinearGradient
-        colors={['#050024', '#212979', '#48c4dd']}
+        colors={['#cdaeee', '#88bae0', '#3dc7d0']}
         style={styles.container}>
         <View style={styles.ovalContainer}>
           <Animated.View
