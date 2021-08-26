@@ -16,7 +16,7 @@ import {
 import {connect} from 'react-redux';
 import {login, getFollowing} from '../../redux/actions';
 import {getData} from '../../utils';
-
+import LinearGradient from 'react-native-linear-gradient';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -27,7 +27,6 @@ class Login extends Component {
     this.state = {
       email: '',
       password: '',
-      eye: false,
     };
   }
 
@@ -87,52 +86,54 @@ class Login extends Component {
     this.props.navigation.navigate('ForgotPassword');
   };
 
-  togglePassword = () => {
-    this.setState({eye: !this.state.eye});
-  };
-
   render() {
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          showsVerticalScrollIndicator={false}
-          style={styles.container}>
-          <Loader status={this.props.loading} message={'logging'} />
-          <Image
-            source={require('../../assets/image/login.png')}
-            style={styles.image}
-          />
-          <Text style={styles.text}>Login</Text>
-          <View style={styles.form}>
-            <TextInput
-              iconName={'envelope'}
-              onChangeText={this.changeTextEmail}
-              value={this.state.email}
-              placeholder={'example@gmail.com'}></TextInput>
-            <TextInput
-              iconName={'key'}
-              placeholder={'******'}
-              value={this.state.password}
-              onChangeText={this.changeTextPass}
-              secureTextEntry={true}></TextInput>
-            <TouchableOpacity style={styles.forgot}>
-              <Text style={styles.textRegister}>Forgot your password?</Text>
-            </TouchableOpacity>
-            <Button onPress={this.moveToMain} label={'Login'}></Button>
-          </View>
-          <View style={styles.textRegisterContainer}>
-            <Text style={styles.textRegister1}>New user? </Text>
-            <TouchableOpacity onPress={this.moveToRegisterIter}>
-              <Text style={styles.textRegister}>Register Iter</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.textRegisterContainerDown}>
-            <TouchableOpacity onPress={this.moveToRegisterCompany}>
-              <Text style={styles.textRegister}>Company</Text>
-            </TouchableOpacity>
-          </View>
-        </ScrollView>
+        <LinearGradient
+          colors={['#e1dae9', '#e2ebf1', '#c8eef6']}
+          style={{flex: 1}}>
+          <ScrollView
+            contentInsetAdjustmentBehavior="automatic"
+            showsVerticalScrollIndicator={false}
+            style={styles.container}>
+            <Loader status={this.props.loading} message={'logging'} />
+            <Image
+              source={require('../../assets/image/login.png')}
+              style={styles.image}
+            />
+            <Text style={styles.text}>Login</Text>
+            <View style={styles.form}>
+              <TextInput
+                iconName={'envelope'}
+                onChangeText={this.changeTextEmail}
+                value={this.state.email}
+                placeholder={'example@gmail.com'}></TextInput>
+              <TextInput
+                iconName={'key'}
+                placeholder={'******'}
+                value={this.state.password}
+                onChangeText={this.changeTextPass}
+                secureTextEntry={true}></TextInput>
+              <TouchableOpacity
+                style={styles.forgot}
+                onPress={this.moveToForgotPassword}>
+                <Text style={styles.textRegister}>Forgot your password?</Text>
+              </TouchableOpacity>
+              <Button onPress={this.moveToMain} label={'Login'}></Button>
+            </View>
+            <View style={styles.textRegisterContainer}>
+              <Text style={styles.textRegister1}>New user? </Text>
+              <TouchableOpacity onPress={this.moveToRegisterIter}>
+                <Text style={styles.textRegister}>Register Iter</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.textRegisterContainerDown}>
+              <TouchableOpacity onPress={this.moveToRegisterCompany}>
+                <Text style={styles.textRegister}>Company</Text>
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
+        </LinearGradient>
       </TouchableWithoutFeedback>
     );
   }
@@ -152,7 +153,6 @@ export default connect(mapStateToProps, mapDispatchToProps)(Login);
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff',
     paddingLeft: wp('5%'),
   },
   form: {
