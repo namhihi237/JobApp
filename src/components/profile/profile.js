@@ -11,6 +11,7 @@ import {
   TouchableOpacity,
   TextInput,
   ScrollView,
+  Image,
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {connect} from 'react-redux';
@@ -200,7 +201,7 @@ class Profile extends Component {
               <TouchableOpacity
                 onPress={this.handleChoosePhoto}
                 style={styles.containerImg}>
-                <FastImage
+                <Image
                   style={{
                     height: 150,
                     width: 100,
@@ -211,9 +212,7 @@ class Profile extends Component {
                       _.get(photo, 'uri') ||
                       _.get(this.props.user, 'image') ||
                       'https://res.cloudinary.com/do-an-cnpm/image/upload/v1618073475/person_j0pvho.png',
-                    priority: FastImage.priority.normal,
                   }}
-                  resizeMode={FastImage.resizeMode.contain}
                 />
               </TouchableOpacity>
               <View style={styles.content}>

@@ -1,13 +1,13 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import _ from 'lodash';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import {Loader, SearchBar} from '../../common';
+import { Loader, SearchBar } from '../../common';
 import axios from 'axios';
-import {apiUrl} from '../../api/api';
+import { apiUrl } from '../../api/api';
 import FollowButton from './followButton';
-import {getData} from '../../utils';
-import {getCompanies, follow, getFollowing} from '../../redux/actions';
+import { getData } from '../../utils';
+import { getCompanies, follow, getFollowing } from '../../redux/actions';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -41,28 +41,28 @@ class Companies extends Component {
   }
 
   onRefresh = async () => {
-    this.setState({isFetching: true});
+    this.setState({ isFetching: true });
     await this.props.getCompanies();
 
-    this.setState({companies: this.props.companies, page: 1});
-    this.setState({isFetching: false});
+    this.setState({ companies: this.props.companies, page: 1 });
+    this.setState({ isFetching: false });
   };
 
   updateSearch = (search) => {
-    this.setState({search});
+    this.setState({ search });
   };
 
   searchItem = async () => {
     if (this.state.search == '') return;
-    this.props.navigation.navigate('Search', {search: this.state.search});
+    this.props.navigation.navigate('Search', { search: this.state.search });
   };
 
   moveToListJobs = async (companyId, companyName) => {
-    this.props.navigation.navigate('ListJobs', {companyId, companyName});
+    this.props.navigation.navigate('ListJobs', { companyId, companyName });
   };
 
   async componentDidMount() {
-    this.setState({search: ''});
+    this.setState({ search: '' });
     await this.props.getCompanies();
     const token = await getData('token');
     const role = await getData('role');
@@ -86,7 +86,7 @@ class Companies extends Component {
   async handleLoadMore() {
     try {
       let page = this.state.page + 1;
-      await this.setState({isLoading: true, page});
+      await this.setState({ isLoading: true, page });
 
       if (page > this.props.numPages) {
         return;
@@ -124,14 +124,14 @@ class Companies extends Component {
         return;
       }
       if (!this.state.following.includes(companyId)) {
-        this.setState({following: [...this.props.following, companyId]});
+        this.setState({ following: [...this.state.following, companyId] });
       } else {
         let index = this.state.following.indexOf(companyId);
         let newFollow = this.state.following;
         newFollow.splice(index, 1);
-        this.setState({following: newFollow});
+        this.setState({ following: newFollow });
       }
-      await this.props.follow({companyId});
+      await this.props.follow({ companyId });
     } catch (error) {
       return;
     }
@@ -147,7 +147,7 @@ class Companies extends Component {
     }
     return null;
   };
-  renderItem = ({item}) => (
+  renderItem = ({ item }) => (
     <View style={styles.item}>
       <View style={styles.logoContainer}>
         <FastImage
@@ -158,10 +158,10 @@ class Companies extends Component {
           }}
           resizeMode={FastImage.resizeMode.contain}
         />
-        <View style={{padding: 1, marginLeft: 10, maxWidth: wp('60%')}}>
+        <View style={{ padding: 1, marginLeft: 10, maxWidth: wp('60%') }}>
           <View style={styles.follow}>{this.renderFollow(item.accountId)}</View>
           <Text
-            style={{...styles.text, fontSize: hp('2.5%')}}
+            style={{ ...styles.text, fontSize: hp('2.5%') }}
             numberOfLines={2}
             ellipsizeMode="tail">
             {_.get(item, 'name')}
@@ -177,7 +177,7 @@ class Companies extends Component {
               onPress={() =>
                 this.moveToListJobs(item.accountId, _.get(item, 'name'))
               }>
-              <Text style={{color: 'green'}}>
+              <Text style={{ color: 'green' }}>
                 {_.get(item, 'recruitingPost')} Jobs
               </Text>
             </TouchableOpacity>
@@ -188,7 +188,7 @@ class Companies extends Component {
   );
   footerList = () => {
     return (
-      <View style={{flex: 1}}>{this.state.isLoading && <View></View>}</View>
+      <View style={{ flex: 1 }}>{this.state.isLoading && <View></View>}</View>
     );
   };
   render() {
@@ -224,7 +224,7 @@ const mapDispatchToProps = {
 };
 
 const mapStateToProps = (state) => {
-  const {loading, status, msg} = state.getCompanies;
+  const { loading, status, msg } = state.getCompanies;
   return {
     loading,
     status,
@@ -243,7 +243,7 @@ const styles = StyleSheet.create({
   },
   flatlist: {
     marginTop: 3,
-    marginBottom: hp('10%'),
+    marginBottom: hp('12%'),
   },
   item: {
     height: hp('90%') / 5,
@@ -281,7 +281,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
   },
-  iconText: {marginTop: 4, marginLeft: 5},
+  iconText: { marginTop: 4, marginLeft: 5 },
   seeMore: {
     display: 'flex',
     flexDirection: 'row',

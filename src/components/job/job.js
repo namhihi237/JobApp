@@ -1,12 +1,12 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import _ from 'lodash';
-import {connect} from 'react-redux';
-import {Toast} from 'native-base';
-import {Loader, CardItem, SearchBar, ModalJob} from '../../common';
+import { connect } from 'react-redux';
+import { Toast } from 'native-base';
+import { Loader, CardItem, SearchBar, ModalJob } from '../../common';
 import axios from 'axios';
-import {apiUrl} from '../../api/api';
-import {getJob, applyJob, savePost, getSavedPost} from '../../redux/actions';
-import {getData} from '../../utils';
+import { apiUrl } from '../../api/api';
+import { getJob, applyJob, savePost, getSavedPost } from '../../redux/actions';
+import { getData } from '../../utils';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -23,7 +23,7 @@ import {
 } from 'react-native';
 
 const windowWidth = Dimensions.get('window').width;
-const {GET_JOBS_URL} = apiUrl;
+const { GET_JOBS_URL } = apiUrl;
 class Job extends Component {
   constructor(props) {
     super(props);
@@ -42,10 +42,10 @@ class Job extends Component {
   }
 
   onRefresh = async () => {
-    this.setState({isFetching: true});
+    this.setState({ isFetching: true });
     await this.props.getJob();
-    this.setState({posts: this.props.posts, page: 1});
-    this.setState({isFetching: false});
+    this.setState({ posts: this.props.posts, page: 1 });
+    this.setState({ isFetching: false });
   };
 
   showToast = (msg) => {
@@ -58,15 +58,15 @@ class Job extends Component {
   };
 
   updateSearch = (search) => {
-    this.setState({search});
+    this.setState({ search });
   };
 
   searchItem = async () => {
     if (this.state.search == '') return;
-    this.props.navigation.navigate('Search', {search: this.state.search});
+    this.props.navigation.navigate('Search', { search: this.state.search });
   };
 
-  renderItem = ({item}) => (
+  renderItem = ({ item }) => (
     <CardItem
       item={item}
       userId={this.state.userId}
@@ -100,7 +100,7 @@ class Job extends Component {
 
   async handleLoadMore() {
     try {
-      await this.setState({page: this.state.page + 1, isLoading: true});
+      await this.setState({ page: this.state.page + 1, isLoading: true });
 
       if (this.state.page > this.props.numPages) {
         return;
@@ -124,7 +124,7 @@ class Job extends Component {
 
   footerList = () => {
     return (
-      <View style={{flex: 1}}>
+      <View style={{ flex: 1 }}>
         {this.state.isLoading && (
           <View style={styles.loading}>
             <ActivityIndicator />
@@ -135,12 +135,12 @@ class Job extends Component {
   };
 
   setModalVisible = (visible) => {
-    this.setState({modalVisible: visible});
+    this.setState({ modalVisible: visible });
   };
 
   showDetail = (item) => {
     this.setModalVisible(true);
-    this.setState({item});
+    this.setState({ item });
   };
 
   alertLogin = () =>
@@ -178,7 +178,7 @@ class Job extends Component {
     }
     let newPost = [];
     if (!this.props.savedPost.map((e) => e.postId).includes(post._id)) {
-      newPost = [...this.props.savedPost, {postId: post._id, post: [post]}];
+      newPost = [...this.props.savedPost, { postId: post._id, post: [post] }];
     } else {
       this.props.savedPost.forEach((element) => {
         if (element.postId != post._id) {
@@ -202,7 +202,7 @@ class Job extends Component {
     if (this.state.role == 'iter' || !this.state.role) {
       return (
         <TouchableOpacity
-          style={{...styles.openButton, backgroundColor: '#37ce3f'}}
+          style={{ ...styles.openButton, backgroundColor: '#37ce3f' }}
           onPress={this.iterApplyJob}>
           <Text style={styles.textStyle}>Apply</Text>
         </TouchableOpacity>
@@ -212,7 +212,7 @@ class Job extends Component {
   };
 
   render() {
-    const {modalVisible, item} = this.state;
+    const { modalVisible, item } = this.state;
 
     if (this.props.status != 200 && this.props.status != 304) {
       return (
@@ -259,7 +259,7 @@ const mapDispatchToProps = {
 };
 
 const mapStateToProps = (state) => {
-  const {loading, status, msg} = state.getJob;
+  const { loading, status, msg } = state.getJob;
 
   return {
     loading,
@@ -281,7 +281,7 @@ const styles = StyleSheet.create({
   },
   flatlist: {
     marginTop: 3,
-    marginBottom: hp('10%'),
+    marginBottom: hp('14%'),
   },
   searchButton: {
     height: 40,

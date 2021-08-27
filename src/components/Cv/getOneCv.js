@@ -10,6 +10,7 @@ import {
   Dimensions,
   TouchableOpacity,
   ScrollView,
+  Image,
 } from 'react-native';
 import {connect} from 'react-redux';
 import {getCv} from '../../redux/actions/getCv';

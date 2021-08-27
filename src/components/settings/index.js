@@ -5,6 +5,7 @@ import {
   Text,
   View,
   TouchableOpacity,
+  Image,
 } from 'react-native';
 import {storeData} from '../../utils';
 import FastImage from 'react-native-fast-image';
@@ -50,15 +51,13 @@ class Settings extends Component {
             borderBottomLeftRadius: 30,
             borderBottomRightRadius: 30,
           }}>
-          <FastImage
+          <Image
             style={styles.avatar}
             source={{
               uri:
                 _.get(user, 'image') ||
                 'https://res.cloudinary.com/do-an-cnpm/image/upload/v1618073475/person_j0pvho.png',
-              priority: FastImage.priority.normal,
             }}
-            resizeMode={FastImage.resizeMode.contain}
           />
           <View style={styles.info}>
             <Text style={styles.name}>{_.get(user, 'name')}</Text>

@@ -1,10 +1,10 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import _ from 'lodash';
-import {connect} from 'react-redux';
-import {Loader, Header} from '../../common';
+import { connect } from 'react-redux';
+import { Loader, Header } from '../../common';
 import axios from 'axios';
-import {apiUrl} from '../../api/api';
-import {notifications} from '../../redux/actions';
+import { apiUrl } from '../../api/api';
+import { notifications } from '../../redux/actions';
 import Card from './Card';
 import {
   widthPercentageToDP as wp,
@@ -17,8 +17,8 @@ import {
   ActivityIndicator,
   Text,
 } from 'react-native';
-import {getData} from '../../utils';
-const {BASE_URL} = apiUrl;
+import { getData } from '../../utils';
+const { BASE_URL } = apiUrl;
 class Notification extends Component {
   _isMounted = false;
   constructor(props) {
@@ -35,13 +35,13 @@ class Notification extends Component {
   }
 
   onRefresh = async () => {
-    this.setState({isFetching: true});
+    this.setState({ isFetching: true });
     await this.props.notifications();
-    this.setState({notifications: this.props.listNotifications, page: 1});
-    this.setState({isFetching: false});
+    this.setState({ notifications: this.props.listNotifications, page: 1 });
+    this.setState({ isFetching: false });
   };
 
-  renderItem = ({item}) => <Card item={item}></Card>;
+  renderItem = ({ item }) => <Card item={item}></Card>;
 
   keyExtractor = (item) => {
     return item._id;
@@ -50,14 +50,14 @@ class Notification extends Component {
   async componentDidMount() {
     const unsubscribe = this.props.navigation.addListener('focus', async () => {
       await this.props.notifications();
-      this.setState({notifications: this.props.listNotifications, page: 1});
+      this.setState({ notifications: this.props.listNotifications, page: 1 });
     });
     return unsubscribe;
   }
 
   async handleLoadMore() {
     try {
-      await this.setState({page: this.state.page + 1, isLoading: true});
+      await this.setState({ page: this.state.page + 1, isLoading: true });
 
       if (this.state.page > this.props.numPages) {
         return;
@@ -86,7 +86,7 @@ class Notification extends Component {
 
   footerList = () => {
     return (
-      <View style={{flex: 1}}>
+      <View style={{ flex: 1 }}>
         {this.state.isLoading && (
           <View style={styles.loading}>
             <ActivityIndicator />
@@ -97,11 +97,10 @@ class Notification extends Component {
   };
 
   setModalVisible = (visible) => {
-    this.setState({modalVisible: visible});
+    this.setState({ modalVisible: visible });
   };
 
   render() {
-    console.log(this.props.status);
     if (this.props.status != 200 && this.props.status != 304) {
       return (
         <View>
@@ -110,7 +109,7 @@ class Notification extends Component {
       );
     }
     return (
-      <View style={{flex: 1}}>
+      <View style={{ flex: 1 }}>
         <Loader status={this.props.loading}></Loader>
         <Header
           title={'    Notification'}
@@ -137,7 +136,7 @@ class Notification extends Component {
               alignItems: 'center',
               marginTop: 100,
             }}>
-            <Text style={{fontSize: 20, fontWeight: 'bold'}}>
+            <Text style={{ fontSize: 20, fontWeight: 'bold' }}>
               You have not any notifications yet
             </Text>
           </View>
@@ -151,7 +150,7 @@ const mapDispatchToProps = {
 };
 
 const mapStateToProps = (state) => {
-  const {loading, status, msg} = state.notifications;
+  const { loading, status, msg } = state.notifications;
   return {
     loading,
     listNotifications: _.get(state.notifications, 'data.notifications') || [],

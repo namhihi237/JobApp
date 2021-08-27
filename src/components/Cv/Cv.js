@@ -25,6 +25,7 @@ import {
   Keyboard,
   ScrollView,
   Modal,
+  Image,
 } from 'react-native';
 import FormData from 'form-data';
 import axios from 'axios';
@@ -237,15 +238,13 @@ class Cv extends Component {
           <ScrollView showsVerticalScrollIndicator={false}>
             <Loader status={this.props.loading} msg={'Creating'}></Loader>
             <View style={styles.container}>
-              <FastImage
+              <Image
                 style={styles.avatar}
                 source={{
                   uri: photo
                     ? photo.uri
                     : 'https://res.cloudinary.com/do-an-cnpm/image/upload/v1618073475/person_j0pvho.png',
-                  priority: FastImage.priority.normal,
                 }}
-                resizeMode={FastImage.resizeMode.contain}
               />
               <TouchableOpacity
                 onPress={this.handleChoosePhoto}
